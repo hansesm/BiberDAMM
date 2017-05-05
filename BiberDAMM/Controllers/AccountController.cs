@@ -10,7 +10,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BiberDAMM.Models;
 
-//Anna kann das
 namespace BiberDAMM.Controllers
 {
     [Authorize]
