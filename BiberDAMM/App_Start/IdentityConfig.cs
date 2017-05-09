@@ -33,18 +33,27 @@ namespace BiberDAMM
     }
 
     // Konfigurieren des in dieser Anwendung verwendeten Anwendungsbenutzer-Managers. UserManager wird in ASP.NET Identity definiert und von der Anwendung verwendet.
-    public class ApplicationUserManager : UserManager<ApplicationUser>
+    // Change PrimaryKey of identity package to int [public class ApplicationUserManager : UserManager<ApplicationUser>] //Jonas
+    public class ApplicationUserManager : UserManager<ApplicationUser, int>
     {
+        /*Change PrimaryKey of identity package to int //Jonas
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
+            : base(store)
+        {
+        }
+        */
+        public ApplicationUserManager(IUserStore<ApplicationUser, int> store)
             : base(store)
         {
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            //Change PrimaryKey of identity package to int [var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));] //Jonas
+            var manager = new ApplicationUserManager(new CustomUserStore(context.Get<ApplicationDbContext>()));
             // Konfigurieren der Überprüfungslogik für Benutzernamen.
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
+            //Change PrimaryKey of identity package to int [manager.UserValidator = new UserValidator<ApplicationUser>(manager)] //Jonas
+            manager.UserValidator = new UserValidator<ApplicationUser, int>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -67,6 +76,7 @@ namespace BiberDAMM
 
             // Registrieren von Anbietern für zweistufige Authentifizierung. Diese Anwendung verwendet telefonische und E-Mail-Nachrichten zum Empfangen eines Codes zum Überprüfen des Benutzers.
             // Sie können Ihren eigenen Anbieter erstellen und hier einfügen.
+            /* Change PrimaryKey of identity package to int //Jonas 
             manager.RegisterTwoFactorProvider("Telefoncode", new PhoneNumberTokenProvider<ApplicationUser>
             {
                 MessageFormat = "Ihr Sicherheitscode lautet {0}"
@@ -76,20 +86,36 @@ namespace BiberDAMM
                 Subject = "Sicherheitscode",
                 BodyFormat = "Ihr Sicherheitscode lautet {0}"
             });
+            */
+            manager.RegisterTwoFactorProvider("Telefoncode", new PhoneNumberTokenProvider<ApplicationUser, int>
+            {
+                MessageFormat = "Ihr Sicherheitscode lautet {0}"
+            });
+            manager.RegisterTwoFactorProvider("E-Mail-Code", new EmailTokenProvider<ApplicationUser, int>
+            {
+                Subject = "Sicherheitscode",
+                BodyFormat = "Ihr Sicherheitscode lautet {0}"
+            });
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
+                /*Change PrimaryKey of identity package to int //Jonas
                 manager.UserTokenProvider = 
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    */
+                manager.UserTokenProvider =
+                    new DataProtectorTokenProvider<ApplicationUser, int>(dataProtectionProvider.Create("ASP.NET Identity"));
+
             }
             return manager;
         }
     }
 
     // Anwendungsanmelde-Manager konfigurieren, der in dieser Anwendung verwendet wird.
-    public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
+    //Change Primary Key of identity package to int [public class ApplicationSignInManager : SignInManager<ApplicationUser, string>] //Jonas
+    public class ApplicationSignInManager : SignInManager<ApplicationUser, int>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)

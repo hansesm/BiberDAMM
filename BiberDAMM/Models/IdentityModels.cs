@@ -7,9 +7,11 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace BiberDAMM.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
-    public class ApplicationUser : IdentityUser
+    // Change PrimaryKey of identity package to int [public class ApplicationUser : IdentityUser] //Jonas
+    public class ApplicationUser : IdentityUser<int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
+        //Change PrimaryKey of identity package to int [public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)] //Jonas
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser, int> manager)
         {
             // Beachten Sie, dass der "authenticationType" mit dem in "CookieAuthenticationOptions.AuthenticationType" definierten Typ übereinstimmen muss.
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
@@ -18,6 +20,7 @@ namespace BiberDAMM.Models
         }
     }
 
+    /* Change PrimaryKey of identity package to int //Jonas
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
@@ -28,6 +31,44 @@ namespace BiberDAMM.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+    }
+    */
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
+    {
+        public ApplicationDbContext()
+            : base("DefaultConnection")
+        {
+        }
+
+        public static ApplicationDbContext Create()
+        {
+            return new ApplicationDbContext();
+        }
+    }
+
+    //Change PrimaryKey of identity package to int [new custom classes of identity package are needed here] //Jonas
+    public class CustomUserRole : IdentityUserRole<int> { }
+    public class CustomUserClaim : IdentityUserClaim<int> { }
+    public class CustomUserLogin : IdentityUserLogin<int> { }
+
+    public class CustomRole : IdentityRole<int, CustomUserRole>
+    {
+        public CustomRole() { }
+        public CustomRole(string name) { Name = name; }
+    }
+
+    public class CustomUserStore : UserStore<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
+    {
+        public CustomUserStore(ApplicationDbContext context) : base(context)
+        {
+        }
+    }
+
+    public class CustomRoleStore : RoleStore<CustomRole, int, CustomUserRole>
+    {
+        public CustomRoleStore(ApplicationDbContext context) : base(context)
+        {
         }
     }
 }

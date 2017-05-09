@@ -67,9 +67,14 @@ namespace BiberDAMM.Controllers
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
+                /* Change PrimaryKey of identity package to int //Jonas
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
+                */
+                PhoneNumber = await UserManager.GetPhoneNumberAsync(User.Identity.GetUserId<int>()),
+                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(User.Identity.GetUserId<int>()),
+                Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId<int>()),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
@@ -82,10 +87,12 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
             ManageMessageId? message;
-            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            //Change PrimaryKey of identity package to int [var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));] //Jonas
+            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId<int>(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                //Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -117,7 +124,8 @@ namespace BiberDAMM.Controllers
                 return View(model);
             }
             // Token generieren und senden
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
+            // Change PrimaryKey of identity package to int [var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);] //Jonas
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(), model.Number);
             if (UserManager.SmsService != null)
             {
                 var message = new IdentityMessage
@@ -136,8 +144,12 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EnableTwoFactorAuthentication()
         {
+            /* Change PrimaryKey of identity package to int //Jonas
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            */
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), true);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -151,8 +163,12 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DisableTwoFactorAuthentication()
         {
+            /*Change PrimaryKey of identity package to int //Jonas
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            */
+            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), false);
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -164,7 +180,8 @@ namespace BiberDAMM.Controllers
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
+            // Change PrimaryKey of identity package to int [var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);] //Jonas
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(), phoneNumber);
             // Eine SMS über den SMS-Anbieter senden, um die Telefonnummer zu überprüfen.
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
@@ -179,10 +196,12 @@ namespace BiberDAMM.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
+            // Change PrimaryKey of identity package to int [var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);] //Jonas
+            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId<int>(), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                //Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -200,12 +219,14 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePhoneNumber()
         {
-            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
+            // Change PrimaryKey of identity package to int [var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);] //Jonas
+            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId<int>(), null);
             if (!result.Succeeded)
             {
                 return RedirectToAction("Index", new { Message = ManageMessageId.Error });
             }
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -230,10 +251,12 @@ namespace BiberDAMM.Controllers
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+            // Change PrimaryKey of identity package to int [var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);] //Jonas
+            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId<int>(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -259,10 +282,12 @@ namespace BiberDAMM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                // Change PrimaryKey of identity package to int [var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);] //Jonas
+                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId<int>(), model.NewPassword);
                 if (result.Succeeded)
                 {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                     if (user != null)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -284,12 +309,14 @@ namespace BiberDAMM.Controllers
                 message == ManageMessageId.RemoveLoginSuccess ? "Die externe Anmeldung wurde entfernt."
                 : message == ManageMessageId.Error ? "Fehler"
                 : "";
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //Jonas
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user == null)
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
+            // Change PrimaryKey of identity package to int [var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());] //Jonas
+            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId<int>());
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
@@ -318,7 +345,8 @@ namespace BiberDAMM.Controllers
             {
                 return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
             }
-            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+            // Change PrimaryKey of identity package to int [var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);] //Jonas
+            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId<int>(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
@@ -355,7 +383,8 @@ namespace BiberDAMM.Controllers
 
         private bool HasPassword()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            // Change PrimaryKey of identity package to int [var user = UserManager.FindById(User.Identity.GetUserId());] //Jonas
+            var user = UserManager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 return user.PasswordHash != null;
@@ -365,7 +394,8 @@ namespace BiberDAMM.Controllers
 
         private bool HasPhoneNumber()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            // Change PrimaryKey of identity package to int [var user = UserManager.FindById(User.Identity.GetUserId());] //Jonas
+            var user = UserManager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
             {
                 return user.PhoneNumber != null;
