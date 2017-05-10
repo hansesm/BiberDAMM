@@ -32,6 +32,11 @@ namespace BiberDAMM.DAL
         {
         }
 
+        public DbSet<Bed> Beds { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
+        public DbSet<TreatmentType> TreatmentTypes { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
