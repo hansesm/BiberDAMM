@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -25,6 +26,8 @@ namespace BiberDAMM.DAL
         }
     }
     */
+
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
         public ApplicationDbContext()
@@ -32,14 +35,36 @@ namespace BiberDAMM.DAL
         {
         }
 
+
+
+
+        //Imports the needed Models to the database
+
         public DbSet<Bed> Beds { get; set; }
+        public DbSet<Blocks> Blocks { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<ContactData> ContactDatas { get; set; }
+        public DbSet<ContactType> ContactTypes { get; set; }
+        public DbSet<HealthInsurance> HealthInsurances { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
+        public DbSet<Stay> Stays { get; set; }
+        public DbSet<Treatment> Treatments { get; set; }
         public DbSet<TreatmentType> TreatmentTypes { get; set; }
+
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+
+        //For security reasons disables on delete cascade to ensure data quality and minimize risk of data loss
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+        }
     }
+
 }

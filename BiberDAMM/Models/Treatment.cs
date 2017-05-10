@@ -27,10 +27,11 @@ namespace BiberDAMM.Models
 
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }
-        
-        public int ThreatmentTypeId { get; set; }
+
+
+        public int TreatmentTypeId { get; set; }
         public virtual TreatmentType TreatmentType { get; set; }
 
-        public virtual ICollection<ApplicationUser> ApplicationUser { get; set; }
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

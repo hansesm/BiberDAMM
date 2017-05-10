@@ -17,7 +17,7 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Aufnahmedatum")]
-        public DateTime BeginnDate { get; set; }
+        public DateTime BeginDate { get; set; }
 
         [Display(Name = "Entlassungsdatum")]
         public DateTime? EndDate { get; set; }
@@ -49,6 +49,6 @@ namespace BiberDAMM.Models
 
         public virtual ICollection<Blocks> Blocks { get; set; }
 
-        public virtual ICollection<Treatment> Treatment { get; set; }
+        public virtual ICollection<Treatment> Treatments { get; set; }
     }
 }

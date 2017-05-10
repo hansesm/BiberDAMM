@@ -15,12 +15,15 @@ namespace BiberDAMM.Models
         public string Description { get; set; }
 
         [Display(Name = "E-Mail")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Display(Name = "Telefonnummer")]
+        [Phone]
         public string Phone { get; set; }
 
         [Display(Name = "Mobiltelefonnummer")]
+        [Phone]
         public string Mobile { get; set; }
 
         [Display(Name = "Straße und Hausnummer")]

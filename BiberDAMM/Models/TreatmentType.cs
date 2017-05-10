@@ -21,6 +21,6 @@ namespace BiberDAMM.Models
 
         public virtual RoomType RoomType { get; set; }
 
-        public virtual ICollection<Treatment> Treatment { get; set; }
+        public virtual ICollection<Treatment> Treatments { get; set; }
     }
 }
