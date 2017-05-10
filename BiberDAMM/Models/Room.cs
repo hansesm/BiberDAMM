@@ -22,6 +22,6 @@ namespace BiberDAMM.Models
 
         public virtual ICollection<Bed> Bed { get; set; }
 
-//        public virtual ICollection<Treatment> Treatment { get; set; }
+        public virtual ICollection<Treatment> Treatment { get; set; }
     }
 }

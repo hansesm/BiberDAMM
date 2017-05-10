@@ -15,12 +15,12 @@ namespace BiberDAMM.Models
         [Display(Name = "Behandlungstyp")]
         public string Name { get; set; }
 
-        //        public Nullable<int> RoomType_Id { get; set; }
+
         [Display(Name = "Raumtyp-ID")]
-        public int? RoomType_Id { get; set; }
+        public int? RoomTypeId { get; set; }
 
         public virtual RoomType RoomType { get; set; }
 
-//        public virtual ICollection<Treatment> Treatment { get; set; }
+        public virtual ICollection<Treatment> Treatment { get; set; }
     }
 }
