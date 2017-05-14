@@ -6,6 +6,9 @@ using System.Web;
 
 namespace BiberDAMM.ViewModels
 {
+    // ===============================
+    // AUTHOR     : ChristesR
+    // ===============================
     public enum InsuranceType
     {
         privat, gesetzlich

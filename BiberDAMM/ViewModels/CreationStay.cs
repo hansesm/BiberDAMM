@@ -7,6 +7,9 @@ using System.Web;
 
 namespace BiberDAMM.ViewModels
 {
+    // ===============================
+    // AUTHOR     : ChristesR
+    // ===============================
     public enum StayType
     {
         ambulant, stationär

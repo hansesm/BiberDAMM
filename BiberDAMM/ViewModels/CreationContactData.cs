@@ -7,6 +7,9 @@ using System.Web;
 
 namespace BiberDAMM.ViewModels
 {
+    // ===============================
+    // AUTHOR     : ChristesR
+    // ===============================
     public class CreationContactData
     {
         [Display(Name = "Kontaktbeschreibung")]

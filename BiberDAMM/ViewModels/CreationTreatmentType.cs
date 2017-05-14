@@ -7,6 +7,10 @@ using System.Web;
 
 namespace BiberDAMM.ViewModels
 {
+    // ===============================
+    // AUTHOR     : ChristesR
+    // ===============================
+
     public class CreationTreatmentType
     {
         [Required]

@@ -9,6 +9,9 @@ namespace BiberDAMM.ViewModels
 {
     public class CreationClient
     {
+        // ===============================
+        // AUTHOR     : ChristesR
+        // ===============================
 
         [Required]
         //        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]
