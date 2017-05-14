@@ -1,3 +1,40 @@
-﻿@{
+﻿<!--section changed: LoginPage should have another layout than the rest of the application [KrabsJ]-->
+@*
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+*@
+
+@{
+    <!--Get the values of the current request and check if the controller and the action fits to AccountController and LoginAction.
+        In this case the layout should be "_LoginLayout". In all other cases the default layout is used ("_Layout") [KrabsJ]
+        -->
+    string cLayout = "";
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action") && routeValues.ContainsKey("controller"))
+        {
+            var action = routeValues["action"].ToString();
+            var controller = routeValues["controller"].ToString();
+            if (action == "Login" && controller == "Account")
+            {
+                cLayout = "~/Views/Shared/_LoginLayout.cshtml";
+            }
+            else
+            {
+                cLayout = "~/Views/Shared/_Layout.cshtml";
+            }
+        }
+        else
+        {
+            cLayout = "~/Views/Shared/_Layout.cshtml";
+        }
+    }
+    else
+    {
+        cLayout = "~/Views/Shared/_Layout.cshtml";
+    }
+    Layout = cLayout;
+}
+

@@ -81,7 +81,6 @@ namespace BiberDAMM.Controllers
             // section changed: login should be based on Username instead of Email and there should be no rememberMe function so it is set to "false" [KrabsJ]
             // var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
-            // TODO [KrabsJ] SignIn only possible if user is active; check idea below
             ApplicationUser requestingUser = UserManager.FindByName(model.Username);
             if(requestingUser != null && requestingUser.Active == false)
             {
@@ -104,7 +103,7 @@ namespace BiberDAMM.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");
+                    ModelState.AddModelError("", "Falscher Benutzername oder falsches Passwort");
                     return View(model);
             }
         }
