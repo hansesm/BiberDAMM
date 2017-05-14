@@ -48,22 +48,51 @@ namespace BiberDAMM.Models
 
     public class LoginViewModel
     {
+        //section changed: login should be based on username instead of Email [KrabsJ]
+        /*
         [Required]
         [Display(Name = "E-Mail")]
         [EmailAddress]
         public string Email { get; set; }
+        */
+
+        [Required]
+        [Display(Name = "Benutzername")]
+        public string  Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort")]
         public string Password { get; set; }
 
+        //section deleted: for security reasons there should be no rememberme function [KrabsJ]
+        /*
         [Display(Name = "Speichern?")]
         public bool RememberMe { get; set; }
+        */
     }
 
     public class RegisterViewModel
     {
+        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed and PhoneNumber ist optional [KrabsJ]
+        [Required]
+        [Display(Name = "Vorname")]
+        public string Surname { get; set; }
+
+        [Required]
+        [Display(Name = "Nachname")]
+        public string Lastname { get; set; }
+
+        [Required]
+        [Display(Name = "Benutzertyp")]
+        public UserType UserType { get; set; }
+
+        [Display(Name = "Aktiviert")]
+        public bool Active { get; set; }
+
+        [Display(Name = "Telefonnummer")]
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "E-Mail")]

@@ -34,10 +34,10 @@ namespace BiberDAMM
     }
 
     // Konfigurieren des in dieser Anwendung verwendeten Anwendungsbenutzer-Managers. UserManager wird in ASP.NET Identity definiert und von der Anwendung verwendet.
-    // Change PrimaryKey of identity package to int [public class ApplicationUserManager : UserManager<ApplicationUser>] //Jonas
+    // Change PrimaryKey of identity package to int [public class ApplicationUserManager : UserManager<ApplicationUser>] //KrabsJ
     public class ApplicationUserManager : UserManager<ApplicationUser, int>
     {
-        /*Change PrimaryKey of identity package to int //Jonas
+        /*Change PrimaryKey of identity package to int //KrabsJ
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
@@ -50,10 +50,10 @@ namespace BiberDAMM
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            //Change PrimaryKey of identity package to int [var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));] //Jonas
+            //Change PrimaryKey of identity package to int [var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));] //KrabsJ
             var manager = new ApplicationUserManager(new CustomUserStore(context.Get<ApplicationDbContext>()));
             // Konfigurieren der Überprüfungslogik für Benutzernamen.
-            //Change PrimaryKey of identity package to int [manager.UserValidator = new UserValidator<ApplicationUser>(manager)] //Jonas
+            //Change PrimaryKey of identity package to int [manager.UserValidator = new UserValidator<ApplicationUser>(manager)] //KrabsJ
             manager.UserValidator = new UserValidator<ApplicationUser, int>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
@@ -77,7 +77,7 @@ namespace BiberDAMM
 
             // Registrieren von Anbietern für zweistufige Authentifizierung. Diese Anwendung verwendet telefonische und E-Mail-Nachrichten zum Empfangen eines Codes zum Überprüfen des Benutzers.
             // Sie können Ihren eigenen Anbieter erstellen und hier einfügen.
-            /* Change PrimaryKey of identity package to int //Jonas 
+            /* Change PrimaryKey of identity package to int //KrabsJ 
             manager.RegisterTwoFactorProvider("Telefoncode", new PhoneNumberTokenProvider<ApplicationUser>
             {
                 MessageFormat = "Ihr Sicherheitscode lautet {0}"
@@ -102,7 +102,7 @@ namespace BiberDAMM
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                /*Change PrimaryKey of identity package to int //Jonas
+                /*Change PrimaryKey of identity package to int //KrabsJ
                 manager.UserTokenProvider = 
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
                     */
@@ -115,7 +115,7 @@ namespace BiberDAMM
     }
 
     // Anwendungsanmelde-Manager konfigurieren, der in dieser Anwendung verwendet wird.
-    //Change Primary Key of identity package to int [public class ApplicationSignInManager : SignInManager<ApplicationUser, string>] //Jonas
+    //Change Primary Key of identity package to int [public class ApplicationSignInManager : SignInManager<ApplicationUser, string>] //KrabsJ
     public class ApplicationSignInManager : SignInManager<ApplicationUser, int>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)

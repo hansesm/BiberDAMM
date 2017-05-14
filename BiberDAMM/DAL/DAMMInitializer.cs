@@ -16,7 +16,7 @@ namespace BiberDAMM.DAL
             var manager = new ApplicationUserManager(store);
             var user = new ApplicationUser
             {
-                UserName = "peter@gmx.de",
+                UserName = "LustigP",
                 Email = "peter@gmx.de",
                 Surname = "Peter",
                 Lastname = "Lustig",

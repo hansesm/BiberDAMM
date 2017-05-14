@@ -15,9 +15,6 @@ namespace BiberDAMM.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        //simple Comment
-        //test leon
-
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -57,6 +54,7 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/Login
+        // TODO [KrabsJ] no returnUrl needed in Loginfunction
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -66,6 +64,8 @@ namespace BiberDAMM.Controllers
 
         //
         // POST: /Account/Login
+        // TODO [KrabsJ] no return Url needed in Login function
+        // TODO [KrabsJ] check the annotation "validateAntiForgeryToken"
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -78,15 +78,32 @@ namespace BiberDAMM.Controllers
 
             // Anmeldefehler werden bezüglich einer Kontosperre nicht gezählt.
             // Wenn Sie aktivieren möchten, dass Kennwortfehler eine Sperre auslösen, ändern Sie in "shouldLockout: true".
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            // section changed: login should be based on Username instead of Email and there should be no rememberMe function so it is set to "false" [KrabsJ]
+            // var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            // TODO [KrabsJ] SignIn only possible if user is active; check idea below
+            /*
+            ApplicationUser requestingUser = UserManager.FindByName(model.Username);
+            if(requestingUser.Active == false)
+            {
+                ModelState.AddModelError("", "Angegebener Nutzer ist inaktiv. Bitte wenden Sie sich an einen Administrator.");
+                return View(model);
+            }
+            */
+
+            var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, shouldLockout: false);
             switch (result)
             {
+                // TODO [KrabsJ] adress the different homeviews depending on users role after login
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+                // section changed: there should be no rememberMe function --> so it is set to "false" [KrabsJ]
+                //case SignInStatus.RequiresVerification:
+                    //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");
@@ -147,6 +164,8 @@ namespace BiberDAMM.Controllers
 
         //
         // POST: /Account/Register
+        // TODO [KrabsJ] check the annotation "validateAntiForgeryToken"
+        // TODO [KrabsJ] change access to Admin only
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -154,11 +173,62 @@ namespace BiberDAMM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                // section added: variables for the algorithm of creating the Username [KrabsJ]
+                string username = model.Lastname + model.Surname[0];
+                string usernameWithNumber;
+                ApplicationUser userdb;
+                int surnameCounter = model.Surname.Length;
+                int userNameNumber = 1;
+
+                //section added: algorithm of creating the Username [KrabsJ]
+                //Username should be the Lastname plus the first character of the Surname
+                //If there is already another user with the same name the next character of the surname will be added and so on
+                //If there is already another user with the same name including the whole lastname plus surname a sequential number will be added
+                for (int i = 0; i < surnameCounter; i++)
+                {
+                    userdb = UserManager.FindByName(username);
+                    if (userdb == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        if ((i + 1) < surnameCounter)
+                        {
+                            username = username + model.Surname[i + 1];
+                        }
+                        else
+                        {
+                            usernameWithNumber = username + userNameNumber.ToString();
+                            while (true)
+                            {
+                                userdb = UserManager.FindByName(usernameWithNumber);
+                                if (userdb == null)
+                                {
+                                    username = usernameWithNumber;
+                                    break;
+                                }
+                                else
+                                {
+                                    userNameNumber++;
+                                    usernameWithNumber = username + userNameNumber.ToString();
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                //section changed: depending on the expansion of the ApplicationUser class there are more attributes that are necessary to create a new user
+                //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = username, Email = model.Email, Surname = model.Surname, Lastname = model.Lastname, Active=model.Active, UserType=model.UserType, PhoneNumber=model.PhoneNumber };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    // section deleted: the register-method is only available for the administrator, there is no need to login the new user
+                    // await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                    // TODO [KrabsJ] based on the usertype the user has to get a role
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // E-Mail-Nachricht mit diesem Link senden
@@ -166,6 +236,7 @@ namespace BiberDAMM.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
 
+                    // TODO [KrabsJ] where to go after creating a new User?
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
@@ -177,11 +248,11 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/ConfirmEmail
-        // Change PrimaryKey of identity package to int [public async Task<ActionResult> ConfirmEmail(string userId, string code)] //Jonas
+        // Change PrimaryKey of identity package to int [public async Task<ActionResult> ConfirmEmail(string userId, string code)] //KrabsJ
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
-            //Change PrimaryKey of identity package to int [if (userId == null || code == null)] //Jonas
+            //Change PrimaryKey of identity package to int [if (userId == null || code == null)] //KrabsJ
             if (userId == default(int) || code == null)
             {
                 return View("Error");
@@ -293,7 +364,7 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
-            // Change PrimaryKey of identity package to int [if (userId == null)] //Jonas
+            // Change PrimaryKey of identity package to int [if (userId == null)] //KrabsJ
             if (userId == default(int))
             {
                 return View("Error");
