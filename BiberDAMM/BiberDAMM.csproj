@@ -189,9 +189,18 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BedController.cs" />
+    <Compile Include="Controllers\BlocksController.cs" />
+    <Compile Include="Controllers\ContactDataController.cs" />
+    <Compile Include="Controllers\ContactTypeController.cs" />
+    <Compile Include="Controllers\HealthInsuranceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Controllers\RoomTypeController.cs" />
+    <Compile Include="Controllers\StayController.cs" />
     <Compile Include="Controllers\TreatmentController.cs" />
+    <Compile Include="Controllers\TreatmentTypeController.cs" />
     <Compile Include="DAL\ApplicationDbContext.cs" />
     <Compile Include="DAL\DAMMInitializer.cs" />
     <Compile Include="Global.asax.cs">
@@ -284,6 +293,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Bed\" />
+    <Folder Include="Views\Blocks\" />
+    <Folder Include="Views\ContactData\" />
+    <Folder Include="Views\ContactType\" />
+    <Folder Include="Views\HealthInsurance\" />
+    <Folder Include="Views\RoomType\" />
+    <Folder Include="Views\Room\" />
+    <Folder Include="Views\Stay\" />
+    <Folder Include="Views\TreatmentType\" />
     <Folder Include="Views\Treatment\" />
   </ItemGroup>
   <ItemGroup>

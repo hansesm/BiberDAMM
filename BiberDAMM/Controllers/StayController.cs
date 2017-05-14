@@ -7,29 +7,29 @@ using BiberDAMM.Models;
 
 namespace BiberDAMM.Controllers
 {
-    public class TreatmentController : Controller
+    public class StayController : Controller
     {
-        // GET all: Treatment [JEL] [ANNAS]
+        // GET all: Stay [JEL] [ANNAS]
         public ActionResult Index()
         {
             return View();
         }
-        //CREATE: Treatment [JEL] [ANNAS]
+        //CREATE: Stay [JEL] [ANNAS]
         public ActionResult New()
         {
             return View();
         }
-        //CHANGE: Treatment [JEL] [ANNAS]
+        //CHANGE: Stay [JEL] [ANNAS]
         public ActionResult Edit()
         {
             return View();
         }
-        //GET SINGLE: Treatment [JEL] [ANNAS]
+        //GET SINGLE: Stay [JEL] [ANNAS]
         public ActionResult Detail()
         {
             return View();
         }
-        //SAVE: Treatment [JEL] [ANNAS]
+        //SAVE: Stay [JEL] [ANNAS]
         public ActionResult Save()
         {
             return View();
