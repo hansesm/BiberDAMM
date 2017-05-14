@@ -15,9 +15,6 @@ namespace BiberDAMM.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        //simple Comment
-        //test leon
-
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -57,6 +54,7 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/Login
+        // TODO [KrabsJ] no returnUrl needed in Loginfunction
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -66,6 +64,8 @@ namespace BiberDAMM.Controllers
 
         //
         // POST: /Account/Login
+        // TODO [KrabsJ] no return Url needed in Login function
+        // TODO [KrabsJ] check the annotation "validateAntiForgeryToken"
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -78,15 +78,21 @@ namespace BiberDAMM.Controllers
 
             // Anmeldefehler werden bezüglich einer Kontosperre nicht gezählt.
             // Wenn Sie aktivieren möchten, dass Kennwortfehler eine Sperre auslösen, ändern Sie in "shouldLockout: true".
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            // section changed: login should be based on Username instead of Email and there should be no rememberMe function so it is set to "false" [KrabsJ]
+            // var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, shouldLockout: false);
             switch (result)
             {
+                // TODO [KrabsJ] adress the different homeviews depending on users role after login
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
+                // section changed: there should be no rememberMe function --> so it is set to "false" [KrabsJ]
+                //case SignInStatus.RequiresVerification:
+                    //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");

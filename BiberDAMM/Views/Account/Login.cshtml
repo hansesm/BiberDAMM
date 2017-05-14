@@ -4,6 +4,9 @@
     ViewBag.Title = "Anmelden";
 }
 
+<!--TODO [KrabsJ] check the details on this page if all attributes, validationmessages etc are necessary-->
+<!--TODO [KrabsJ] define design and layout for login-page-->
+
 <h2>@ViewBag.Title.</h2>
 <div class="row">
     <div class="col-md-8">
@@ -14,11 +17,21 @@
                 <h4>Lokales Konto für die Anmeldung verwenden.</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <!--section changed: LoginIn function should be based on Username instead of Email [KrabsJ]-->
+                @*
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                *@
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -28,6 +41,8 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
+                <!--section deleted: for security reasons there should be no RememberMe function [KrabsJ]-->
+                @*
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <div class="checkbox">
@@ -36,14 +51,18 @@
                         </div>
                     </div>
                 </div>
+                *@
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Anmelden" class="btn btn-default" />
                     </div>
                 </div>
+                <!--section deleted: There should be no option to get the register page. This is only available for the administrator [KrabsJ]-->
+                @*
                 <p>
                     @Html.ActionLink("Als neuer Benutzer registrieren", "Register")
                 </p>
+                *@
                 @* Diese Option aktivieren, nachdem Sie die Kontobestätigung für die Funktion zum Zurücksetzen des Kennworts aktiviert haben
                     <p>
                         @Html.ActionLink("Kennwort vergessen?", "ForgotPassword")
@@ -51,11 +70,15 @@
             }
         </section>
     </div>
+
+    <!--section deleted: There should be no option to login with a social network account [KrabsJ]-->
+    @*
     <div class="col-md-4">
         <section id="socialLoginForm">
             @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
+    *@
 </div>
 
 @section Scripts {
