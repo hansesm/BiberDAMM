@@ -17,6 +17,7 @@ namespace BiberDAMM.Models
 
         public int Id { get; set; }
          // TODO Check if working and names like Ügüglülü can be saved
+         // TODO [for all] delete the regular expressions on validation surname and lastname? it doesn't work
 
         [Required]
 //        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]

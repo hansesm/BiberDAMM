@@ -74,6 +74,25 @@ namespace BiberDAMM.Models
 
     public class RegisterViewModel
     {
+        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed and PhoneNumber ist optional [KrabsJ]
+        [Required]
+        [Display(Name = "Vorname")]
+        public string Surname { get; set; }
+
+        [Required]
+        [Display(Name = "Nachname")]
+        public string Lastname { get; set; }
+
+        [Required]
+        [Display(Name = "Benutzertyp")]
+        public UserType UserType { get; set; }
+
+        [Display(Name = "Aktiviert")]
+        public bool Active { get; set; }
+
+        [Display(Name = "Telefonnummer")]
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "E-Mail")]
