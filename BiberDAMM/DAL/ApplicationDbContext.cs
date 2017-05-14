@@ -12,7 +12,7 @@ using BiberDAMM.Models;
 
 namespace BiberDAMM.DAL
 {
-    /* Change PrimaryKey of identity package to int //Jonas
+    /* Change PrimaryKey of identity package to int //KrabsJ
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()

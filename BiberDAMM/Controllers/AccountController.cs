@@ -248,11 +248,11 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/ConfirmEmail
-        // Change PrimaryKey of identity package to int [public async Task<ActionResult> ConfirmEmail(string userId, string code)] //Jonas
+        // Change PrimaryKey of identity package to int [public async Task<ActionResult> ConfirmEmail(string userId, string code)] //KrabsJ
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
-            //Change PrimaryKey of identity package to int [if (userId == null || code == null)] //Jonas
+            //Change PrimaryKey of identity package to int [if (userId == null || code == null)] //KrabsJ
             if (userId == default(int) || code == null)
             {
                 return View("Error");
@@ -364,7 +364,7 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await SignInManager.GetVerifiedUserIdAsync();
-            // Change PrimaryKey of identity package to int [if (userId == null)] //Jonas
+            // Change PrimaryKey of identity package to int [if (userId == null)] //KrabsJ
             if (userId == default(int))
             {
                 return View("Error");
