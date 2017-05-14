@@ -82,14 +82,12 @@ namespace BiberDAMM.Controllers
             // var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
 
             // TODO [KrabsJ] SignIn only possible if user is active; check idea below
-            /*
             ApplicationUser requestingUser = UserManager.FindByName(model.Username);
-            if(requestingUser.Active == false)
+            if(requestingUser != null && requestingUser.Active == false)
             {
-                ModelState.AddModelError("", "Angegebener Nutzer ist inaktiv. Bitte wenden Sie sich an einen Administrator.");
+                ModelState.AddModelError("", "Der angegebene Nutzer ist inaktiv. Bitte wenden Sie sich an einen Administrator.");
                 return View(model);
             }
-            */
 
             var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, shouldLockout: false);
             switch (result)
