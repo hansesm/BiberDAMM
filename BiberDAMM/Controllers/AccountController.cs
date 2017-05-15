@@ -54,7 +54,6 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/Login
-        // TODO [KrabsJ] no returnUrl needed in Loginfunction
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -62,10 +61,7 @@ namespace BiberDAMM.Controllers
             return View();
         }
 
-        //
         // POST: /Account/Login
-        // TODO [KrabsJ] no return Url needed in Login function
-        // TODO [KrabsJ] check the annotation "validateAntiForgeryToken"
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -91,9 +87,19 @@ namespace BiberDAMM.Controllers
             var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: false, shouldLockout: false);
             switch (result)
             {
-                // TODO [KrabsJ] adress the different homeviews depending on users role after login
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    // if there is a returnUrl (this happens if a user who is not logged in tries to call a method), the application should redirect to the required page after login [KrabsJ]
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        // TODO [KrabsJ] check if the redirect works; it has to work when an user who is not logged in tries to call an [authorized] method.
+                        // check not possible until roles are created
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        // TODO [KrabsJ] adress the different homeviews depending on users role after login
+                        return RedirectToAction("Index", "Home");
+                    };
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 // section changed: there should be no rememberMe function --> so it is set to "false" [KrabsJ]
@@ -161,7 +167,6 @@ namespace BiberDAMM.Controllers
 
         //
         // POST: /Account/Register
-        // TODO [KrabsJ] check the annotation "validateAntiForgeryToken"
         // TODO [KrabsJ] change access to Admin only
         [HttpPost]
         [AllowAnonymous]
