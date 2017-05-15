@@ -1,5 +1,5 @@
 ﻿@using WebGrease.Css.ImageAssemblyAnalysis
-<!--This is the Layout for the Login Page [KrabsJ]-->
+<!--This is the Layout for the Login Page -->
 <!--Customized by [HansesM]-->
 
 <!DOCTYPE html>
@@ -18,15 +18,12 @@
 
 </head>
 <body>
-    <div>
+<div>
+    @RenderBody()
+</div>
 
-        @RenderBody()
-
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
 </body>
 </html>
-
