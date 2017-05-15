@@ -4,8 +4,7 @@
     ViewBag.Title = "Anmelden";
 }
 
-<!--TODO [KrabsJ] check the details on this page if all attributes, validationmessages etc are necessary-->
-<!--TODO [KrabsJ] define design and layout for login-page-->
+<!--TODO [HansesM] define layout for login-page-->
 
 <h2>@ViewBag.Title</h2>
 <div class="row">
@@ -13,8 +12,10 @@
         <section id="loginForm">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
+                <!--prevent cross-site-attacks-->
                 @Html.AntiForgeryToken()
-                <h4>Lokales Konto für die Anmeldung verwenden.</h4>
+                <!--line deleted [KrabsJ]-->
+                <!--<h4>Lokales Konto für die Anmeldung verwenden.</h4>-->
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <!--section changed: LoginIn function should be based on Username instead of Email [KrabsJ]-->
@@ -81,6 +82,7 @@
     *@
 </div>
 
+<!--enable scripts for validation-->
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
