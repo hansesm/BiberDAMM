@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using BiberDAMM.Models;
 
 
 namespace BiberDAMM.Controllers
 {
-
+    //[HANSESM]
     public class ClientController : Controller
     {
-
         // GET all: Client [JEL] [ANNAS]
         public ActionResult Index()
         {
@@ -37,6 +35,5 @@ namespace BiberDAMM.Controllers
         {
             return View();
         }
-
     }
 }

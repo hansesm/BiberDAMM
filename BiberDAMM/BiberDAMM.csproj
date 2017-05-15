@@ -191,6 +191,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BedController.cs" />
     <Compile Include="Controllers\BlocksController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ContactDataController.cs" />
     <Compile Include="Controllers\ContactTypeController.cs" />
     <Compile Include="Controllers\HealthInsuranceController.cs" />
@@ -296,6 +297,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\Bed\" />
     <Folder Include="Views\Blocks\" />
+    <Folder Include="Views\Client\" />
     <Folder Include="Views\ContactData\" />
     <Folder Include="Views\ContactType\" />
     <Folder Include="Views\HealthInsurance\" />
