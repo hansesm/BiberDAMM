@@ -16,9 +16,9 @@ namespace BiberDAMM
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                // TODO [KrabsJ] set default route to login view (see below); question is just when?
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-                //defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
+                //section changed: set default action to login
+                //defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
             );
         }
     }
