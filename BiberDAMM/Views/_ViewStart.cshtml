@@ -17,7 +17,7 @@
         {
             var action = routeValues["action"].ToString();
             var controller = routeValues["controller"].ToString();
-            if (action == "Login" && controller == "Account")
+            if ((action == "Login" || action == "login") && (controller == "Account" || controller == "account"))
             {
                 cLayout = "~/Views/Shared/_LoginLayout.cshtml";
             }
