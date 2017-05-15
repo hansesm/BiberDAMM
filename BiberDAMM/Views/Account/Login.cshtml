@@ -11,7 +11,7 @@
         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
-            
+
             <h1></h1>
 
             <div class="form-group">
@@ -38,7 +38,8 @@
 
         }
     </section>
-    
+</div>
+
 
 <!--enable scripts for validation-->
 @section Scripts {
