@@ -1,4 +1,5 @@
-﻿@using BiberDAMM.Models
+﻿@using System.Web.UI.WebControls
+@using BiberDAMM.Models
 @model LoginViewModel
 @{
     ViewBag.Title = "Anmelden";
@@ -6,40 +7,32 @@
 
 <!--TODO [HansesM] define layout for login-page-->
 
-<div class="overlay">
+<div class="login-page">
     <section id="loginForm">
         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
+            
+            <img src="/Content/Images/LogoDamm.png" width="280"/>
+
+            <h2></h2>
+            
             @Html.AntiForgeryToken()
 
-            <h1></h1>
+            @Html.ValidationMessage("InactiveUser");
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            @Html.TextBoxFor(m => m.Username, new { placeholder = "Nutzername" })
+        
+            @Html.PasswordFor(m => m.Password, new { placeholder = "Passwort" })
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            @Html.ValidationMessage("WrongUsernameOrPass");
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Anmelden" class="btn btn-default" />
-                </div>
-            </div>
+            <button>login</button>
 
+            <hr />
+            <p>&copy; @DateTime.Now.Year - Biber Consulting</p>
         }
     </section>
 </div>
-
 
 <!--enable scripts for validation-->
 @section Scripts {

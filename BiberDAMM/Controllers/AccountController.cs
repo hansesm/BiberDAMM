@@ -80,7 +80,8 @@ namespace BiberDAMM.Controllers
             ApplicationUser requestingUser = UserManager.FindByName(model.Username);
             if(requestingUser != null && requestingUser.Active == false)
             {
-                ModelState.AddModelError("", "Der angegebene Nutzer ist inaktiv. Bitte wenden Sie sich an einen Administrator.");
+                //Added errormessage name to dispay in loginview [HansesM]
+                ModelState.AddModelError("InactiveUser", "Der angegebene Nutzer ist inaktiv. Bitte wenden Sie sich an einen Administrator.");
                 return View(model);
             }
 
@@ -107,9 +108,11 @@ namespace BiberDAMM.Controllers
                     //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+
+                //Added errormessage name to dispay in loginview [HansesM]
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Falscher Benutzername oder falsches Passwort");
+                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort");
                     return View(model);
             }
         }
