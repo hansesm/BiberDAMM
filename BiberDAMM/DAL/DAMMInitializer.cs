@@ -20,7 +20,8 @@ namespace BiberDAMM.DAL
                 Email = "peter@gmx.de",
                 Surname = "Peter",
                 Lastname = "Lustig",
-                UserType = UserType.Administrator
+                UserType = UserType.Administrator,
+                Active = true
             };
 
             manager.Create(user, "BiberDamm!");
