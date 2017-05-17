@@ -92,8 +92,6 @@ namespace BiberDAMM.Controllers
                     // if there is a returnUrl (this happens if a user who is not logged in tries to call a method), the application should redirect to the required page after login [KrabsJ]
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
-                        // TODO [KrabsJ] check if the redirect works; it has to work when an user who is not logged in tries to call an [authorized] method.
-                        // check not possible until roles are created
                         return RedirectToLocal(returnUrl);
                     }
                     else
@@ -236,8 +234,25 @@ namespace BiberDAMM.Controllers
                     // section deleted: the register-method is only available for the administrator, there is no need to login the new user
                     // await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    // TODO [KrabsJ] based on the usertype the user has to get a role
-                    
+                    switch (user.UserType)
+                    {
+                        case UserType.Reinigungskraft:
+                            UserManager.AddToRole(user.Id, "Reinigungskraft");
+                            break;
+                        case UserType.Pflegekraft:
+                            UserManager.AddToRole(user.Id, "Pflegekraft");
+                            break;
+                        case UserType.Arzt:
+                            UserManager.AddToRole(user.Id, "Arzt");
+                            break;
+                        case UserType.Administrator:
+                            UserManager.AddToRole(user.Id, "Administrator");
+                            break;
+                        default:
+                            //TODO [KrabsJ] throw custom exception
+                            break;
+                    }
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // E-Mail-Nachricht mit diesem Link senden
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

@@ -20,7 +20,7 @@ namespace BiberDAMM.DAL
             var roleStore = new CustomRoleStore(_context);
             var roleManager = new ApplicationRoleManager(roleStore);
 
-            // create all roles for application and seed them into the database [KrabsJ]
+            // create all roles for application and seed them into the database if they not exist [KrabsJ]
 
             // role Administrator
             var roleAdmin = new CustomRole { Name = "Administrator" };
