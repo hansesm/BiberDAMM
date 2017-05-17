@@ -7,10 +7,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
-    [Authorize]
+    [CustomAuthorize]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;

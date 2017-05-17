@@ -228,5 +228,7 @@ namespace BiberDAMM.DAL
             _context.SaveChanges();
 
         }
+
+        //TODO [KrabsJ] check if there has to be a Dispose method
     }
 }

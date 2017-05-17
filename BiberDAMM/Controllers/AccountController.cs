@@ -9,10 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
-    [Authorize]
+    [CustomAuthorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -162,7 +163,7 @@ namespace BiberDAMM.Controllers
         // GET: /Account/Register
         // changed line: register only available for administrator [KrabsJ]
         //[AllowAnonymous]
-        [Authorize(Roles = "Administrator")]
+        [CustomAuthorize(Roles = "Administrator")]
         public ActionResult Register()
         {
             return View();
@@ -173,7 +174,7 @@ namespace BiberDAMM.Controllers
         // changed line: register only available for administrator [KrabsJ]
         //[AllowAnonymous]
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [CustomAuthorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -234,6 +235,7 @@ namespace BiberDAMM.Controllers
                     // section deleted: the register-method is only available for the administrator, there is no need to login the new user
                     // await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
+                    //based on the usertype the new user will get a role to give specific access to functionalities [KrabsJ]
                     switch (user.UserType)
                     {
                         case UserType.Reinigungskraft:
