@@ -162,7 +162,9 @@ namespace BiberDAMM.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        // changed line: register only available for administrator [KrabsJ]
+        //[AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Register()
         {
             return View();
@@ -170,9 +172,10 @@ namespace BiberDAMM.Controllers
 
         //
         // POST: /Account/Register
-        // TODO [KrabsJ] change access to Admin only
+        // changed line: register only available for administrator [KrabsJ]
+        //[AllowAnonymous]
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
