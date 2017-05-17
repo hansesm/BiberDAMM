@@ -18,18 +18,18 @@ namespace BiberDAMM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: HealthInsurances
+       
         public ActionResult Index()
         {
-            return View(db.HealthInsurances.ToList());
+            return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
         }
 
-        // GET: HealthInsurances/Details/5
+   
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
@@ -39,15 +39,12 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        // GET: HealthInsurances/Create
+        
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: HealthInsurances/Create
-        // Aktivieren Sie zum Schutz vor übermäßigem Senden von Angriffen die spezifischen Eigenschaften, mit denen eine Bindung erfolgen soll. Weitere Informationen 
-        // finden Sie unter https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
@@ -62,12 +59,12 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        // GET: HealthInsurances/Edit/5
+       
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
@@ -77,9 +74,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        // POST: HealthInsurances/Edit/5
-        // Aktivieren Sie zum Schutz vor übermäßigem Senden von Angriffen die spezifischen Eigenschaften, mit denen eine Bindung erfolgen soll. Weitere Informationen 
-        // finden Sie unter https://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
@@ -93,12 +88,12 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        // GET: HealthInsurances/Delete/5
+      
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
@@ -108,7 +103,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        // POST: HealthInsurances/Delete/5
+      
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

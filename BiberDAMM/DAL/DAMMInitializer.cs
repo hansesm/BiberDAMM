@@ -71,6 +71,26 @@ namespace BiberDAMM.DAL
 
             _context.SaveChanges();
 
+            healthInsurance = new HealthInsurance
+            {
+                Name = "Robin's unschlagbare Turboversicherung",
+                Type = InsuranceType.privat
+            };
+
+            _context.HealthInsurances.Add(healthInsurance);
+
+            _context.SaveChanges();
+
+            healthInsurance = new HealthInsurance
+            {
+                Name = "AAA Krankenkasse",
+                Type = InsuranceType.privat
+            };
+
+            _context.HealthInsurances.Add(healthInsurance);
+
+            _context.SaveChanges();
+
 
             var client = new Client
             {
