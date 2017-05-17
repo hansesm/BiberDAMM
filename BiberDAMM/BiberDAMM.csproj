@@ -301,6 +301,8 @@
     <Content Include="Views\HealthInsurance\Details.cshtml" />
     <Content Include="Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Views\HealthInsurance\Index.cshtml" />
+    <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Room\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -310,7 +312,6 @@
     <Folder Include="Views\ContactData\" />
     <Folder Include="Views\ContactType\" />
     <Folder Include="Views\RoomType\" />
-    <Folder Include="Views\Room\" />
     <Folder Include="Views\Stay\" />
     <Folder Include="Views\TreatmentType\" />
     <Folder Include="Views\Treatment\" />

@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
+using BiberDAMM.DAL;
 using BiberDAMM.Models;
+
 namespace BiberDAMM.Controllers
 {
-    public class RoomController : Controller
-    {
+    public class RoomController : Controller     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         // GET all: Room [JEL] [ANNAS]
         public ActionResult Index()
         {
-            return View();
+            return View(db.Rooms.ToList());
         }
         //CREATE: Room [JEL] [ANNAS]
+        public ActionResult Create([Bind(Include = "Id,Name,Type")] Room Room)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Rooms.Add(Room);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(Room);
+        }
         public ActionResult New()
         {
             return View();
