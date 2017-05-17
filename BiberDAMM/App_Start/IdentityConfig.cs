@@ -133,4 +133,17 @@ namespace BiberDAMM
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }
     }
+
+    // creating a custom ApplicationRoleManager to be able to use the CustomRoleStore for managing roles [KrabsJ]
+    public class ApplicationRoleManager : RoleManager<CustomRole, int>
+    {
+        public ApplicationRoleManager(IRoleStore<CustomRole, int> roleStore) : base(roleStore)
+        {
+        }
+
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        {
+            return new ApplicationRoleManager(new RoleStore<CustomRole, int, CustomUserRole>(context.Get<ApplicationDbContext>()));
+        }
+    }
 }

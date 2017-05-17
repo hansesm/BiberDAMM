@@ -12,8 +12,48 @@ namespace BiberDAMM.DAL
     {
         protected override void Seed(ApplicationDbContext _context)
         {
-            var store = new CustomUserStore(_context);
-            var manager = new ApplicationUserManager(store);
+            // create userStore and user userManager for seeding default users [KrabsJ]
+            var userStore = new CustomUserStore(_context);
+            var userManager = new ApplicationUserManager(userStore);
+
+            // create roleStore and roleManager for seeding default roles [KrabsJ]
+            var roleStore = new CustomRoleStore(_context);
+            var roleManager = new ApplicationRoleManager(roleStore);
+
+            // create all roles for application and seed them into the database [KrabsJ]
+
+            // role Administrator
+            var roleAdmin = new CustomRole { Name = "Administrator" };
+            CustomRole dbrole = roleManager.FindByName(roleAdmin.Name);
+            if(dbrole == null)
+            {
+                roleManager.Create(roleAdmin);
+            }
+
+            // role Pflegekraft
+            var roleNurse = new CustomRole { Name = "Pflegekraft" };
+            dbrole = roleManager.FindByName(roleNurse.Name);
+            if(dbrole == null)
+            {
+                roleManager.Create(roleNurse);
+            }
+
+            // role Arzt
+            var roleDoctor = new CustomRole { Name = "Arzt" };
+            dbrole = roleManager.FindByName(roleDoctor.Name);
+            if (dbrole == null)
+            {
+                roleManager.Create(roleDoctor);
+            }
+
+            // role Reinigungskraft
+            var roleCleaner = new CustomRole { Name = "Reinigungskraft" };
+            dbrole = roleManager.FindByName(roleCleaner.Name);
+            if (dbrole == null)
+            {
+                roleManager.Create(roleCleaner);
+            }
+
             var user = new ApplicationUser
             {
                 UserName = "LustigP",
@@ -24,7 +64,9 @@ namespace BiberDAMM.DAL
                 Active = true
             };
 
-            manager.Create(user, "BiberDamm!");
+            // create user and add the role Administator
+            userManager.Create(user, "BiberDamm!");
+            userManager.AddToRole(user.Id, "Administrator");
 
 
 
