@@ -11,7 +11,15 @@
 <h2>Versicherungsübersicht</h2>
 
 <p>
-    @Html.ActionLink("Neue Versicherung anlegen", "Create")
+
+    @using (Html.BeginForm())
+    {
+    <p>
+        @Html.TextBox("SearchString") 
+        <input type="submit" value="Filtern" />
+    </p>
+    }
+    
 </p>
 <table class="table">
     <tr>

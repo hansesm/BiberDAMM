@@ -19,12 +19,26 @@ namespace BiberDAMM.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
        
-        public ActionResult Index()
+    //    public ActionResult Index()
+    //    {
+    //        return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
+     //   }
+
+
+        public ActionResult Index(string searchString)
         {
-            return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
+            var healthInsurances = from m in db.HealthInsurances
+                                   select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString));
+            }
+
+            return View(healthInsurances.OrderBy(o => o.Name));
         }
 
-   
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -123,5 +137,8 @@ namespace BiberDAMM.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+
     }
 }
