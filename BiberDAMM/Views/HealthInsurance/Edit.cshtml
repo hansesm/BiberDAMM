@@ -1,5 +1,7 @@
 ﻿@* AUTHOR     : ChristesR *@
 
+@* Klasse für die Bearbeitung von Krankenkassen *@
+
 @model BiberDAMM.Models.HealthInsurance
 
 @{
@@ -11,6 +13,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.HiddenFor(m => m.Id)
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
