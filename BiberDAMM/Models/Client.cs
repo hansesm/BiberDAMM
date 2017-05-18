@@ -47,6 +47,7 @@ namespace BiberDAMM.Models
 
         public DateTime LastUpdated { get; set; }
 
+        //TODO [HansesM, ChristesR, KrabsJ] check if there is a possibility to set rowVersion automatically by database
         public int RowVersion { get; set; }
 
         [Display(Name = "Versicherung")]
