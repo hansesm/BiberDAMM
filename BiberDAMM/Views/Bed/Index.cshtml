@@ -1,0 +1,40 @@
+﻿@*
+    // Overview page for beds
+    // Author: Jean-PierreK
+*@
+
+@model IEnumerable<BiberDAMM.Models.Bed>
+
+@{
+    ViewBag.Title = "Bettenuebersicht";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Bettenübersicht</h2>
+
+<p>
+    @Html.ActionLink("Bett hinzufügen", "Create", "Bed")
+</p>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Id)</th>
+        <th>@Html.DisplayNameFor(model => model.Model)</th>
+        <th>@Html.DisplayNameFor(model => model.RoomId)</th>
+        <th>Status</th>
+        <th>Aktionen</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>@Html.DisplayFor(modeliten => item.Id)</th>
+            <th>@Html.DisplayFor(modelItem => item.Model)</th>
+            <th>@Html.DisplayFor(modelItem => item.RoomId)</th>
+            <th></th>
+            <th>
+                <button onclick="location.href='@Url.Action("Details", new { id=item.Id })';return false;" class="btn btn-default">Details</button>
+                <button onclick="location.href='@Url.Action("Edit", new { id=item.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+            </th>
+        </tr>
+    }
+</table>

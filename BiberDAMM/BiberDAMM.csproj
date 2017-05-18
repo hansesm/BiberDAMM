@@ -743,10 +743,13 @@
     <Content Include="Views\Room\Create.cshtml" />
     <Content Include="Views\AccessDenied\Index.cshtml" />
     <Content Include="Views\Room\Delete.cshtml" />
+    <Content Include="Views\Bed\Index.cshtml" />
+    <Content Include="Views\Bed\Details.cshtml" />
+    <Content Include="Views\Bed\Edit.cshtml" />
+    <Content Include="Views\Bed\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Bed\" />
     <Folder Include="Views\Blocks\" />
     <Folder Include="Views\Client\" />
     <Folder Include="Views\ContactData\" />

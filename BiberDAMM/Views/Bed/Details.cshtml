@@ -1,0 +1,48 @@
+﻿@*
+    // Page showing details for selected bed
+    // Author: Jean-PierreK
+*@
+
+
+@model BiberDAMM.Models.Bed
+@{
+    ViewBag.Title = "Detailansicht";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Detailansicht für Bett @Html.DisplayFor(model => model.Id)</h3>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Befindet sich im Raum:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RoomId)
+        </dd>
+        <dt>
+            Belegt von Patient:
+        </dt>
+        <dd>
+            //---PLACEHOLDER---//
+        </dd>
+        <dt>
+            Bett Id:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            Modellbezeichnung:
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Zurück zur Übersicht", "Index") | @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id })
+</p>
