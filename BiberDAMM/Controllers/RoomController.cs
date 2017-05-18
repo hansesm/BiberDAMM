@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using System.Data.Entity;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 
@@ -58,9 +59,31 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
         //CHANGE: Room [JEL] [ANNAS]
-        public ActionResult Edit()
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Room room = db.Rooms.Find(id);
+            if (room == null)
+            {
+                return HttpNotFound();
+            }
+            return View(room);
+           
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,RoomNumber,RoomTypeId")] Room room)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(room).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(room);
         }
         //GET SINGLE: Room [JEL] [ANNAS]
         public ActionResult Detail()

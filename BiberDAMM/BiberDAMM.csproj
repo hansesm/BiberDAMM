@@ -747,6 +747,7 @@
     <Content Include="Views\Bed\Details.cshtml" />
     <Content Include="Views\Bed\Edit.cshtml" />
     <Content Include="Views\Bed\Create.cshtml" />
+    <Content Include="Views\Room\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
