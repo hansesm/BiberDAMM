@@ -6,7 +6,9 @@ using BiberDAMM.Models;
 namespace BiberDAMM.Controllers
 {
     public class RoomController : Controller     {
+
         private ApplicationDbContext db = new ApplicationDbContext();
+
         // GET all: Room [JEL] [ANNAS]
         public ActionResult Index()
         {
@@ -32,9 +34,28 @@ namespace BiberDAMM.Controllers
         {
             return View();
         }
-        public ActionResult Delete()
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            Room room = db.Rooms.Find(id);
+            if (room == null)
+            {
+                return HttpNotFound();
+            }
+            return View(room);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Room room = db.Rooms.Find(id);
+            db.Rooms.Remove(room);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
         //CHANGE: Room [JEL] [ANNAS]
         public ActionResult Edit()

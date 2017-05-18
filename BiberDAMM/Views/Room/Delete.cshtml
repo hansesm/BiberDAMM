@@ -1,7 +1,46 @@
-﻿
+﻿@* AUTHOR     : [JEL] *@
+
+@* class to delete rooms *@
+
+@model BiberDAMM.Models.Room
+
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Raum löschen";
 }
 
-<h2>Delete</h2>
+<h2>Raum löschen</h2>
 
+<h3>Sind Sie sicher, dass sie dies tun möchten?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomType.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomType.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Löschen" class="btn btn-default" />
+            <br />
+            @Html.ActionLink("Zurück zur Übersicht", "Index")
+        </div>
+    }
+</div>
