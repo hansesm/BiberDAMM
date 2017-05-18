@@ -5,6 +5,7 @@
 * Copyright (c) 2017 creativeLabs Łukasz Holeczek
 * license MIT
 -->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -19,10 +20,12 @@
     <title>DAMM - Daily Assistant in Medical Management</title>
 
     <!-- Icons - Fontawesome [HansesM] -->
-    <link href="~/Content/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
+    <!-- <link href="~/Content/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet"> -->
     <!-- Main styles for this application [HansesM]-->
-    <link href="~/Content/css/style.css" rel="stylesheet">
+    <!--<link href="~/Content/css/style.css" rel="stylesheet"> -->
+
+    @Styles.Render("~/Content/css")
+
 
 </head>
 <!-- BODY options, add following classes to body to change options
@@ -110,16 +113,21 @@
             Powered by <a href="http://coreui.io">CoreUI</a>
         </span>
     </footer>
+
     <!-- Bootstrap and necessary plugins -->
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Content/tether/dist/js/tether.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 
     <!--<script src="~/Content/pace/pace.min.js"></script> -->
+    
+
+
     <!-- GenesisUI main scripts -->
     <script src="~/Content/js/app.js"></script>
 
     <!-- Plugins and scripts required by this views -->
     @RenderSection("scripts", false)
+    @RenderSection("styles", false)
 </body>
 </html>

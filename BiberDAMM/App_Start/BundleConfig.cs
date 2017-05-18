@@ -24,8 +24,8 @@ namespace BiberDAMM
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap-yeti.css",
-                      "~/Content/site.css"));
+                      "~/Content/css/style.css",
+                      "~/Content/fonts/font-awesome/css/font-awesome.min.css"));
         }
     }
 }
