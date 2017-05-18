@@ -13,7 +13,9 @@ namespace BiberDAMM.Controllers
             return View(db.Rooms.ToList());
         }
         //CREATE: Room [JEL] [ANNAS]
-        public ActionResult Create([Bind(Include = "Id,Name,Type")] Room Room)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Room Room)
         {
             if (ModelState.IsValid)
             {
@@ -21,9 +23,16 @@ namespace BiberDAMM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(Room);
+            else
+            {
+                return View(Room);
+            }
         }
-        public ActionResult New()
+        public ActionResult Create()
+        {
+            return View();
+        }
+        public ActionResult Delete()
         {
             return View();
         }
