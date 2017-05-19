@@ -92,7 +92,8 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
+        //public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
+        public ActionResult Edit(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
             {
