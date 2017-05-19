@@ -18,11 +18,11 @@ namespace BiberDAMM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-       
-    //    public ActionResult Index()
-    //    {
-    //        return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
-     //   }
+
+        //    public ActionResult Index()
+        //    {
+        //        return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
+        //   }
 
 
         public ActionResult Index(string searchString)
@@ -32,7 +32,7 @@ namespace BiberDAMM.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString));
+                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString) || s.Type.ToString().Contains(searchString));
             }
 
             return View(healthInsurances.OrderBy(o => o.Name));
@@ -53,7 +53,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        
+
         public ActionResult Create()
         {
             return View();
@@ -74,7 +74,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-       
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -89,7 +89,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
@@ -103,7 +103,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-      
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -118,7 +118,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-      
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
