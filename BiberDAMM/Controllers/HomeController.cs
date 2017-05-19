@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using BiberDAMM.Security;
 using BiberDAMM.Helpers;
-using BiberDAMM.Models;
 
 namespace BiberDAMM.Controllers
 {
@@ -17,15 +16,15 @@ namespace BiberDAMM.Controllers
         {
             switch (User.Identity.GetUserType())
             {
-                case "Administrator":
+                case ConstVariables.RoleAdministrator:
                     return View("IndexAdmin");
-                case "Arzt":
+                case ConstVariables.RoleDoctor:
                     return View("IndexDoctor");
-                case "Pflegekraft":
+                case ConstVariables.RoleNurse:
                     return View("IndexNursingStaff");
-                case "Reinigungskraft":
+                case ConstVariables.RoleCleaner:
                     return View("IndexCleaner");
-                case "Therapeut":
+                case ConstVariables.RoleTherapist:
                     return View("IndexTherapist");
                 default:
                     return RedirectToAction("Login", "Account");

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BiberDAMM.Models;
 using BiberDAMM.Security;
+using BiberDAMM.Helpers;
 
 namespace BiberDAMM.Controllers
 {
@@ -162,7 +163,7 @@ namespace BiberDAMM.Controllers
         // GET: /Account/Register
         // changed line: register only available for administrator [KrabsJ]
         //[AllowAnonymous]
-        [CustomAuthorize(Roles = "Administrator")]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Register()
         {
             return View();
@@ -173,7 +174,7 @@ namespace BiberDAMM.Controllers
         // changed line: register only available for administrator [KrabsJ]
         //[AllowAnonymous]
         [HttpPost]
-        [CustomAuthorize(Roles = "Administrator")]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -238,19 +239,19 @@ namespace BiberDAMM.Controllers
                     switch (user.UserType)
                     {
                         case UserType.Reinigungskraft:
-                            UserManager.AddToRole(user.Id, "Reinigungskraft");
+                            UserManager.AddToRole(user.Id, ConstVariables.RoleCleaner);
                             break;
                         case UserType.Pflegekraft:
-                            UserManager.AddToRole(user.Id, "Pflegekraft");
+                            UserManager.AddToRole(user.Id, ConstVariables.RoleNurse);
                             break;
                         case UserType.Arzt:
-                            UserManager.AddToRole(user.Id, "Arzt");
+                            UserManager.AddToRole(user.Id, ConstVariables.RoleDoctor);
                             break;
                         case UserType.Administrator:
-                            UserManager.AddToRole(user.Id, "Administrator");
+                            UserManager.AddToRole(user.Id, ConstVariables.RoleAdministrator);
                             break;
                         case UserType.Therapeut:
-                            UserManager.AddToRole(user.Id, "Therapeut");
+                            UserManager.AddToRole(user.Id, ConstVariables.RoleTherapist);
                             break;
                         default:
                             //TODO [KrabsJ] throw custom exception

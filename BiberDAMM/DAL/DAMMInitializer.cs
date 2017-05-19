@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Configuration;
 using BiberDAMM.Models;
 using Microsoft.AspNet.Identity;
+using BiberDAMM.Helpers;
 
 namespace BiberDAMM.DAL
 {
@@ -23,7 +24,7 @@ namespace BiberDAMM.DAL
             // create all roles for application and seed them into the database if they not exist [KrabsJ]
 
             // role Administrator
-            var roleAdmin = new CustomRole { Name = "Administrator" };
+            var roleAdmin = new CustomRole { Name =  ConstVariables.RoleAdministrator};
             CustomRole dbrole = roleManager.FindByName(roleAdmin.Name);
             if(dbrole == null)
             {
@@ -31,7 +32,7 @@ namespace BiberDAMM.DAL
             }
 
             // role Pflegekraft
-            var roleNurse = new CustomRole { Name = "Pflegekraft" };
+            var roleNurse = new CustomRole { Name = ConstVariables.RoleNurse };
             dbrole = roleManager.FindByName(roleNurse.Name);
             if(dbrole == null)
             {
@@ -39,7 +40,7 @@ namespace BiberDAMM.DAL
             }
 
             // role Arzt
-            var roleDoctor = new CustomRole { Name = "Arzt" };
+            var roleDoctor = new CustomRole { Name = ConstVariables.RoleDoctor };
             dbrole = roleManager.FindByName(roleDoctor.Name);
             if (dbrole == null)
             {
@@ -47,7 +48,7 @@ namespace BiberDAMM.DAL
             }
 
             // role Reinigungskraft
-            var roleCleaner = new CustomRole { Name = "Reinigungskraft" };
+            var roleCleaner = new CustomRole { Name = ConstVariables.RoleCleaner };
             dbrole = roleManager.FindByName(roleCleaner.Name);
             if (dbrole == null)
             {
@@ -55,7 +56,7 @@ namespace BiberDAMM.DAL
             }
 
             // role Therapeut
-            var roleTherapist = new CustomRole { Name = "Therapeut" };
+            var roleTherapist = new CustomRole { Name = ConstVariables.RoleTherapist };
             dbrole = roleManager.FindByName(roleTherapist.Name);
             if (dbrole == null)
             {
@@ -66,7 +67,7 @@ namespace BiberDAMM.DAL
 
             // create user and add the role Administator
             userManager.Create(user1, "BiberDamm!");
-            userManager.AddToRole(user1.Id, "Administrator");
+            userManager.AddToRole(user1.Id, ConstVariables.RoleAdministrator);
 
             // up to this point the data will be stored in the database by default when the aplication is going productive
             // #############################################################################################################
@@ -76,42 +77,42 @@ namespace BiberDAMM.DAL
             // creating three testusers of type "Arzt"
             var user2 = new ApplicationUser { UserName = "BeckerF", Email = "Franz@gmx.de", Surname = "Franz", Lastname = "Becker", UserType = UserType.Arzt, Active = true, PhoneNumber = "5236984" };
             userManager.Create(user2, "BiberDamm!");
-            userManager.AddToRole(user2.Id, "Arzt");
+            userManager.AddToRole(user2.Id, ConstVariables.RoleDoctor);
 
             var user3 = new ApplicationUser { UserName = "MuellerA", Email = "Anna@gmx.de", Surname = "Anna", Lastname = "Mueller", UserType = UserType.Arzt, Active = true, PhoneNumber = "1452398" };
             userManager.Create(user3, "BiberDamm!");
-            userManager.AddToRole(user3.Id, "Arzt");
+            userManager.AddToRole(user3.Id, ConstVariables.RoleDoctor);
 
             var user4 = new ApplicationUser { UserName = "MustermannO", Email = "Otto@gmx.de", Surname = "Otto", Lastname = "Mustermann", UserType = UserType.Arzt, Active = false, PhoneNumber = "6354720" };
             userManager.Create(user4, "BiberDamm!");
-            userManager.AddToRole(user4.Id, "Arzt");
+            userManager.AddToRole(user4.Id, ConstVariables.RoleDoctor);
 
             //creating three testusers of type "Pflegekraft"
             var user5 = new ApplicationUser { UserName = "ReisM", Email = "Michael@gmx.de", Surname = "Michael", Lastname = "Reis", UserType = UserType.Pflegekraft, Active = true, PhoneNumber = "6985324" };
             userManager.Create(user5, "BiberDamm!");
-            userManager.AddToRole(user5.Id, "Pflegekraft");
+            userManager.AddToRole(user5.Id, ConstVariables.RoleNurse);
 
             var user6 = new ApplicationUser { UserName = "FleischerK", Email = "Katharina@gmx.de", Surname = "Katharina", Lastname = "Fleischer", UserType = UserType.Pflegekraft, Active = true, PhoneNumber = "1153369" };
             userManager.Create(user6, "BiberDamm!");
-            userManager.AddToRole(user6.Id, "Pflegekraft");
+            userManager.AddToRole(user6.Id, ConstVariables.RoleNurse);
 
             var user7 = new ApplicationUser { UserName = "WeissS", Email = "Sandra@gmx.de", Surname = "Sandra", Lastname = "Weiss", UserType = UserType.Pflegekraft, Active = false, PhoneNumber = "9968534" };
             userManager.Create(user7, "BiberDamm!");
-            userManager.AddToRole(user7.Id, "Pflegekraft");
+            userManager.AddToRole(user7.Id, ConstVariables.RoleNurse);
 
             //creating two testuser of type "Reinigungskraft"
             var user8 = new ApplicationUser { UserName = "WolfM", Email = "Marko@gmx.de", Surname = "Marko", Lastname = "Wolf", UserType = UserType.Reinigungskraft, Active = true, PhoneNumber = "6653842" };
             userManager.Create(user8, "BiberDamm!");
-            userManager.AddToRole(user8.Id, "Reinigungskraft");
+            userManager.AddToRole(user8.Id, ConstVariables.RoleCleaner);
 
             var user9 = new ApplicationUser { UserName = "JaegerT", Email = "Tobias@gmx.de", Surname = "Tobias", Lastname = "Jaeger", UserType = UserType.Reinigungskraft, Active = false, PhoneNumber = "8853364" };
             userManager.Create(user9, "BiberDamm!");
-            userManager.AddToRole(user9.Id, "Reinigungskraft");
+            userManager.AddToRole(user9.Id, ConstVariables.RoleCleaner);
 
             //creating one testuder of type "Therapeut"
             var user10 = new ApplicationUser { UserName = "FriedrichH", Email = "Hans@gmx.de", Surname = "Hans", Lastname = "Friedrich", UserType = UserType.Therapeut, Active = true, PhoneNumber = "5586694" };
             userManager.Create(user10, "BiberDamm!");
-            userManager.AddToRole(user10.Id, "Therapeut");
+            userManager.AddToRole(user10.Id, ConstVariables.RoleTherapist);
 
             // creating roomtypes
             var roomTypes = new List<RoomType>
