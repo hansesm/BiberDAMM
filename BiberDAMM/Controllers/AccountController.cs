@@ -97,7 +97,6 @@ namespace BiberDAMM.Controllers
                     }
                     else
                     {
-                        // TODO [KrabsJ] adress the different homeviews depending on users role after login
                         return RedirectToAction("Index", "Home");
                     };
                 case SignInStatus.LockedOut:
@@ -249,6 +248,9 @@ namespace BiberDAMM.Controllers
                             break;
                         case UserType.Administrator:
                             UserManager.AddToRole(user.Id, "Administrator");
+                            break;
+                        case UserType.Therapeut:
+                            UserManager.AddToRole(user.Id, "Therapeut");
                             break;
                         default:
                             //TODO [KrabsJ] throw custom exception

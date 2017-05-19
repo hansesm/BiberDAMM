@@ -54,6 +54,14 @@ namespace BiberDAMM.DAL
                 roleManager.Create(roleCleaner);
             }
 
+            // role Therapeut
+            var roleTherapist = new CustomRole { Name = "Therapeut" };
+            dbrole = roleManager.FindByName(roleTherapist.Name);
+            if (dbrole == null)
+            {
+                roleManager.Create(roleTherapist);
+            }
+
             var user1 = new ApplicationUser{UserName = "LustigP", Email = "peter@gmx.de", Surname = "Peter", Lastname = "Lustig", UserType = UserType.Administrator, Active = true, PhoneNumber = "12345670"};
 
             // create user and add the role Administator
@@ -99,6 +107,11 @@ namespace BiberDAMM.DAL
             var user9 = new ApplicationUser { UserName = "JaegerT", Email = "Tobias@gmx.de", Surname = "Tobias", Lastname = "Jaeger", UserType = UserType.Reinigungskraft, Active = false, PhoneNumber = "8853364" };
             userManager.Create(user9, "BiberDamm!");
             userManager.AddToRole(user9.Id, "Reinigungskraft");
+
+            //creating one testuder of type "Therapeut"
+            var user10 = new ApplicationUser { UserName = "FriedrichH", Email = "Hans@gmx.de", Surname = "Hans", Lastname = "Friedrich", UserType = UserType.Therapeut, Active = true, PhoneNumber = "5586694" };
+            userManager.Create(user10, "BiberDamm!");
+            userManager.AddToRole(user10.Id, "Therapeut");
 
             // creating roomtypes
             var roomTypes = new List<RoomType>
@@ -230,8 +243,8 @@ namespace BiberDAMM.DAL
                 new Treatment{Begin=DateTime.Parse("01.02.2016 10:00"), End=DateTime.Parse("01.02.2016 11:00"), StayId=1, RoomId=6, Description="Vorsorgeuntersuchung", TreatmentTypeId=1, ApplicationUsers=new List<ApplicationUser>{user2}},
                 new Treatment{Begin=DateTime.Parse("02.02.2016 08:00"), End=DateTime.Parse("02.02.2016 10:00"), StayId=1, RoomId=2, Description="Nasenbeinoperation", TreatmentTypeId=2, ApplicationUsers=new List<ApplicationUser>{user2, user5, user6} },
                 new Treatment{Begin=DateTime.Parse("01.07.2016 15:00"), End=DateTime.Parse("01.07.2016 16:00"), StayId=2, RoomId=5, Description="Untersuchung der Beschwerden", TreatmentTypeId=1, ApplicationUsers=new List<ApplicationUser>{user3} },
-                new Treatment{Begin=DateTime.Parse("03.07.2016 15:00"), End=DateTime.Parse("03.07.2016 16:00"), StayId=2, RoomId=5, Description="Physiotherapie rechtes Handgelenk", TreatmentTypeId=3, ApplicationUsers=new List<ApplicationUser>{user2} },
-                new Treatment{Begin=DateTime.Parse("08.07.2016 11:00"), End=DateTime.Parse("08.07.2016 12:00"), StayId=2, RoomId=5, Description="Physiotherapie rechtes Handgelenk", TreatmentTypeId=3, ApplicationUsers=new List<ApplicationUser>{user2} },
+                new Treatment{Begin=DateTime.Parse("03.07.2016 15:00"), End=DateTime.Parse("03.07.2016 16:00"), StayId=2, RoomId=5, Description="Physiotherapie rechtes Handgelenk", TreatmentTypeId=3, ApplicationUsers=new List<ApplicationUser>{user10} },
+                new Treatment{Begin=DateTime.Parse("08.07.2016 11:00"), End=DateTime.Parse("08.07.2016 12:00"), StayId=2, RoomId=5, Description="Physiotherapie rechtes Handgelenk", TreatmentTypeId=3, ApplicationUsers=new List<ApplicationUser>{user10} },
                 new Treatment{Begin=DateTime.Today.Date.AddHours(13), End=DateTime.Today.Date.AddHours(14), StayId=3, RoomId=6, Description="Aufnahmeuntersuchung", TreatmentTypeId=1, ApplicationUsers=new List<ApplicationUser>{user4} },
                 new Treatment{Begin=DateTime.Today.Date.AddHours(10), End=DateTime.Today.Date.AddHours(11), StayId=4, RoomId=7, Description="Aufnahmeuntersuchung", TreatmentTypeId=1, ApplicationUsers=new List<ApplicationUser>{user2} },
                 new Treatment{Begin=DateTime.Today.Date.AddDays(1).AddHours(8), End=DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(5), StayId=4, RoomId=8, Description="Calciumkanalblocker verabreichen", TreatmentTypeId=4, ApplicationUsers=new List<ApplicationUser>{user7} },

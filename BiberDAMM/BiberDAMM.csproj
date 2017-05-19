@@ -752,6 +752,7 @@
     <Content Include="Views\Home\IndexDoctor.cshtml" />
     <Content Include="Views\Home\IndexNursingStaff.cshtml" />
     <Content Include="Views\Home\IndexCleaner.cshtml" />
+    <Content Include="Views\Home\IndexTherapist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -25,6 +25,8 @@ namespace BiberDAMM.Controllers
                     return View("IndexNursingStaff");
                 case "Reinigungskraft":
                     return View("IndexCleaner");
+                case "Therapeut":
+                    return View("IndexTherapist");
                 default:
                     return RedirectToAction("Login", "Account");
             }
@@ -32,6 +34,7 @@ namespace BiberDAMM.Controllers
 
         public ActionResult About()
         {
+            // TODO [KrabsJ] decide what to show on this page
             ViewBag.Message = "Your application description page.";
 
             return View();
@@ -39,6 +42,7 @@ namespace BiberDAMM.Controllers
 
         public ActionResult Contact()
         {
+            // TODO [KrabsJ] decide what to show on this page
             ViewBag.Message = "Your contact page.";
 
             return View();
