@@ -208,6 +208,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\IdentityExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
@@ -712,7 +713,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\IndexAdmin.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -748,6 +749,9 @@
     <Content Include="Views\Bed\Edit.cshtml" />
     <Content Include="Views\Bed\Create.cshtml" />
     <Content Include="Views\Room\Edit.cshtml" />
+    <Content Include="Views\Home\IndexDoctor.cshtml" />
+    <Content Include="Views\Home\IndexNursingStaff.cshtml" />
+    <Content Include="Views\Home\IndexCleaner.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -43,6 +43,8 @@ namespace BiberDAMM.Models
             // Beachten Sie, dass der "authenticationType" mit dem in "CookieAuthenticationOptions.AuthenticationType" definierten Typ übereinstimmen muss.
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Benutzerdefinierte Benutzeransprüche hier hinzufügen
+            // custom claim for getting the usertype of the logged in user [KrabsJ]
+            userIdentity.AddClaim(new Claim("UserType", UserType.ToString()));
             return userIdentity;
         }
     }
