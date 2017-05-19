@@ -14,8 +14,11 @@
 
 <p>
     @Html.ActionLink("Bett hinzufügen", "Create", "Bed")
+    @using (Html.BeginForm())
+    {
+        @Html.TextBox("SearchString")<input type="submit" value="Filtern" />
+    }
 </p>
-
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model.Id)</th>

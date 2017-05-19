@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using BiberDAMM.Models;
 using BiberDAMM.DAL;
 using System.Data.Entity;
+using System;
 
 namespace BiberDAMM.Controllers
 {
@@ -16,18 +17,31 @@ namespace BiberDAMM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         //GET /Bed/
-        public ActionResult Index()
+        /*public ActionResult Index()
         {
             return View(db.Beds.ToList());
         }
+        */
+        public ActionResult Index(string searchString)
+        {
+            var beds = from m in db.Beds
+                       select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                beds = beds.Where(s => s.Model.Contains(searchString));
+            }
+
+            return View(beds.OrderBy(o => o.Id));
+        }
         //GET /Bed/Create to add a bed 
-        public ActionResult New()
+        public ActionResult Create()
         {
             return View();
         }
-        // Validation token currently causing error, therefor commented out for now
-        //[HttpPost]                        
-        //[ValidateAntiForgeryToken]        
+
+        [HttpPost]                        
+        [ValidateAntiForgeryToken]        
         public ActionResult Create([Bind(Include = "Id,Model,RoomId")] Bed bed)
         {
             if (ModelState.IsValid)
@@ -80,11 +94,6 @@ namespace BiberDAMM.Controllers
                 return HttpNotFound();
             }
             return View(bed);
-        }
-        //SAVE: Bed [JEL] [ANNAS]
-        public ActionResult Save()
-        {
-            return View();
         }
     }
 }
