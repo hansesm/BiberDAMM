@@ -8,12 +8,14 @@ using System.Web;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
     // ===============================
     // AUTHOR     : ChristesR
     // ===============================
+    [CustomAuthorize]
     public class HealthInsuranceController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
