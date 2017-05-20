@@ -737,7 +737,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\HealthInsurance\Create.cshtml" />
-    <Content Include="Views\HealthInsurance\Delete.cshtml" />
     <Content Include="Views\HealthInsurance\Details.cshtml" />
     <Content Include="Views\HealthInsurance\Edit.cshtml" />
     <Content Include="Views\HealthInsurance\Index.cshtml" />

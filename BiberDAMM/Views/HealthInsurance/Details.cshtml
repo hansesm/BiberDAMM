@@ -32,6 +32,31 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Zurück zur Übersicht", "Index")
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="form-actions no-color">
+
+            <button onclick="location.href='@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
+            
+
+            @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind *@
+            @if (Model.Client.Count == 0)
+            {
+
+                <input type="submit" value="Löschen" class="btn btn-default" />
+            }
+            else
+            {
+                <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
+            }
+            <br/>
+            <br />
+            <button onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
+        </div>
+    }
 </p>

@@ -154,10 +154,10 @@ namespace BiberDAMM.DAL
             //creating healthInsurances
             var healthInsurances = new List<HealthInsurance>
             {
-                new HealthInsurance{Name="Viactiv Krankenkasse", Type=InsuranceType.gesetzlich},
-                new HealthInsurance{Name="Techniker Krankenkasse", Type=InsuranceType.gesetzlich},
-                new HealthInsurance{Name="Axa Krankenversicherung", Type=InsuranceType.privat},
-                new HealthInsurance{Name="Provinzial Krankenversicherung", Type=InsuranceType.privat},
+                new HealthInsurance{Name="Viactiv Krankenkasse", Type=InsuranceType.gesetzlich, Number="1"},
+                new HealthInsurance{Name="Techniker Krankenkasse", Type=InsuranceType.gesetzlich, Number="2"},
+                new HealthInsurance{Name="Axa Krankenversicherung", Type=InsuranceType.privat, Number="3"},
+                new HealthInsurance{Name="Provinzial Krankenversicherung", Type=InsuranceType.privat, Number="4"},
             };
             healthInsurances.ForEach(h => _context.HealthInsurances.Add(h));
             _context.SaveChanges();

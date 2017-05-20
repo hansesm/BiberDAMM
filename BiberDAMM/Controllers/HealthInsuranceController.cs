@@ -34,7 +34,7 @@ namespace BiberDAMM.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString) || s.Type.ToString().Contains(searchString));
+                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString) || s.Type.ToString().Contains(searchString) || s.Number.Contains(searchString));
             }
 
             return View(healthInsurances.OrderBy(o => o.Name));
@@ -106,23 +106,8 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction("Index");
-            }
-            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
-            if (healthInsurance == null)
-            {
-                return HttpNotFound();
-            }
-            return View(healthInsurance);
-        }
-
-
-        [HttpPost, ActionName("Delete")]
+        
+        [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
