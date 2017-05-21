@@ -11,12 +11,15 @@ using Microsoft.Owin.Security;
 using BiberDAMM.Models;
 using BiberDAMM.Security;
 using BiberDAMM.Helpers;
+using BiberDAMM.DAL;
+using System.Collections.Generic;
 
 namespace BiberDAMM.Controllers
 {
     [CustomAuthorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -52,6 +55,24 @@ namespace BiberDAMM.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        // TODO [KrabsJ] make search caseinsensitive --> wait until Michi and Leon checked if we use other searchfunctions
+        // if we need a custom caseinsensitive search follow this link: http://stackoverflow.com/questions/444798/case-insensitive-containsstring
+        // GET: /Account/Index
+        // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult Index(string searchString)
+        {
+            var ApplicationUsers = db.Users.ToList();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var filterResult = ApplicationUsers.Where(a => a.UserName.Contains(searchString) || a.Surname.Contains(searchString) || a.Lastname.Contains(searchString) || a.UserType.ToString().Contains(searchString));
+                return View(filterResult.OrderBy(a => a.UserName));
+            }
+
+            return View(ApplicationUsers.OrderBy(a => a.UserName));
         }
 
         //
@@ -264,8 +285,8 @@ namespace BiberDAMM.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
 
-                    // TODO [KrabsJ] where to go after creating a new User?
-                    return RedirectToAction("Index", "Home");
+                    // Redirect to list of all users [KrabsJ]
+                    return RedirectToAction("Index", "Account");
                 }
                 AddErrors(result);
             }
