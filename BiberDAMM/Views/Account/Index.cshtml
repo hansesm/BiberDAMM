@@ -6,7 +6,18 @@
 
 @{ViewBag.Title = "Nutzerübersicht";}
 
-<h2>Nutzerübersicht</h2>
+<h2>@ViewBag.Title</h2>
+
+<!--show alert "CreateUserSuccess" if a new user was was successfully registered-->
+@if (TempData["CreateUserSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Neuer Benutzer angelegt!</strong>@TempData["CreateUserSuccess"]
+    </div>
+}
 
 <p>
     @Html.ActionLink("Nutzer hinzufügen", "Register")
@@ -59,6 +70,7 @@
                 @Html.DisplayFor(modeItem => item.UserType)
             </td>
             <td>
+                <!--TODO [KrabsJ] place the buttons to the right views-->
                 <button onclick="location.href='@Url.Action("Edit", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                 <button onclick="location.href='@Url.Action("Details", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-info" aria-hidden="true"></i></button>
                 <button onclick="location.href='@Url.Action("Delete", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>

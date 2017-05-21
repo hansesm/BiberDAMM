@@ -57,7 +57,7 @@ namespace BiberDAMM.Controllers
             }
         }
 
-        // TODO [KrabsJ] make search caseinsensitive --> wait until Michi and Leon checked if we use other searchfunctions
+        // TODO [KrabsJ] make search caseinsensitive & maybe think about a better solution than always access the db --> wait until Michi and Leon checked if we use other searchfunctions
         // if we need a custom caseinsensitive search follow this link: http://stackoverflow.com/questions/444798/case-insensitive-containsstring
         // GET: /Account/Index
         // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
@@ -74,6 +74,10 @@ namespace BiberDAMM.Controllers
 
             return View(ApplicationUsers.OrderBy(a => a.UserName));
         }
+
+        // TODO [KrabsJ] add edit method and view
+        // TODO [KrabsJ] add details method and view
+        // TODO [KrabsJ] add delete method and view
 
         //
         // GET: /Account/Login
@@ -285,6 +289,9 @@ namespace BiberDAMM.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
 
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["CreateUserSuccess"] = " Benutzername: " + user.UserName;
+
                     // Redirect to list of all users [KrabsJ]
                     return RedirectToAction("Index", "Account");
                 }
@@ -292,6 +299,8 @@ namespace BiberDAMM.Controllers
             }
 
             // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
+            // failed-message for alert-statement [KrabsJ]
+            TempData["CreateUserFailed"] = " Bei der Registrierung ist ein Fehler aufgetreten";
             return View(model);
         }
 
@@ -544,6 +553,9 @@ namespace BiberDAMM.Controllers
                     _signInManager.Dispose();
                     _signInManager = null;
                 }
+
+                // dispose ApplicationDbContext instance [KrabsJ]
+                db.Dispose();
             }
 
             base.Dispose(disposing);
