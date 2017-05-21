@@ -75,6 +75,24 @@ namespace BiberDAMM.Controllers
             return View(ApplicationUsers.OrderBy(a => a.UserName));
         }
 
+        // GET: /Account/Details
+        // returns the details of a single ApplicationUser [KrabsJ]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult Details(int? userId)
+        {
+            if (userId == null)
+            {
+                return RedirectToAction("Index");
+            }
+            int id = userId ?? default(int);
+            ApplicationUser user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
         // TODO [KrabsJ] add edit method and view
         // TODO [KrabsJ] add details method and view
         // TODO [KrabsJ] add delete method and view

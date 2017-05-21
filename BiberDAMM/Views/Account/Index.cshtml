@@ -56,7 +56,8 @@
 
     @foreach (var item in Model)
     {
-        <tr>
+        <!--TODO [KrabsJ] make should change color on hovering-->
+        <tr onclick="location.href = '@(Url.Action("Details", "Account", new { userId = item.Id }))'">
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>

@@ -754,6 +754,7 @@
     <Content Include="Views\Home\IndexCleaner.cshtml" />
     <Content Include="Views\Home\IndexTherapist.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
