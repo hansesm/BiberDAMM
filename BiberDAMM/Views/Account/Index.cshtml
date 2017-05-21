@@ -4,7 +4,7 @@
 -->
 @model IEnumerable<BiberDAMM.Models.ApplicationUser>
 
-@{ViewBag.Title = "Nutzerübersicht";}
+@{ViewBag.Title = "Benutzerübersicht";}
 
 <h2>@ViewBag.Title</h2>
 
@@ -20,7 +20,7 @@
 }
 
 <p>
-    @Html.ActionLink("Nutzer hinzufügen", "Register")
+    @Html.ActionLink("Benutzer hinzufügen", "Register")
 </p>
 
 <p>
@@ -35,7 +35,7 @@
 
 </p>
 
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead class="thead-inverse">
         <tr>
             <th>
