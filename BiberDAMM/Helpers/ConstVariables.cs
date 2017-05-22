@@ -14,5 +14,7 @@ namespace BiberDAMM.Helpers
         public const string RoleNurse = "Pflegekraft";
         public const string RoleCleaner = "Reinigungskraft";
         public const string RoleTherapist = "Therapeut";
+
+        public const string AbortButton = "Abbrechen";
     }
 }
