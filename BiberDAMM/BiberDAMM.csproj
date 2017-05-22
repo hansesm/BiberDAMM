@@ -754,6 +754,10 @@
     <Content Include="Views\Home\IndexCleaner.cshtml" />
     <Content Include="Views\Home\IndexTherapist.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\ContactType\Create.cshtml" />
+    <Content Include="Views\ContactType\Details.cshtml" />
+    <Content Include="Views\ContactType\Edit.cshtml" />
+    <Content Include="Views\ContactType\Index.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
   </ItemGroup>
@@ -762,7 +766,6 @@
     <Folder Include="Views\Blocks\" />
     <Folder Include="Views\Client\" />
     <Folder Include="Views\ContactData\" />
-    <Folder Include="Views\ContactType\" />
     <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
     <Folder Include="Views\TreatmentType\" />
