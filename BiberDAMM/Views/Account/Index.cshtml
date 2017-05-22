@@ -1,0 +1,80 @@
+﻿<!--
+    The Account-Index View shows a table of all ApplicationUsers (or all ApplicationUser that match the searchString)
+    author: KrabsJ
+-->
+@model IEnumerable<BiberDAMM.Models.ApplicationUser>
+
+@{ViewBag.Title = "Benutzerübersicht";}
+
+<h2>@ViewBag.Title</h2>
+
+<!--show alert "CreateUserSuccess" if a new user was was successfully registered-->
+@if (TempData["CreateUserSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Neuer Benutzer angelegt!</strong>@TempData["CreateUserSuccess"]
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Benutzer hinzufügen", "Register")
+</p>
+
+<p>
+
+    @using (Html.BeginForm())
+    {
+    <p>
+        @Html.TextBox("SearchString")
+        <input type="submit" value="Suchen" />
+    </p>
+    }
+
+</p>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserType)
+            </th>
+            <th>Aktionen</th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+        <!--TODO [KrabsJ] make should change color on hovering-->
+        <tr onclick="location.href = '@(Url.Action("Details", "Account", new { userId = item.Id }))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.UserType)
+            </td>
+            <td>
+                <!--TODO [KrabsJ] place the buttons to the right views-->
+                <button onclick="location.href='@Url.Action("Delete", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    }
+</table>
+

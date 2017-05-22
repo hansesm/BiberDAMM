@@ -1,0 +1,41 @@
+﻿@*
+    // Overview page for contacttype
+    // Author: AnnaS
+*@
+
+@model IEnumerable<BiberDAMM.Models.ContactType>
+
+@{
+    ViewBag.Title = "Kontakttypeuebersicht";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Kontakttypübersicht</h2>
+
+<p>
+    @Html.ActionLink("Kontakttype hinzufügen", "Create", "ContactType")
+    @using (Html.BeginForm())
+    {
+        @Html.TextBox("SearchString")<input type="submit" value="Filtern" />
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Id)</th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>Status</th>
+        <th>Aktionen</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <th>@Html.DisplayFor(modeliten => item.Id)</th>
+            <th>@Html.DisplayFor(modelItem => item.Name)</th>
+            <th></th>
+            <th>
+                <button onclick="location.href='@Url.Action("Details", new { id=item.Name })';return false;" class="btn btn-default">Details</button>
+                <button onclick="location.href='@Url.Action("Edit", new { id=item.Name })';return false;" class="btn btn-default">Bearbeiten</button>
+            </th>
+        </tr>
+    }
+</table>
