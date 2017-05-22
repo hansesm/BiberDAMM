@@ -1,0 +1,64 @@
+﻿@model IEnumerable<BiberDAMM.Models.Client>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Patientenübersicht</h2>
+
+<p>
+
+    @using (Html.BeginForm())
+    {
+    <p>
+        @Html.TextBox("SearchString")
+        <input type="submit" value="Filtern" />
+    </p>
+    }
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Surname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Lastname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Birthdate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InsuranceNumber)
+        </th>
+        <th>Verfügbare Aktionen</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.Surname, "Details", new { id = item.Id })
+        </td>
+        <td>
+            @Html.ActionLink(item.Lastname, "Details", new { id = item.Id })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Birthdate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InsuranceNumber)
+        </td>
+        <td>
+            <button onclick="location.href='@Url.Action("Edit", new { id=item.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+        </td>
+    </tr>
+}
+
+</table>

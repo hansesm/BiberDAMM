@@ -753,12 +753,19 @@
     <Content Include="Views\Home\IndexNursingStaff.cshtml" />
     <Content Include="Views\Home\IndexCleaner.cshtml" />
     <Content Include="Views\Home\IndexTherapist.cshtml" />
+    <Content Include="Views\Client\Create.cshtml" />
+    <Content Include="Views\Client\Details.cshtml" />
+    <Content Include="Views\Client\Edit.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\ContactData\Create.cshtml" />
+    <Content Include="Views\ContactData\Delete.cshtml" />
+    <Content Include="Views\ContactData\Details.cshtml" />
+    <Content Include="Views\ContactData\Edit.cshtml" />
+    <Content Include="Views\ContactData\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Blocks\" />
-    <Folder Include="Views\Client\" />
-    <Folder Include="Views\ContactData\" />
     <Folder Include="Views\ContactType\" />
     <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
@@ -796,7 +803,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52291</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

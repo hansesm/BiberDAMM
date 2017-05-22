@@ -20,13 +20,7 @@ namespace BiberDAMM.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-
-        //    public ActionResult Index()
-        //    {
-        //        return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
-        //   }
-
-
+        //Generating Index Page
         public ActionResult Index(string searchString)
         {
             var healthInsurances = from m in db.HealthInsurances
@@ -40,7 +34,7 @@ namespace BiberDAMM.Controllers
             return View(healthInsurances.OrderBy(o => o.Name));
         }
 
-
+        //Generating Details Page
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -56,6 +50,8 @@ namespace BiberDAMM.Controllers
         }
 
 
+        //Getter and Setter for Creation-Page
+
         public ActionResult Create()
         {
             return View();
@@ -63,7 +59,6 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
         public ActionResult Create(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -77,6 +72,7 @@ namespace BiberDAMM.Controllers
         }
 
 
+        //Getter and Setter for Edit-Page
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -94,7 +90,6 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
         public ActionResult Edit(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -107,6 +102,7 @@ namespace BiberDAMM.Controllers
         }
 
         
+        //Function for deleting Datasets
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

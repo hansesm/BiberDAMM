@@ -43,11 +43,13 @@ namespace BiberDAMM.Models
         [Display(Name = "Kommentar")]
         public string Comment { get; set; }
 
+        [Display(Name = "Erfassung")]
         public DateTime Captured { get; set; }
 
+        [Display(Name = "Letzte Aktualisierung")]
         public DateTime LastUpdated { get; set; }
 
-        //TODO [HansesM, ChristesR, KrabsJ] check if there is a possibility to set rowVersion automatically by database
+        [Display(Name = "Datensatzversion")]
         public int RowVersion { get; set; }
 
         [Display(Name = "Versicherung")]
