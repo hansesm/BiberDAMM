@@ -30,6 +30,8 @@ namespace BiberDAMM.DAL
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
+        internal object ContactType;
+
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
