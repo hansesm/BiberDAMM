@@ -1,9 +1,25 @@
-﻿@model BiberDAMM.Models.RegisterViewModel
+﻿<!--
+    This is the view for creating an new ApplicationUser
+    author: KrabsJ
+-->
+
+@model BiberDAMM.Models.RegisterViewModel
 @{
     ViewBag.Title = "Benutzer anlegen";
 }
 
 <h2>@ViewBag.Title</h2>
+
+<!--show alert "createUserFailed" if the create-method failed-->
+@if (TempData["CreateUserFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Registrierung fehlgeschlagen!</strong>@TempData["CreateUserFailed"]
+    </div>
+}
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
