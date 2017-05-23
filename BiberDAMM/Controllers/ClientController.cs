@@ -29,7 +29,7 @@ namespace BiberDAMM.Controllers
             {
                 clients = from m in db.Clients
                           select m;
-                clients = clients.Where(s => s.Lastname.Contains(searchString) || s.Surname.Contains(searchString) 
+                clients = clients.Where(s => s.Lastname.Contains(searchString) || s.Surname.Contains(searchString)
                 || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString().Contains(searchString));
             }
 
@@ -100,6 +100,20 @@ namespace BiberDAMM.Controllers
             return View(client);
         }
 
+        [HttpPost]
+        public JsonResult Edit(string Prefix)
+        {
+            //Note : you can bind same list from database  
+            var healthInsurances = db.HealthInsurances;
+
+            //Searching records from list using LINQ query  
+            var Name = (from N in healthInsurances
+                                        where N.Name.StartsWith(Prefix)
+                            select new { N.Name });
+            return Json(Name, JsonRequestBehavior.AllowGet);
+        }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -117,7 +131,24 @@ namespace BiberDAMM.Controllers
             return View(client);
         }
 
-      
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddHealthInsurance(Client client)
+        {
+
+            client.LastUpdated = DateTime.Now;
+            client.RowVersion += 1;
+            db.Entry(client).State = EntityState.Modified;
+            db.SaveChanges();
+            ViewBag.TempClient = client;
+            return RedirectToAction("Index", "HealthInsurance");
+
+
+
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

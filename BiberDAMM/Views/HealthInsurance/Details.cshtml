@@ -44,7 +44,7 @@
             <button onclick="location.href='@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
             
 
-            @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind *@
+            @* A HealthInsurance can only be deleted, if there are no Clients using this *@
             @if (Model.Client.Count == 0)
             {
 
