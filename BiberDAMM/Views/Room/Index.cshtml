@@ -6,7 +6,8 @@
 @{ViewBag.Title = "Raumübersicht";}
 
 <head>
-    <link rel="stylesheet" type="text/css" href="~/Content/dynamicDataTable.css">
+    @* TODO Remove, because its already included in bundles ! [HansesM]*@
+    @*<link rel="stylesheet" type="text/css" href="~/Content/dynamicDataTable.css">*@
 </head>
 <body>
     <h2>Raumübersicht</h2>
@@ -40,7 +41,8 @@
     </table>
     </body>
 
-    @section Scripts{ 
-    <script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dynamicDataTable.js"></script>
+@section Scripts{ 
+    @*TODO Check: Removed because its already in Bundles [HansesM]*@
+    @*<script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dynamicDataTable.js"></script>*@
     <script> $(function () { $("#example").dataTable();})</script>
     }

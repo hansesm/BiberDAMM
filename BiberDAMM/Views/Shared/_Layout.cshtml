@@ -1,4 +1,5 @@
-﻿<!--
+﻿@using System.IdentityModel.Tokens
+<!--
 * CoreUI - Open Source Bootstrap Admin Template
 * version v1.0.0-alpha.5
 * link http://coreui.io
@@ -18,19 +19,8 @@
     <link rel="shortcut icon" href="~/Content/img/favicon.png">
 
     <title>DAMM - Daily Assistant in Medical Management</title>
-
-    <!-- Icons - Fontawesome [HansesM] -->
-    <!-- <link href="~/Content/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet"> -->
-    <!-- Main styles for this application [HansesM]-->
-    <!--<link href="~/Content/css/style.css" rel="stylesheet"> -->
-    
-
     
     <!-- Plugins and scripts required by this views  [HansesM]-->
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/jquery")
-
-
 
 </head>
 <!-- BODY options, add following classes to body to change options
@@ -156,17 +146,26 @@
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
-@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
-<script src="~/Content/tether/dist/js/tether.min.js"></script>
-<script src="~/Scripts/bootstrap.min.js"></script>
+@*<script src="~/Scripts/jquery.js"></script>*@
+@*<script src="~/Scripts/jquery.validate.js"></script>*@
+
+@*<script src="~/Content/tether/dist/js/tether.min.js"></script>*@
+@*<script src="~/Scripts/bootstrap.min.js"></script>*@
 
 <!--<script src="~/Content/pace/pace.min.js"></script> -->
 
 <!-- GenesisUI main scripts -->
-<script src="~/Content/js/app.js"></script>
+@*<script src="~/Scripts/app.js"></script>*@
+    
 
-
+<!-- Import Bundels for Java-Script and HTML [HansesM]-->
+@Styles.Render("~/Content/css")
 @RenderSection("styles", false)
-@RenderSection("scripts", false)
+   
+
+@Scripts.Render("~/bundles/scripts")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("Scripts", false)
+    
 </body>
 </html>
