@@ -10,7 +10,7 @@ namespace BiberDAMM
             //bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js", "~/Scripts/jquery.validate*", "~/Content/js/app.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/scripts").Include(
-                "~/Scripts/jquery.js",
+                "~/Scripts/jquery-3.1.1.js",
                 "~/Scripts/jquery.validate.js",
                 "~/Scripts/app.js",
                 "~/Scripts/jquery.dynamicDataTable.js"
@@ -35,6 +35,7 @@ namespace BiberDAMM
                 .Include("~/Content/dynamicDataTable.css")
                 );
 
+            //Sets bundle-opzimizations to false (minimalization etc.) [HansesM]
             BundleTable.EnableOptimizations = false;
         }
     }
