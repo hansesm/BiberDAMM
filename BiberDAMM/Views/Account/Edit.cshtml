@@ -11,18 +11,16 @@
 
 <h2>@ViewBag.Title</h2>
 
-@*
-<!--show alert "createUserFailed" if the create-method failed-->
-@if (TempData["CreateUserFailed"] != null)
+<!--show alert "EditUserFailed" if the edit-method failed-->
+@if (TempData["EditUserFailed"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Registrierung fehlgeschlagen!</strong>@TempData["CreateUserFailed"]
+        <strong>Änderung fehlgeschlagen!</strong>@TempData["EditUserFailed"]
     </div>
 }
-*@
 
 <p>
     @Html.ActionLink("Neues Initialpasswort für dieses Nutzer vergeben", "NewPassword")

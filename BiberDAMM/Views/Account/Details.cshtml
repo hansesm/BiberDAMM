@@ -10,6 +10,17 @@
 
 <h2>@ViewBag.Title</h2>
 
+<!--show alert "EditUserSuccess" if a user was successfully updated-->
+@if (TempData["EditUserSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderungen gespeichert!</strong>@TempData["EditUserSuccess"]
+    </div>
+}
+
 <p>
     @Html.ActionLink("Zurück zur Übersicht", "Index")
 </p>

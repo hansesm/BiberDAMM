@@ -190,13 +190,15 @@ namespace BiberDAMM.Controllers
                                     break;
                             }
                         }
-                        // TODO [KrabsJ] write alert-statement success
+                        // success-message for alert-statement [KrabsJ]
+                        TempData["EditUserSuccess"] = " Die Benutzerdetails wurden aktualisiert.";
                         return RedirectToAction("Details", "Account", new { userId = model.Id });
                     }
                     AddErrors(result);
                 }
                 // if this point is reached there was a error during update
-                // TODO [KrabsJ] failure alert statement
+                // failure-message for alert-statement [KrabsJ]
+                TempData["EditUserFailed"] = " Die Änderungen konnten nicht gespeichert werden.";
                 return View(model);
             }
         }
