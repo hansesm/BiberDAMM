@@ -1,7 +1,9 @@
-﻿using Microsoft.Owin;
+﻿using BiberDAMM;
+using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(BiberDAMM.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
+
 namespace BiberDAMM
 {
     public partial class Startup

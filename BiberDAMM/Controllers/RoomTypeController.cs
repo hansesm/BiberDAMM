@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BiberDAMM.Models;
+﻿using System.Web.Mvc;
 
 namespace BiberDAMM.Controllers
 {
@@ -14,21 +9,25 @@ namespace BiberDAMM.Controllers
         {
             return View();
         }
+
         //CREATE: RoomType [JEL] [ANNAS]
         public ActionResult New()
         {
             return View();
         }
+
         //CHANGE: RoomType [JEL] [ANNAS]
         public ActionResult Edit()
         {
             return View();
         }
+
         //GET SINGLE: RoomType [JEL] [ANNAS]
         public ActionResult Detail()
         {
             return View();
         }
+
         //SAVE: RoomType [JEL] [ANNAS]
         public ActionResult Save()
         {

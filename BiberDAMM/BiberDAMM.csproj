@@ -247,6 +247,9 @@
     <Content Include="Content\fonts\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\Logo_Damm260.png" />
     <Content Include="Content\img\favicon.png" />
+    <Content Include="Content\img\glyphicons-404-sorting.png" />
+    <Content Include="Content\img\glyphicons-409-sort-by-attributes.png" />
+    <Content Include="Content\img\glyphicons-410-sort-by-attributes-alt.png" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\js\app.js" />
     <Content Include="Content\LoginStyle.css" />
@@ -424,6 +427,7 @@
     <Content Include="Content\pace\themes\yellow\pace-theme-mac-osx.css" />
     <Content Include="Content\pace\themes\yellow\pace-theme-material.css" />
     <Content Include="Content\pace\themes\yellow\pace-theme-minimal.css" />
+    <Content Include="Content\dynamicDataTable.css" />
     <Content Include="Content\tether\.gitignore" />
     <Content Include="Content\tether\dist\css\tether-theme-arrows-dark.css" />
     <Content Include="Content\tether\dist\css\tether-theme-arrows-dark.min.css" />
@@ -690,18 +694,7 @@
     <Content Include="Content\fonts\font-awesome\scss\_stacked.scss" />
     <Content Include="Content\fonts\font-awesome\scss\_variables.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\cldr.js" />
-    <Content Include="Scripts\cldr\event.js" />
-    <Content Include="Scripts\cldr\supplemental.js" />
-    <Content Include="Scripts\cldr\unresolved.js" />
-    <Content Include="Scripts\globalize.js" />
-    <Content Include="Scripts\globalize\currency.js" />
-    <Content Include="Scripts\globalize\date.js" />
-    <Content Include="Scripts\globalize\message.js" />
-    <Content Include="Scripts\globalize\number.js" />
-    <Content Include="Scripts\globalize\plural.js" />
-    <Content Include="Scripts\globalize\relative-time.js" />
-    <Content Include="Scripts\globalize\unit.js" />
+    <Content Include="Scripts\jquery.dynamicDataTable.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -765,13 +758,26 @@
     <Content Include="Views\Home\IndexNursingStaff.cshtml" />
     <Content Include="Views\Home\IndexCleaner.cshtml" />
     <Content Include="Views\Home\IndexTherapist.cshtml" />
+    <Content Include="Views\Account\Details.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Client\Create.cshtml" />
+    <Content Include="Views\Client\Details.cshtml" />
+    <Content Include="Views\Client\Edit.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\ContactData\Create.cshtml" />
+    <Content Include="Views\ContactData\Delete.cshtml" />
+    <Content Include="Views\ContactData\Details.cshtml" />
+    <Content Include="Views\ContactData\Edit.cshtml" />
+    <Content Include="Views\ContactData\Index.cshtml" />
+    <Content Include="Views\ContactType\Create.cshtml" />
+    <Content Include="Views\ContactType\Details.cshtml" />
+    <Content Include="Views\ContactType\Edit.cshtml" />
+    <Content Include="Views\ContactType\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Blocks\" />
-    <Folder Include="Views\Client\" />
-    <Folder Include="Views\ContactData\" />
-    <Folder Include="Views\ContactType\" />
     <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
     <Folder Include="Views\TreatmentType\" />

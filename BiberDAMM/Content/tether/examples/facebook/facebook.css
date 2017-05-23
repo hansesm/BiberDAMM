@@ -1,35 +1,31 @@
-.drop-target.drop-open {
-    outline: 2px solid;
-}
+.drop-target.drop-open { outline: 2px solid; }
 
 .body {
-    position: relative;
     margin-right: 300px;
+    position: relative;
 }
 
 .page {
-    max-width: 100%;
-    width: 1080px;
-    padding: 0 10px;
     box-sizing: border-box;
     margin: 0 auto;
+    max-width: 100%;
+    padding: 0 10px;
+    width: 1080px;
 }
 
 .navigation {
     background: blue;
     color: #fff;
-    margin-right: 300px;
     margin-bottom: 30px;
+    margin-right: 300px;
 }
 
 .navigation .item a {
-    padding: 30px 20px;
     display: inline-block;
+    padding: 30px 20px;
 }
 
-.navigation .item a {
-    color: inherit;
-}
+.navigation .item a { color: inherit; }
 
 .navigation .drop-target.drop-open {
     background: #fff;
@@ -38,12 +34,12 @@
 }
 
 .right-sidebar {
-    position: fixed;
-    height: 50%;
-    width: 300px;
     background: #eee;
+    height: 50%;
     overflow: auto;
+    position: fixed;
     right: 0;
+    width: 300px;
 }
 
 .right-sidebar .drop-target.drop-open {
@@ -53,34 +49,32 @@
 }
 
 .right-sidebar .item a {
-    display: block;
-    padding: 20px;
-    margin-bottom: 10px;
     background: rgba(0, 0, 0, .1);
+    display: block;
+    margin-bottom: 10px;
+    padding: 20px;
 }
 
-.right-sidebar-top {
-    top: 0;
-}
+.right-sidebar-top { top: 0; }
 
 .right-sidebar-bottom {
-    top: 50%;
     background: #ccc;
+    top: 50%;
 }
 
 .scroll-container {
-    position: relative; 
-    overflow: auto;
     background: #eee;
-    padding: 20px;
+    height: 200px;
     margin-bottom: 20px;
     margin-right: 20px;
-    height: 200px;
+    overflow: auto;
+    padding: 20px;
+    position: relative;
     width: 200px;
 }
 
 .absolute-container {
     position: absolute;
-    top: 20px;
     right: 300px;
+    top: 20px;
 }

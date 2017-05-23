@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BiberDAMM.Models;
-using BiberDAMM.DAL;
 using System.Collections;
+using System.Web.Mvc;
+using BiberDAMM.DAL;
+using BiberDAMM.Models;
 
 namespace BiberDAMM.Controllers
 {
     public class ContactTypeController : Controller
     {
-
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         public ContactType ContactTypes { get; private set; }
 
@@ -27,7 +23,7 @@ namespace BiberDAMM.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-             return View();
+            return View();
         }
 
         [HttpPost]
@@ -41,29 +37,26 @@ namespace BiberDAMM.Controllers
             }
             catch (Exception)
             {
-
             }
         }
-        
+
         //CHANGE: ContactType [JEL] [ANNAS]
         public ActionResult Edit()
         {
             return View();
         }
+
         //GET SINGLE: ContactType [JEL] [ANNAS]
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            ContactType ContactTyp = db.ContactTypes.Find(id);
+            var ContactTyp = db.ContactTypes.Find(id);
             if (ContactTyp == null)
-            {
                 return HttpNotFound();
-            }
             return View(ContactTyp);
         }
+
         //SAVE: ContactType [JEL] [ANNAS]
         public ActionResult Save()
         {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
@@ -13,7 +9,7 @@ namespace BiberDAMM.Controllers
 {
     public class ContactDataController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: ContactData
         public ActionResult Index()
@@ -26,14 +22,10 @@ namespace BiberDAMM.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ContactData contactData = db.ContactDatas.Find(id);
+            var contactData = db.ContactDatas.Find(id);
             if (contactData == null)
-            {
                 return HttpNotFound();
-            }
             return View(contactData);
         }
 
@@ -50,7 +42,9 @@ namespace BiberDAMM.Controllers
         // finden Sie unter https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Description,Email,Phone,Mobile,Street,Postcode,City,ClientId,ContactTypeId")] ContactData contactData)
+        public ActionResult Create(
+            [Bind(Include = "Id,Description,Email,Phone,Mobile,Street,Postcode,City,ClientId,ContactTypeId")]
+            ContactData contactData)
         {
             if (ModelState.IsValid)
             {
@@ -68,14 +62,10 @@ namespace BiberDAMM.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ContactData contactData = db.ContactDatas.Find(id);
+            var contactData = db.ContactDatas.Find(id);
             if (contactData == null)
-            {
                 return HttpNotFound();
-            }
             ViewBag.ClientId = new SelectList(db.Clients, "Id", "Surname", contactData.ClientId);
             ViewBag.ContactTypeId = new SelectList(db.ContactTypes, "Id", "Name", contactData.ContactTypeId);
             return View(contactData);
@@ -86,7 +76,9 @@ namespace BiberDAMM.Controllers
         // finden Sie unter https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Description,Email,Phone,Mobile,Street,Postcode,City,ClientId,ContactTypeId")] ContactData contactData)
+        public ActionResult Edit(
+            [Bind(Include = "Id,Description,Email,Phone,Mobile,Street,Postcode,City,ClientId,ContactTypeId")]
+            ContactData contactData)
         {
             if (ModelState.IsValid)
             {
@@ -103,23 +95,20 @@ namespace BiberDAMM.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ContactData contactData = db.ContactDatas.Find(id);
+            var contactData = db.ContactDatas.Find(id);
             if (contactData == null)
-            {
                 return HttpNotFound();
-            }
             return View(contactData);
         }
 
         // POST: ContactData/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ContactData contactData = db.ContactDatas.Find(id);
+            var contactData = db.ContactDatas.Find(id);
             db.ContactDatas.Remove(contactData);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -128,9 +117,7 @@ namespace BiberDAMM.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

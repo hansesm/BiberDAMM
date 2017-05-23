@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
+using BiberDAMM.DAL;
+using BiberDAMM.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using BiberDAMM.Models;
-using BiberDAMM.DAL;
 
 namespace BiberDAMM
 {
@@ -48,7 +44,8 @@ namespace BiberDAMM
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
+            IOwinContext context)
         {
             //Change PrimaryKey of identity package to int [var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));] //KrabsJ
             var manager = new ApplicationUserManager(new CustomUserStore(context.Get<ApplicationDbContext>()));
@@ -67,7 +64,7 @@ namespace BiberDAMM
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = true
             };
 
             // Standardeinstellungen für Benutzersperren konfigurieren
@@ -101,15 +98,9 @@ namespace BiberDAMM
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
-            {
-                /*Change PrimaryKey of identity package to int //KrabsJ
-                manager.UserTokenProvider = 
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
-                    */
                 manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser, int>(dataProtectionProvider.Create("ASP.NET Identity"));
-
-            }
+                    new DataProtectorTokenProvider<ApplicationUser, int>(
+                        dataProtectionProvider.Create("ASP.NET Identity"));
             return manager;
         }
     }
@@ -118,19 +109,22 @@ namespace BiberDAMM
     //Change Primary Key of identity package to int [public class ApplicationSignInManager : SignInManager<ApplicationUser, string>] //KrabsJ
     public class ApplicationSignInManager : SignInManager<ApplicationUser, int>
     {
-        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
+        public ApplicationSignInManager(ApplicationUserManager userManager,
+            IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
         }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
         {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
+            return user.GenerateUserIdentityAsync((ApplicationUserManager) UserManager);
         }
 
-        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
+        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options,
+            IOwinContext context)
         {
-            return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+            return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(),
+                context.Authentication);
         }
     }
 
@@ -141,9 +135,11 @@ namespace BiberDAMM
         {
         }
 
-        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options,
+            IOwinContext context)
         {
-            return new ApplicationRoleManager(new RoleStore<CustomRole, int, CustomUserRole>(context.Get<ApplicationDbContext>()));
+            return new ApplicationRoleManager(
+                new RoleStore<CustomRole, int, CustomUserRole>(context.Get<ApplicationDbContext>()));
         }
     }
 }
