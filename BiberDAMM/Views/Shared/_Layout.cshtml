@@ -23,8 +23,13 @@
     <!-- <link href="~/Content/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet"> -->
     <!-- Main styles for this application [HansesM]-->
     <!--<link href="~/Content/css/style.css" rel="stylesheet"> -->
+    
 
+    
+    <!-- Plugins and scripts required by this views  [HansesM]-->
     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+
 
 
 </head>
@@ -151,18 +156,17 @@
 </footer>
 
 <!-- Bootstrap and necessary plugins -->
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
 <script src="~/Content/tether/dist/js/tether.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 
 <!--<script src="~/Content/pace/pace.min.js"></script> -->
 
-
 <!-- GenesisUI main scripts -->
 <script src="~/Content/js/app.js"></script>
 
-<!-- Plugins and scripts required by this views -->
-@RenderSection("scripts", false)
+
 @RenderSection("styles", false)
+@RenderSection("scripts", false)
 </body>
 </html>
