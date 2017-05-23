@@ -96,7 +96,7 @@ namespace BiberDAMM.Controllers
         {
             if (ModelState.IsValid)
             {
-                client.LastUpdated = DateTime.Now;
+                //client.LastUpdated = DateTime.Now;
                 client.RowVersion += 1;
                 db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();
@@ -105,6 +105,21 @@ namespace BiberDAMM.Controllers
             ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name", client.HealthInsuranceId);
             return View(client);
         }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GoToHealthInsurances()
+        {
+            //ViewBag.TempClient = client;
+            return RedirectToAction("Index", "HealthInsurance");
+        }
+
+
+
+
+
 
 
         protected override void Dispose(bool disposing)

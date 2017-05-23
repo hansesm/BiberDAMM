@@ -34,7 +34,7 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Geburtsdatum")]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Birthdate { get; set; }
 
         [Display(Name = "Versicherungsnummer")]

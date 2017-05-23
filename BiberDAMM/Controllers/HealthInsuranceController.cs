@@ -102,6 +102,20 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
 
+        //Function for Redirecting HealthInsurance to Client
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GoToClient(int id )
+        {
+            var healthInsurance = db.HealthInsurances.Find(id);
+            if (healthInsurance == null)
+                return HttpNotFound();
+            ViewBag.TempHealthInsurance = healthInsurance;
+            return RedirectToAction("Edit", "Client", new { id = (Client)ViewBag.TempClient.Id });
+        }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
