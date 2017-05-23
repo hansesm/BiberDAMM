@@ -48,15 +48,16 @@
                     @Html.DisplayFor(modelItem => item.Number)
                 </td>
                 <td>
-                    @if (ViewBag.TempClient != null)
+                    @if (Session["TempClient"] != null)
                     {
-                        <input type="submit" value="Löschen" class="btn btn-default" />
+                        
+                        <button onclick="location.href = '@Url.Action("AddInsuranceToClient", new { id = item.Id })';return false;" class="btn btn-default">Krankenversicherung hinzufügen</button>
                     }
                     else
                     {
-                        <button onclick="location.href = '@Url.Action("Edit", new {id = item.Id})';return false;" class="btn btn-default">Bearbeiten</button>
-                    }
+                        <button onclick="location.href = '@Url.Action("Edit", new { id = item.Id })';return false;" class="btn btn-default">Bearbeiten</button>
 
+                    }
                 </td>
             </tr>
         }

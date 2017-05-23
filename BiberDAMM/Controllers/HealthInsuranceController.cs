@@ -103,15 +103,19 @@ namespace BiberDAMM.Controllers
         }
 
         //Function for Redirecting HealthInsurance to Client
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult GoToClient(int id )
+        public ActionResult AddInsuranceToClient(int id )
         {
-            var healthInsurance = db.HealthInsurances.Find(id);
+            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
                 return HttpNotFound();
-            ViewBag.TempHealthInsurance = healthInsurance;
-            return RedirectToAction("Edit", "Client", new { id = (Client)ViewBag.TempClient.Id });
+            Client temp = (Client)Session["TempClient"];
+
+            temp.HealthInsurance = healthInsurance;
+            temp.HealthInsuranceId = healthInsurance.Id;
+
+            Session["TempClient"] = temp;
+
+            return RedirectToAction("Edit", "Client", new { id = temp.Id });
         }
 
 
