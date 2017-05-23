@@ -38,9 +38,9 @@
         @Html.HiddenFor(m => m.Id)
 
         <div class="form-actions no-color">
-            <input type="submit" value="Löschen" class="btn btn-default"/>
-            <br/>
-            @Html.ActionLink("Zurück zur Übersicht", "Index")
+            <input type="submit" value="Löschen" class="btn btn-outline-primary btn-sm"/>
+         
         </div>
+        <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
     }
 </div>
