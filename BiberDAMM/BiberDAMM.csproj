@@ -774,6 +774,7 @@
     <Content Include="Views\ContactType\Details.cshtml" />
     <Content Include="Views\ContactType\Edit.cshtml" />
     <Content Include="Views\ContactType\Index.cshtml" />
+    <Content Include="Views\Room\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
