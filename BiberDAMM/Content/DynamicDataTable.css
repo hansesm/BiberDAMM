@@ -96,7 +96,9 @@ table.dataTable tr.even td.sorting_3 {
  */
 .dataTables_info {
     /*edit [JEL]*/
+    font: 9px arial;
     color: #63c2de;
+    color: black;
     clear: both;
     float: left;
 }

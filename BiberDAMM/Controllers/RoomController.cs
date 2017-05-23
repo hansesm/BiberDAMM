@@ -81,13 +81,17 @@ namespace BiberDAMM.Controllers
         }
 
         //GET SINGLE: Room [JEL] [ANNAS]
-        public ActionResult Detail()
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+                return RedirectToAction("Index");
+            var room = db.Rooms.Find(id);
+            if (room == null)
+                return HttpNotFound();
+            return View(room);
         }
-
         //SAVE: Room [JEL] [ANNAS]
-        public ActionResult Save()
+            public ActionResult Save()
         {
             return View();
         }

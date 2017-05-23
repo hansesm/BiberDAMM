@@ -6,7 +6,8 @@
 @{ViewBag.Title = "Raumübersicht";}
 
 <head>
-    <link rel="stylesheet" type="text/css" href="~/Content/dynamicDataTable.css">
+    @* TODO Remove, because its already included in bundles ! [HansesM]*@
+    @*<link rel="stylesheet" type="text/css" href="~/Content/dynamicDataTable.css">*@
 </head>
 <body>
     <h2>Raumübersicht</h2>
@@ -19,28 +20,29 @@
                 <th>
                     @Html.DisplayNameFor(model => model.RoomType.Name)
                 </th>
-                <th>Aktionen</th>
+                @*<th>Aktionen</th>*@
             </tr>
         </thead>
         @foreach (var item in Model)  {
-            <tr>
+            <tr onclick="location.href = '@(Url.Action("Details", "Room", new {id = item.Id}))'">
                 <td>
                     @Html.DisplayFor(modelItem => item.RoomNumber)
                 </td>
                 <td>
                     @Html.DisplayFor(modeItem => item.RoomType.Name)
                 </td>
-                <td>
+                @*<td>
                     <button onclick="location.href='@Url.Action("Edit", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                     <button onclick="location.href='@Url.Action("Details", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-info" aria-hidden="true"></i></button>
                     <button onclick="location.href='@Url.Action("Delete", new { id=item.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                </td>
+                </td>*@
             </tr>
         }
     </table>
     </body>
 
-    @section Scripts{ 
-    <script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dynamicDataTable.js"></script>
+@section Scripts{ 
+    @*TODO Check: Removed because its already in Bundles [HansesM]*@
+    @*<script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dynamicDataTable.js"></script>*@
     <script> $(function () { $("#example").dataTable();})</script>
     }

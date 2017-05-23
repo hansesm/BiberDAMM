@@ -7,29 +7,36 @@ namespace BiberDAMM
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery")
-                .Include("~/Scripts/jquery-{version}.js")
-                .Include("~/Scripts/jquery.validate*")
-                );
-
-            //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                //"~/Scripts/jquery.validate*"));
+            //Scripts used in this Project, all Bundels are loaded in _Layout.cshtml [HansesM]
+            bundles.Add(new ScriptBundle("~/bundles/scripts").Include(
+                "~/Scripts/jquery-3.1.1.js",
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/app.js",
+                "~/Scripts/jquery.dynamicDataTable.js"
+                ));
 
             //TODO Change Modenizr-Version [HansesM]
             // Verwenden Sie die Entwicklungsversion von Modernizr zum Entwickeln und Erweitern Ihrer Kenntnisse. Wenn Sie dann
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                "~/Scripts/modernizr-*"));
+            bundles.Add(new ScriptBundle("~/bundles/modernizr")
+                .Include("~/Scripts/modernizr-*"));
 
-            //TODO Add Java-Script-Classes to Bundle to reducre HTTP Connections [HansesM]
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                "~/Scripts/bootstrap.js",
-                "~/Scripts/respond.js"));
+       
+            //Bootstrap used in this Project, all Bundels are loaded in _Layout.cshtml [HansesM]
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap")
+                .Include("~/Scripts/bootstrap.js")
+                .Include("~/Scripts/respond.js")
+                );
 
-            //TODO Add Css-Stylesheets to Bundle to reducre HTTP Connections [HansesM]
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/css/style.css",
-                "~/Content/fonts/font-awesome/css/font-awesome.min.css"));
+            //CSS used in this Project, all Bundels are loaded in _Layout.cshtml [HansesM]
+            bundles.Add(new StyleBundle("~/Content/css")
+                .Include("~/Content/css/style.css")
+                .Include("~/Content/fonts/font-awesome/css/font-awesome.min.css")
+                .Include("~/Content/dynamicDataTable.css")
+                );
+
+            //Sets bundle-opzimizations to false (minimalization etc.) [HansesM]
+            BundleTable.EnableOptimizations = false;
         }
     }
 }
