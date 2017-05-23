@@ -1,9 +1,6 @@
-﻿using BiberDAMM.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using BiberDAMM.Models;
 
 namespace BiberDAMM.ViewModels
 {
@@ -20,6 +17,5 @@ namespace BiberDAMM.ViewModels
 
         [Display(Name = "Raumtyp")]
         public virtual ICollection<RoomType> RoomType { get; set; }
-
     }
 }

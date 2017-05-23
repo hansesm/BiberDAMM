@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
@@ -18,43 +13,36 @@ namespace BiberDAMM.Controllers
     [CustomAuthorize]
     public class HealthInsuranceController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-
-        //    public ActionResult Index()
-        //    {
-        //        return View(db.HealthInsurances.ToList().OrderBy(o => o.Name));
-        //   }
-
-
+        //Generating Index Page
         public ActionResult Index(string searchString)
         {
             var healthInsurances = from m in db.HealthInsurances
-                                   select m;
+                select m;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                healthInsurances = healthInsurances.Where(s => s.Name.Contains(searchString) || s.Type.ToString().Contains(searchString) || s.Number.Contains(searchString));
-            }
+            if (!string.IsNullOrEmpty(searchString))
+                healthInsurances =
+                    healthInsurances.Where(s => s.Name.Contains(searchString) ||
+                                                s.Type.ToString().Contains(searchString) ||
+                                                s.Number.Contains(searchString));
 
             return View(healthInsurances.OrderBy(o => o.Name));
         }
 
-
+        //Generating Details Page
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
+            var healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
-            {
                 return HttpNotFound();
-            }
             return View(healthInsurance);
         }
 
+
+        //Getter and Setter for Creation-Page
 
         public ActionResult Create()
         {
@@ -63,7 +51,6 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Create([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
         public ActionResult Create(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -77,24 +64,20 @@ namespace BiberDAMM.Controllers
         }
 
 
+        //Getter and Setter for Edit-Page
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
+            var healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
-            {
                 return HttpNotFound();
-            }
             return View(healthInsurance);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "Id,Name,Type")] HealthInsurance healthInsurance)
         public ActionResult Edit(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -106,12 +89,14 @@ namespace BiberDAMM.Controllers
             return View(healthInsurance);
         }
 
-        
-        [HttpPost, ActionName("Details")]
+
+        //Function for deleting Datasets
+        [HttpPost]
+        [ActionName("Details")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
+            var healthInsurance = db.HealthInsurances.Find(id);
             db.HealthInsurances.Remove(healthInsurance);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -120,13 +105,8 @@ namespace BiberDAMM.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
-
-
-
     }
 }

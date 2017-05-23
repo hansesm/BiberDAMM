@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BiberDAMM.Security;
+﻿using System.Web.Mvc;
 using BiberDAMM.Helpers;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {

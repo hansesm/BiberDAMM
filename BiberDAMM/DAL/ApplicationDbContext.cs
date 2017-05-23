@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using BiberDAMM.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace BiberDAMM.DAL
 {
@@ -28,14 +21,15 @@ namespace BiberDAMM.DAL
     */
 
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin,
+        CustomUserRole, CustomUserClaim>
     {
+        internal object ContactType;
+
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
         }
-
-
 
 
         //Imports the needed Models to the database
@@ -66,5 +60,4 @@ namespace BiberDAMM.DAL
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
     }
-
 }

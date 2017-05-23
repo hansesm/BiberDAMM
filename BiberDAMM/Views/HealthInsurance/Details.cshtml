@@ -1,6 +1,6 @@
 ﻿@* AUTHOR     : ChristesR *@
 
-@* Klasse für die Detailansicht von Krankenkassen *@
+@* View for Detailled viewing HealthInsurances *@
 
 @model BiberDAMM.Models.HealthInsurance
 
@@ -11,7 +11,7 @@
 <h2>Versicherungsdetails</h2>
 
 <div>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -41,22 +41,21 @@
 
         <div class="form-actions no-color">
 
-            <button onclick="location.href='@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
-            
+            <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
+
 
             @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind *@
             @if (Model.Client.Count == 0)
             {
-
-                <input type="submit" value="Löschen" class="btn btn-default" />
+                <input type="submit" value="Löschen" class="btn btn-default"/>
             }
             else
             {
                 <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
             }
             <br/>
-            <br />
-            <button onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
+            <br/>
+            <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
         </div>
     }
 </p>

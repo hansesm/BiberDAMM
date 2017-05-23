@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace BiberDAMM.Models
 {
     public enum StayType
     {
-        ambulant, stationär
+        ambulant,
+        stationär
     }
 
     public class Stay
@@ -38,13 +37,15 @@ namespace BiberDAMM.Models
         public int RowVersion { get; set; }
 
         public DateTime LastUpdated { get; set; }
-        
+
         [Display(Name = "Patient")]
         public int ClientId { get; set; }
+
         public virtual Client Client { get; set; }
 
         [Display(Name = "Behandelnder Arzt")]
         public int ApplicationUserId { get; set; }
+
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         public virtual ICollection<Blocks> Blocks { get; set; }

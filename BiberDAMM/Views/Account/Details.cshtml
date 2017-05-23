@@ -1,6 +1,6 @@
 ﻿<!-- details page for an ApplicationUser
-     author: KrabsJ
-    -->
+author: KrabsJ
+-->
 
 @model BiberDAMM.Models.ApplicationUser
 
@@ -10,11 +10,26 @@
 
 <h2>@ViewBag.Title</h2>
 
+<!--show alert "EditUserSuccess" if a user was successfully updated-->
+@if (TempData["EditUserSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderungen gespeichert!</strong>@TempData["EditUserSuccess"]
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Zurück zur Übersicht", "Index")
+</p>
+
 <div>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.UserName)
+            Benutzername
         </dt>
 
         <dd>
@@ -29,22 +44,69 @@
             @Html.DisplayFor(model => model.Surname)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Lastname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lastname)
+        </dd>
+
+        <dt>
+            E-Mail
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            Telefonnummer
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        @if (Model.Active)
+        {
+            <dd>ja</dd>
+        }
+        else
+        {
+            <dd>nein</dd>
+        }
+
     </dl>
 </div>
 <p>
 
-@*
-    @using (Html.BeginForm())
+    <!--TODO [KrabsJ] delte unnecessary comments-->
+
+    @*@using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
 
-        <div class="form-actions no-color">
+        <div class="form-actions no-color">*@
 
-            <button onclick="location.href='@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
+    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Bearbeiten</button>
+    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Löschen</button>
 
 
-            @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind 
+    @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind
             @if (Model.Client.Count == 0)
             {
 
@@ -53,12 +115,9 @@
             else
             {
                 <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
-            }
-            <br />
-            <br />
-            <button onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
-        </div>
-    }
+            }*@
+    <br/>
+    <br/>
+    @*</div>
+    }*@
 </p>
-*@
-

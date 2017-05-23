@@ -1,20 +1,21 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
-using System.Data.Entity;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 
 namespace BiberDAMM.Controllers
 {
-    public class RoomController : Controller     {
-
-        private ApplicationDbContext db = new ApplicationDbContext();
+    public class RoomController : Controller
+    {
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         // GET all: Room [JEL] [ANNAS]
         public ActionResult Index()
         {
             return View(db.Rooms.ToList());
         }
+
         //CREATE: Room [JEL] [ANNAS]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -26,53 +27,46 @@ namespace BiberDAMM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            else
-            {
-                return View(Room);
-            }
+            return View(Room);
         }
+
         public ActionResult Create()
         {
             return View();
         }
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Room room = db.Rooms.Find(id);
+            var room = db.Rooms.Find(id);
             if (room == null)
-            {
                 return HttpNotFound();
-            }
             return View(room);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Room room = db.Rooms.Find(id);
+            var room = db.Rooms.Find(id);
             db.Rooms.Remove(room);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         //CHANGE: Room [JEL] [ANNAS]
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Room room = db.Rooms.Find(id);
+            var room = db.Rooms.Find(id);
             if (room == null)
-            {
                 return HttpNotFound();
-            }
             return View(room);
-           
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,RoomNumber,RoomTypeId")] Room room)
@@ -85,11 +79,13 @@ namespace BiberDAMM.Controllers
             }
             return View(room);
         }
+
         //GET SINGLE: Room [JEL] [ANNAS]
         public ActionResult Detail()
         {
             return View();
         }
+
         //SAVE: Room [JEL] [ANNAS]
         public ActionResult Save()
         {

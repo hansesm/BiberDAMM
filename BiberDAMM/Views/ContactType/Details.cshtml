@@ -1,0 +1,38 @@
+﻿@*
+    // Page showing details for selected Contacttype
+    // Author: AnnaS
+*@
+
+
+@model BiberDAMM.Models.ContactType
+@{
+    ViewBag.Title = "Detailansicht";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Detailansicht für Kontakttype @Html.DisplayFor(model => model.Id)</h3>
+
+<div>
+    <hr/>
+    <dl class="dl-horizontal">
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dd>
+            //---PLACEHOLDER---//
+        </dd>
+        <dt>
+            Kontakt Id:
+        </dt>
+        @*<dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>*@
+
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Zurück zur Übersicht", "Index") | @Html.ActionLink("Bearbeiten", "Edit", new {id = Model.Id})
+</p>

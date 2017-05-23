@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace BiberDAMM.Models
 {
 //    Initializing enum for genders
     public enum Sex
     {
-        männlich, weiblich, unbekannt
+        männlich,
+        weiblich,
+        unbekannt
     }
 
     public class Client
     {
-
         public int Id { get; set; }
-         // TODO Check if working and names like Ügüglülü can be saved
-         // TODO [for all] delete the regular expressions on validation surname and lastname? it doesn't work
+        // TODO Check if working and names like Ügüglülü can be saved
+        // TODO [for all] delete the regular expressions on validation surname and lastname? it doesn't work
 
         [Required]
 //        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]
@@ -43,15 +42,18 @@ namespace BiberDAMM.Models
         [Display(Name = "Kommentar")]
         public string Comment { get; set; }
 
+        [Display(Name = "Erfassung")]
         public DateTime Captured { get; set; }
 
+        [Display(Name = "Letzte Aktualisierung")]
         public DateTime LastUpdated { get; set; }
 
-        //TODO [HansesM, ChristesR, KrabsJ] check if there is a possibility to set rowVersion automatically by database
+        [Display(Name = "Datensatzversion")]
         public int RowVersion { get; set; }
 
         [Display(Name = "Versicherung")]
         public int? HealthInsuranceId { get; set; }
+
         public virtual HealthInsurance HealthInsurance { get; set; }
 
         public virtual ICollection<ContactData> ContactData { get; set; }

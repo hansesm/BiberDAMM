@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BiberDAMM.Models;
+using BiberDAMM.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using BiberDAMM.Models;
-using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
@@ -29,26 +28,14 @@ namespace BiberDAMM.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set 
-            { 
-                _signInManager = value; 
-            }
+            get => _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            private set => _signInManager = value;
         }
 
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            private set => _userManager = value;
         }
 
         //
@@ -56,13 +43,19 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Ihr Kennwort wurde geändert."
-                : message == ManageMessageId.SetPasswordSuccess ? "Ihr Kennwort wurde festgelegt."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Ihr Anbieter für zweistufige Authentifizierung wurde festgelegt."
-                : message == ManageMessageId.Error ? "Fehler"
-                : message == ManageMessageId.AddPhoneSuccess ? "Ihre Telefonnummer wurde hinzugefügt."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Ihre Telefonnummer wurde entfernt."
-                : "";
+                message == ManageMessageId.ChangePasswordSuccess
+                    ? "Ihr Kennwort wurde geändert."
+                    : message == ManageMessageId.SetPasswordSuccess
+                        ? "Ihr Kennwort wurde festgelegt."
+                        : message == ManageMessageId.SetTwoFactorSuccess
+                            ? "Ihr Anbieter für zweistufige Authentifizierung wurde festgelegt."
+                            : message == ManageMessageId.Error
+                                ? "Fehler"
+                                : message == ManageMessageId.AddPhoneSuccess
+                                    ? "Ihre Telefonnummer wurde hinzugefügt."
+                                    : message == ManageMessageId.RemovePhoneSuccess
+                                        ? "Ihre Telefonnummer wurde entfernt."
+                                        : "";
 
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
@@ -89,22 +82,21 @@ namespace BiberDAMM.Controllers
         {
             ManageMessageId? message;
             //Change PrimaryKey of identity package to int [var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));] //KrabsJ
-            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId<int>(), new UserLoginInfo(loginProvider, providerKey));
+            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId<int>(),
+                new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
                 //Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
+                    await SignInManager.SignInAsync(user, false, false);
                 message = ManageMessageId.RemoveLoginSuccess;
             }
             else
             {
                 message = ManageMessageId.Error;
             }
-            return RedirectToAction("ManageLogins", new { Message = message });
+            return RedirectToAction("ManageLogins", new {Message = message});
         }
 
         //
@@ -121,12 +113,11 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
             // Token generieren und senden
             // Change PrimaryKey of identity package to int [var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);] //KrabsJ
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(), model.Number);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(),
+                model.Number);
             if (UserManager.SmsService != null)
             {
                 var message = new IdentityMessage
@@ -136,7 +127,7 @@ namespace BiberDAMM.Controllers
                 };
                 await UserManager.SmsService.SendAsync(message);
             }
-            return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
+            return RedirectToAction("VerifyPhoneNumber", new {PhoneNumber = model.Number});
         }
 
         //
@@ -152,9 +143,7 @@ namespace BiberDAMM.Controllers
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), true);
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
+                await SignInManager.SignInAsync(user, false, false);
             return RedirectToAction("Index", "Manage");
         }
 
@@ -171,9 +160,7 @@ namespace BiberDAMM.Controllers
             await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), false);
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
+                await SignInManager.SignInAsync(user, false, false);
             return RedirectToAction("Index", "Manage");
         }
 
@@ -182,9 +169,12 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
             // Change PrimaryKey of identity package to int [var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);] //KrabsJ
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(), phoneNumber);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId<int>(),
+                phoneNumber);
             // Eine SMS über den SMS-Anbieter senden, um die Telefonnummer zu überprüfen.
-            return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
+            return phoneNumber == null
+                ? View("Error")
+                : View(new VerifyPhoneNumberViewModel {PhoneNumber = phoneNumber});
         }
 
         //
@@ -194,20 +184,17 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
             // Change PrimaryKey of identity package to int [var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);] //KrabsJ
-            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId<int>(), model.PhoneNumber, model.Code);
+            var result =
+                await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId<int>(), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
                 //Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
+                    await SignInManager.SignInAsync(user, false, false);
+                return RedirectToAction("Index", new {Message = ManageMessageId.AddPhoneSuccess});
             }
             // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten. Formular erneut anzeigen.
             ModelState.AddModelError("", "Fehler beim Überprüfen des Telefons.");
@@ -223,16 +210,12 @@ namespace BiberDAMM.Controllers
             // Change PrimaryKey of identity package to int [var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);] //KrabsJ
             var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId<int>(), null);
             if (!result.Succeeded)
-            {
-                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
-            }
+                return RedirectToAction("Index", new {Message = ManageMessageId.Error});
             // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
+                await SignInManager.SignInAsync(user, false, false);
+            return RedirectToAction("Index", new {Message = ManageMessageId.RemovePhoneSuccess});
         }
 
         //
@@ -249,20 +232,18 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
             // Change PrimaryKey of identity package to int [var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);] //KrabsJ
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId<int>(), model.OldPassword, model.NewPassword);
+            var result =
+                await UserManager.ChangePasswordAsync(User.Identity.GetUserId<int>(), model.OldPassword,
+                    model.NewPassword);
             if (result.Succeeded)
             {
                 // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    await SignInManager.SignInAsync(user, false, false);
+                return RedirectToAction("Index", new {Message = ManageMessageId.ChangePasswordSuccess});
             }
             AddErrors(result);
             return View(model);
@@ -290,10 +271,8 @@ namespace BiberDAMM.Controllers
                     // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
                     var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                     if (user != null)
-                    {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    }
-                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
+                        await SignInManager.SignInAsync(user, false, false);
+                    return RedirectToAction("Index", new {Message = ManageMessageId.SetPasswordSuccess});
                 }
                 AddErrors(result);
             }
@@ -307,18 +286,19 @@ namespace BiberDAMM.Controllers
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "Die externe Anmeldung wurde entfernt."
-                : message == ManageMessageId.Error ? "Fehler"
-                : "";
+                message == ManageMessageId.RemoveLoginSuccess
+                    ? "Die externe Anmeldung wurde entfernt."
+                    : message == ManageMessageId.Error
+                        ? "Fehler"
+                        : "";
             // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
             if (user == null)
-            {
                 return View("Error");
-            }
             // Change PrimaryKey of identity package to int [var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());] //KrabsJ
             var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId<int>());
-            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
+            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes()
+                .Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {
@@ -334,7 +314,8 @@ namespace BiberDAMM.Controllers
         public ActionResult LinkLogin(string provider)
         {
             // Umleitung an den externen Anmeldeanbieter anfordern, um eine Anmeldung für den aktuellen Benutzer zu verknüpfen.
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
+            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"),
+                User.Identity.GetUserId());
         }
 
         //
@@ -343,12 +324,12 @@ namespace BiberDAMM.Controllers
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
             if (loginInfo == null)
-            {
-                return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-            }
+                return RedirectToAction("ManageLogins", new {Message = ManageMessageId.Error});
             // Change PrimaryKey of identity package to int [var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);] //KrabsJ
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId<int>(), loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+            return result.Succeeded
+                ? RedirectToAction("ManageLogins")
+                : RedirectToAction("ManageLogins", new {Message = ManageMessageId.Error});
         }
 
         protected override void Dispose(bool disposing)
@@ -362,24 +343,17 @@ namespace BiberDAMM.Controllers
             base.Dispose(disposing);
         }
 
-#region Hilfsprogramme
+        #region Hilfsprogramme
+
         // Wird für XSRF-Schutz beim Hinzufügen externer Anmeldungen verwendet.
         private const string XsrfKey = "XsrfId";
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
-            {
                 ModelState.AddModelError("", error);
-            }
         }
 
         private bool HasPassword()
@@ -387,9 +361,7 @@ namespace BiberDAMM.Controllers
             // Change PrimaryKey of identity package to int [var user = UserManager.FindById(User.Identity.GetUserId());] //KrabsJ
             var user = UserManager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
-            {
                 return user.PasswordHash != null;
-            }
             return false;
         }
 
@@ -398,9 +370,7 @@ namespace BiberDAMM.Controllers
             // Change PrimaryKey of identity package to int [var user = UserManager.FindById(User.Identity.GetUserId());] //KrabsJ
             var user = UserManager.FindById(User.Identity.GetUserId<int>());
             if (user != null)
-            {
                 return user.PhoneNumber != null;
-            }
             return false;
         }
 
@@ -415,6 +385,6 @@ namespace BiberDAMM.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

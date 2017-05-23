@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace BiberDAMM.Models
 {
@@ -18,7 +19,7 @@ namespace BiberDAMM.Models
     public class SendCodeViewModel
     {
         public string SelectedProvider { get; set; }
-        public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+        public ICollection<SelectListItem> Providers { get; set; }
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
     }
@@ -31,6 +32,7 @@ namespace BiberDAMM.Models
         [Required]
         [Display(Name = "Code")]
         public string Code { get; set; }
+
         public string ReturnUrl { get; set; }
 
         [Display(Name = "Diesen Browser merken?")]
@@ -58,18 +60,18 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Benutzername")]
-        public string  Username { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort")]
         public string Password { get; set; }
-
-        //section deleted: for security reasons there should be no rememberme function [KrabsJ]
         /*
         [Display(Name = "Speichern?")]
         public bool RememberMe { get; set; }
         */
+
+        //section deleted: for security reasons there should be no rememberme function [KrabsJ]
     }
 
     public class RegisterViewModel
@@ -106,7 +108,8 @@ namespace BiberDAMM.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort bestätigen")]
-        [Compare("Password", ErrorMessage = "Das Kennwort entspricht nicht dem Bestätigungskennwort.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage =
+            "Das Kennwort entspricht nicht dem Bestätigungskennwort.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -125,7 +128,8 @@ namespace BiberDAMM.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort bestätigen")]
-        [Compare("Password", ErrorMessage = "Das Kennwort stimmt nicht mit dem Bestätigungskennwort überein.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage =
+            "Das Kennwort stimmt nicht mit dem Bestätigungskennwort überein.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
@@ -133,6 +137,35 @@ namespace BiberDAMM.Models
 
     public class ForgotPasswordViewModel
     {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "E-Mail")]
+        public string Email { get; set; }
+    }
+
+    // ViewModel for editing applicationUsers [KrabsJ]
+    public class EditViewModel
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [Display(Name = "Vorname")]
+        public string Surname { get; set; }
+
+        [Required]
+        [Display(Name = "Nachname")]
+        public string Lastname { get; set; }
+
+        [Required]
+        [Display(Name = "Benutzertyp")]
+        public UserType UserType { get; set; }
+
+        [Display(Name = "Aktiviert")]
+        public bool Active { get; set; }
+
+        [Display(Name = "Telefonnummer")]
+        public string PhoneNumber { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "E-Mail")]

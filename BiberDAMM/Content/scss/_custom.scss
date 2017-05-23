@@ -1,1 +1,6 @@
-// Here you can add other styles
+
+// In this Class we can ovverride Bootstrap-Attributes [HansesM]
+// Just copy your variable from _variables.scss, paste here and override [HansesM]
+
+$body-bg: $gray-dark;
+$body-color: $gray-light;
