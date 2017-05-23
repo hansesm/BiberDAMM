@@ -5,25 +5,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
+    <!-- TODO Add Meta-Information for LoginPage [HansesM]-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Custom Stylesheet [HansesM]-->
-    <link href="~/Content/LoginStyle.css" rel="stylesheet" />
+    <link href="~/Content/LoginStyle.css" rel="stylesheet"/>
 
     <title>DAMM-@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-    
+
+    <!-- No modenizr required in this view [HansesM]-->
+    @*@Scripts.Render("~/bundles/modernizr")*@
+
 
 </head>
 <body>
 <div>
     @RenderBody()
 </div>
-
+<!-- jquery bundle is needed for highlighting and client-side-validation [HansesM]-->
 @Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+
+<!-- No need for Bootstrap-Bundle in this Class because of custom-Stylesheel [HansesM]-->
+@*@Scripts.Render("~/bundles/bootstrap")*@
+
 @RenderSection("scripts", required: false)
 </body>
 </html>
