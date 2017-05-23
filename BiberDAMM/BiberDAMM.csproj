@@ -251,7 +251,7 @@
     <Content Include="Content\img\glyphicons-409-sort-by-attributes.png" />
     <Content Include="Content\img\glyphicons-410-sort-by-attributes-alt.png" />
     <Content Include="Content\img\logo.png" />
-    <Content Include="Content\js\app.js" />
+    <Content Include="Scripts\app.js" />
     <Content Include="Content\LoginStyle.css" />
     <Content Include="Content\pace\.gitignore" />
     <Content Include="Content\pace\docs\lib\color.js" />
@@ -695,7 +695,7 @@
     <Content Include="Content\fonts\font-awesome\scss\_variables.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery.dynamicDataTable.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -777,6 +777,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\js\" />
     <Folder Include="Views\Blocks\" />
     <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
