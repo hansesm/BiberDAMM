@@ -4,18 +4,18 @@
  * Edited: Jean-PierreK
  */
 
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using BiberDAMM.Models;
 using BiberDAMM.DAL;
-using System.Data.Entity;
-using System;
+using BiberDAMM.Models;
 
 namespace BiberDAMM.Controllers
 {
     public class BedController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
+
         //GET /Bed/
         /*public ActionResult Index()
         {
@@ -25,23 +25,22 @@ namespace BiberDAMM.Controllers
         public ActionResult Index(string searchString)
         {
             var beds = from m in db.Beds
-                       select m;
+                select m;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
+            if (!string.IsNullOrEmpty(searchString))
                 beds = beds.Where(s => s.Model.Contains(searchString));
-            }
 
             return View(beds.OrderBy(o => o.Id));
         }
+
         //GET /Bed/Create to add a bed 
         public ActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]                        
-        [ValidateAntiForgeryToken]        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Model,RoomId")] Bed bed)
         {
             if (ModelState.IsValid)
@@ -53,18 +52,15 @@ namespace BiberDAMM.Controllers
 
             return View(bed);
         }
+
         //Get /Bed/Edit for id
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Bed bed = db.Beds.Find(id);
+            var bed = db.Beds.Find(id);
             if (bed == null)
-            {
                 return HttpNotFound();
-            }
             return View(bed);
         }
 
@@ -81,18 +77,15 @@ namespace BiberDAMM.Controllers
             }
             return View(bed);
         }
+
         //GET Bed/Details for Bed with id
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Bed bed = db.Beds.Find(id);
+            var bed = db.Beds.Find(id);
             if (bed == null)
-            {
                 return HttpNotFound();
-            }
             return View(bed);
         }
     }

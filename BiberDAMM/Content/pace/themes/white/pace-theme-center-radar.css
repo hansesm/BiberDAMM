@@ -1,82 +1,80 @@
 /* This is a compiled file, you should be editing the file in the templates directory */
 .pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
+    -moz-user-select: none;
+    -webkit-pointer-events: none;
 
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+    -webkit-user-select: none;
+    bottom: 0;
+    height: 90px;
 
-  z-index: 2000;
-  position: fixed;
-  height: 90px;
-  width: 90px;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+    left: 0;
+    margin: auto;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    user-select: none;
+    width: 90px;
+    z-index: 2000;
 }
 
-.pace.pace-inactive .pace-activity {
-  display: none;
-}
+.pace.pace-inactive .pace-activity { display: none; }
 
 .pace .pace-activity {
-  position: fixed;
-  z-index: 2000;
-  display: block;
-  position: absolute;
-  left: -30px;
-  top: -30px;
-  height: 90px;
-  width: 90px;
-  display: block;
-  border-width: 30px;
-  border-style: double;
-  border-color: #ffffff transparent transparent;
-  border-radius: 50%;
+    -moz-animation: spin 1s linear infinite;
+    -moz-box-sizing: content-box;
+    -o-animation: spin 1s linear infinite;
+    -webkit-animation: spin 1s linear infinite;
+    -webkit-box-sizing: content-box;
+    animation: spin 1s linear infinite;
+    border-color: #ffffff transparent transparent;
+    border-radius: 50%;
+    border-style: double;
+    border-width: 30px;
+    box-sizing: content-box;
+    display: block;
+    display: block;
 
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+    height: 90px;
+    left: -30px;
+    position: fixed;
 
-  -webkit-animation: spin 1s linear infinite;
-  -moz-animation: spin 1s linear infinite;
-  -o-animation: spin 1s linear infinite;
-  animation: spin 1s linear infinite;
+    position: absolute;
+    top: -30px;
+    width: 90px;
+    z-index: 2000;
 }
 
 .pace .pace-activity:before {
-  content: ' ';
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  height: 50px;
-  width: 50px;
-  display: block;
-  border-width: 10px;
-  border-style: solid;
-  border-color: #ffffff transparent transparent;
-  border-radius: 50%;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    border-color: #ffffff transparent transparent;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 10px;
+    box-sizing: content-box;
+    content: ' ';
+    display: block;
+    height: 50px;
+    left: 10px;
 
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+    position: absolute;
+    top: 10px;
+    width: 50px;
 }
 
 @-webkit-keyframes spin {
-  100% { -webkit-transform: rotate(359deg); }
+    100% { -webkit-transform: rotate(359deg); }
 }
 
 @-moz-keyframes spin {
-  100% { -moz-transform: rotate(359deg); }
+    100% { -moz-transform: rotate(359deg); }
 }
 
 @-o-keyframes spin {
-  100% { -moz-transform: rotate(359deg); }
+    100% { -moz-transform: rotate(359deg); }
 }
 
 @keyframes spin {
-  100% {  transform: rotate(359deg); }
+    100% { transform: rotate(359deg); }
 }

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
@@ -18,19 +15,20 @@ namespace BiberDAMM.Controllers
     [CustomAuthorize]
     public class ClientController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         //Getter for the Index-Page requires searchString for filtering entries
         public ActionResult Index(string searchString)
         {
-            IQueryable<Client> clients = new List<Client>().AsQueryable();
+            var clients = new List<Client>().AsQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 clients = from m in db.Clients
-                          select m;
+                    select m;
                 clients = clients.Where(s => s.Lastname.Contains(searchString) || s.Surname.Contains(searchString)
-                || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString().Contains(searchString));
+                                             || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString()
+                                                 .Contains(searchString));
             }
 
             return View(clients.OrderBy(o => o.Lastname));
@@ -42,17 +40,12 @@ namespace BiberDAMM.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Client client = db.Clients.Find(id);
+            var client = db.Clients.Find(id);
             if (client == null)
-            {
                 return HttpNotFound();
-            }
             return View(client);
         }
-
 
 
         //Getter and Setter for the creating-Page
@@ -88,31 +81,13 @@ namespace BiberDAMM.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return RedirectToAction("Index");
-            }
-            Client client = db.Clients.Find(id);
+            var client = db.Clients.Find(id);
             if (client == null)
-            {
                 return HttpNotFound();
-            }
             ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name", client.HealthInsuranceId);
             return View(client);
         }
-
-        [HttpPost]
-        public JsonResult Edit(string Prefix)
-        {
-            //Note : you can bind same list from database  
-            var healthInsurances = db.HealthInsurances;
-
-            //Searching records from list using LINQ query  
-            var Name = (from N in healthInsurances
-                                        where N.Name.StartsWith(Prefix)
-                            select new { N.Name });
-            return Json(Name, JsonRequestBehavior.AllowGet);
-        }
-
 
 
         [HttpPost]
@@ -132,29 +107,10 @@ namespace BiberDAMM.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddHealthInsurance(Client client)
-        {
-
-            client.LastUpdated = DateTime.Now;
-            client.RowVersion += 1;
-            db.Entry(client).State = EntityState.Modified;
-            db.SaveChanges();
-            ViewBag.TempClient = client;
-            return RedirectToAction("Index", "HealthInsurance");
-
-
-
-        }
-
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

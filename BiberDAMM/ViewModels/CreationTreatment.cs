@@ -1,9 +1,7 @@
-﻿using BiberDAMM.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using BiberDAMM.Models;
 
 namespace BiberDAMM.ViewModels
 {
@@ -30,6 +28,5 @@ namespace BiberDAMM.ViewModels
 
         [Display(Name = "BehandlungsTyp")]
         public virtual ICollection<TreatmentType> TreatmentTypes { get; set; }
-
     }
 }

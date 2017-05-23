@@ -1966,10 +1966,12 @@ fieldset[disabled] a.btn {
   background-color: transparent;
   background-image: none;
   border-color: #20a8d8; }
-  .btn-outline-primary:hover {
-    color: #fff;
-    background-color: #20a8d8;
-    border-color: #20a8d8; }
+    .btn-outline-primary:hover {
+        color: #fff;
+        background-color: #20a8d8;
+        border-color: #20a8d8;
+        cursor: pointer;/*edit [JEL]*/
+    }
   .btn-outline-primary:focus, .btn-outline-primary.focus {
     box-shadow: 0 0 0 2px rgba(32, 168, 216, 0.5); }
   .btn-outline-primary.disabled, .btn-outline-primary:disabled {

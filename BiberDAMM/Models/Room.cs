@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.ModelBinding;
 
 namespace BiberDAMM.Models
 {
@@ -13,11 +8,12 @@ namespace BiberDAMM.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name="Raumnummer")]
+        [Display(Name = "Raumnummer")]
         public string RoomNumber { get; set; }
 
         [Required]
         public int RoomTypeId { get; set; }
+
         public virtual RoomType RoomType { get; set; }
 
         public virtual ICollection<Bed> Bed { get; set; }

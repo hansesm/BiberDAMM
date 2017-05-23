@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace BiberDAMM.Models
 {
     public class TreatmentType
     {
-
         public int Id { get; set; }
 
         [Required]
