@@ -1,9 +1,7 @@
-﻿using BiberDAMM.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+using BiberDAMM.Models;
 
 namespace BiberDAMM.ViewModels
 {
@@ -12,8 +10,10 @@ namespace BiberDAMM.ViewModels
     // ===============================
     public enum StayType
     {
-        ambulant, stationär
+        ambulant,
+        stationär
     }
+
     public class CreationStay
     {
         [Required]
@@ -41,6 +41,5 @@ namespace BiberDAMM.ViewModels
 
         [Display(Name = "Behandelnder Arzt")]
         public virtual ICollection<ApplicationUser> ApplicationUser { get; set; }
-
     }
 }

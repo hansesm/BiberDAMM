@@ -1,47 +1,48 @@
 ﻿body {
-    padding-top: 50px;
     padding-bottom: 20px;
+    padding-top: 50px;
 }
 
 /* Container for displaying the login-form*/
+
 .login-page {
-    width: 360px;
-    padding: 8% 0 0;
     margin: auto;
+    padding: 8% 0 0;
+    width: 360px;
 }
 
-    .login-page button {
-        font-family: "Roboto", sans-serif;
-        text-transform: uppercase;
-        outline: 0;
-        background: #A9A9A9;
-        width: 100%;
-        border: 0;
-        padding: 15px;
-        color: #FFFFFF;
-        font-size: 14px;
-        cursor: pointer;
-    }
+.login-page button {
+    background: #A9A9A9;
+    border: 0;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    outline: 0;
+    padding: 15px;
+    text-transform: uppercase;
+    width: 100%;
+}
 
-    .login-page form {
-        position: relative;
-        z-index: 1;
-        background: #FFFFFF;
-        max-width: 360px;
-        margin: 0 auto 100px;
-        padding: 45px;
-        text-align: center;
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    }
+.login-page form {
+    background: #FFFFFF;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    margin: 0 auto 100px;
+    max-width: 360px;
+    padding: 45px;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
 
-    .login-page input {
-        font-family: "Roboto", sans-serif;
-        outline: 0;
-        background: #f2f2f2;
-        width: 100%;
-        border: 0;
-        margin: 0 0 15px;
-        padding: 15px;
-        box-sizing: border-box;
-        font-size: 14px;
-    }
+.login-page input {
+    background: #f2f2f2;
+    border: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    margin: 0 0 15px;
+    outline: 0;
+    padding: 15px;
+    width: 100%;
+}

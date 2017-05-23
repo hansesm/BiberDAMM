@@ -1,6 +1,6 @@
 ﻿<!-- details page for an ApplicationUser
-     author: KrabsJ
-    -->
+author: KrabsJ
+-->
 
 @model BiberDAMM.Models.ApplicationUser
 
@@ -26,7 +26,7 @@
 </p>
 
 <div>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             Benutzername
@@ -53,7 +53,7 @@
         </dd>
 
         <dt>
-            E-Mail 
+            E-Mail
         </dt>
 
         <dd>
@@ -80,15 +80,15 @@
             @Html.DisplayNameFor(model => model.Active)
         </dt>
 
-            @if (Model.Active == true)
-            {
-                <dd>ja</dd>
-            }
-            else
-            {
-                <dd>nein</dd>
-            }
-              
+        @if (Model.Active)
+        {
+            <dd>ja</dd>
+        }
+        else
+        {
+            <dd>nein</dd>
+        }
+
     </dl>
 </div>
 <p>
@@ -102,11 +102,11 @@
 
         <div class="form-actions no-color">*@
 
-            <button onclick="location.href='@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Bearbeiten</button>
-            <button onclick="location.href='@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Löschen</button>
+    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Bearbeiten</button>
+    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Löschen</button>
 
 
-            @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind
+    @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind
             @if (Model.Client.Count == 0)
             {
 
@@ -116,9 +116,8 @@
             {
                 <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
             }*@
-            <br />
-            <br />
-        @*</div>
+    <br/>
+    <br/>
+    @*</div>
     }*@
 </p>
-

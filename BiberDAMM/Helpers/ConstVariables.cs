@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BiberDAMM.Models;
-
-namespace BiberDAMM.Helpers
+﻿namespace BiberDAMM.Helpers
 {
     //class for using constant variables that are used over the whole application but can not be changed [KrabsJ]
     public static class ConstVariables

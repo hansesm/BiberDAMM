@@ -13,7 +13,7 @@
 
 <div>
     <h4>Client</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.HealthInsurance.Name)
@@ -98,6 +98,6 @@
     </dl>
 </div>
 <p>
-    <button onclick="location.href='@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
-    <button onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
+    <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
+    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
 </p>

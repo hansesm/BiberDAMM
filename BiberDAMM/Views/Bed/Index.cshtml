@@ -16,7 +16,7 @@
     @Html.ActionLink("Bett hinzufügen", "Create", "Bed")
     @using (Html.BeginForm())
     {
-        @Html.TextBox("SearchString")<input type="submit" value="Filtern" />
+        @Html.TextBox("SearchString")<input type="submit" value="Filtern"/>
     }
 </p>
 <table class="table">
@@ -35,8 +35,8 @@
             <th>@Html.DisplayFor(modelItem => item.RoomId)</th>
             <th></th>
             <th>
-                <button onclick="location.href='@Url.Action("Details", new { id=item.Id })';return false;" class="btn btn-default">Details</button>
-                <button onclick="location.href='@Url.Action("Edit", new { id=item.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+                <button onclick="location.href = '@Url.Action("Details", new {id = item.Id})';return false;" class="btn btn-default">Details</button>
+                <button onclick="location.href = '@Url.Action("Edit", new {id = item.Id})';return false;" class="btn btn-default">Bearbeiten</button>
             </th>
         </tr>
     }

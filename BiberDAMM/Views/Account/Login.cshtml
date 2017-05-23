@@ -1,6 +1,4 @@
-﻿@using System.Web.UI.WebControls
-@using BiberDAMM.Models
-@model LoginViewModel
+﻿@model BiberDAMM.Models.LoginViewModel
 @{
     //Custom-Layout for the LoginPage [HansesM]
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
@@ -11,26 +9,27 @@
 
 <div class="login-page">
     <section id="loginForm">
-        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Login", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
         {
-            
             <img src="/Content/Images/Logo_Damm260.png" width="270"/>
 
             <h2></h2>
-            
+
             @Html.AntiForgeryToken()
 
-            @Html.ValidationMessage("InactiveUser");
+            @Html.ValidationMessage("InactiveUser")
+            ;
 
-            @Html.TextBoxFor(m => m.Username, new { placeholder = "Nutzername" })
-        
-            @Html.PasswordFor(m => m.Password, new { placeholder = "Passwort" })
+            @Html.TextBoxFor(m => m.Username, new {placeholder = "Nutzername"})
 
-            @Html.ValidationMessage("WrongUsernameOrPass");
+            @Html.PasswordFor(m => m.Password, new {placeholder = "Passwort"})
+
+            @Html.ValidationMessage("WrongUsernameOrPass")
+            ;
 
             <button>login</button>
 
-            <hr />
+            <hr/>
             <p>&copy; @DateTime.Now.Year - Biber Consulting</p>
         }
     </section>
