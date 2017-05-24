@@ -23,7 +23,7 @@ author: KrabsJ
 }
 
 <p>
-    @Html.ActionLink("Neues Initialpasswort für diesen Benutzer vergeben", "NewPassword")
+    @Html.ActionLink("Neues Initialpasswort für diesen Benutzer vergeben", "NewInitialPassword", new { userId = Model.Id })
 </p>
 
 <p>

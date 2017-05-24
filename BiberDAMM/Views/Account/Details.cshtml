@@ -21,6 +21,17 @@ author: KrabsJ
     </div>
 }
 
+<!--show alert "NewInitialPasswordSuccess" if a new password was successfully set-->
+@if (TempData["NewInitialPasswordSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderungen gespeichert!</strong>@TempData["NewInitialPasswordSuccess"]
+    </div>
+}
+
 <p>
     @Html.ActionLink("Zurück zur Übersicht", "Index")
 </p>

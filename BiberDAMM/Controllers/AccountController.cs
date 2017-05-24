@@ -174,10 +174,48 @@ namespace BiberDAMM.Controllers
             return View(model);
         }
 
-        // TODO [KrabsJ] add delete method and view
-        // TODO [KrabsJ] add NewPassword method
+        // GET: /Acount/NewInitialPassword
+        // returns the View for awarding a new password to an user [KrabsJ]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
 
-        //
+            var id = userId ?? default(int);
+            var userPassword = new NewInitialPasswordViewModel { UserId = id, UserName = UserManager.FindById(id).UserName};
+            return View(userPassword);
+        }
+
+        // POST: /Acount/NewInitialPassword
+        // Awards a new password to an user [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(NewInitialPasswordViewModel userPassword, string command)
+        {
+            if (command.Equals(ConstVariables.AbortButton))
+                return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+
+            if (ModelState.IsValid)
+            {
+                string resetToken = UserManager.GeneratePasswordResetToken(userPassword.UserId);
+                IdentityResult passwordChangeResult = UserManager.ResetPassword(userPassword.UserId, resetToken, userPassword.Password);
+                if (passwordChangeResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["NewInitialPasswordSuccess"] = " Das Passwort wurde erfolgreich aktualisiert.";
+                    return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+                }
+                AddErrors(passwordChangeResult);
+            }
+            // failure-message for alert-statement [KrabsJ]
+            TempData["NewInitialPasswordFailed"] = " Das neue Passwort konnte nicht gespeichert werden.";
+            return View(userPassword);
+        }
+
+        // TODO [KrabsJ] add delete method and view
+
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -230,7 +268,7 @@ namespace BiberDAMM.Controllers
                 //Added errormessage name to dispay in loginview [HansesM]
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort");
+                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort. Falls Sie Ihr Passwort vergessen haben, wenden Sie sich bitte an einen Administrator.");
                     return View(model);
             }
         }
