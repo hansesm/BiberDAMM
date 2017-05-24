@@ -34,6 +34,7 @@ namespace BiberDAMM.Models
         [Display(Name = "Behandlungstyp")]
         public StayType StayType { get; set; }
 
+        // TODO [HansesM, ChristesR, KrabsJ] check if there is way to handle rowversion automatically by database
         public int RowVersion { get; set; }
 
         public DateTime LastUpdated { get; set; }

@@ -51,6 +51,7 @@ namespace BiberDAMM.Models
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime LastUpdated { get; set; }
 
+        // TODO [HansesM, ChristesR, KrabsJ] check if there is way to handle rowversion automatically by database
         [Display(Name = "Datensatzversion")]
         public int RowVersion { get; set; }
 

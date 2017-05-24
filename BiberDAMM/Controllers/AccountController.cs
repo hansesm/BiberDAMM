@@ -304,45 +304,11 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index", "Account");
+
             if (ModelState.IsValid)
             {
-                // TODO [KrabsJ] algorithm in own method
-                // section added: variables for the algorithm of creating the Username [KrabsJ]
-                var username = model.Lastname + model.Surname[0];
-                string usernameWithNumber;
-                ApplicationUser userdb;
-                var surnameCounter = model.Surname.Length;
-                var userNameNumber = 1;
-
-                //section added: algorithm of creating the Username [KrabsJ]
-                //Username should be the Lastname plus the first character of the Surname
-                //If there is already another user with the same name the next character of the surname will be added and so on
-                //If there is already another user with the same name including the whole lastname plus surname a sequential number will be added
-                for (var i = 0; i < surnameCounter; i++)
-                {
-                    userdb = UserManager.FindByName(username);
-                    if (userdb == null)
-                        break;
-                    if (i + 1 < surnameCounter)
-                    {
-                        username = username + model.Surname[i + 1];
-                    }
-                    else
-                    {
-                        usernameWithNumber = username + userNameNumber;
-                        while (true)
-                        {
-                            userdb = UserManager.FindByName(usernameWithNumber);
-                            if (userdb == null)
-                            {
-                                username = usernameWithNumber;
-                                break;
-                            }
-                            userNameNumber++;
-                            usernameWithNumber = username + userNameNumber;
-                        }
-                    }
-                }
+                // create username from surname and lastname
+                string username = CreateUserName(model.Surname, model.Lastname);
 
                 //section changed: depending on the expansion of the ApplicationUser class there are more attributes that are necessary to create a new user
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
