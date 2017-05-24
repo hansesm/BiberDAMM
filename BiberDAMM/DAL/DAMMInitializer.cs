@@ -76,6 +76,7 @@ namespace BiberDAMM.DAL
             {
                 UserName = "BeckerF",
                 Email = "Franz@gmx.de",
+                Title = "Dr.",
                 Surname = "Franz",
                 Lastname = "Becker",
                 UserType = UserType.Arzt,
@@ -89,6 +90,7 @@ namespace BiberDAMM.DAL
             {
                 UserName = "MuellerA",
                 Email = "Anna@gmx.de",
+                Title = "Dr.",
                 Surname = "Anna",
                 Lastname = "Mueller",
                 UserType = UserType.Arzt,
@@ -102,6 +104,7 @@ namespace BiberDAMM.DAL
             {
                 UserName = "MustermannO",
                 Email = "Otto@gmx.de",
+                Title = "Dr.",
                 Surname = "Otto",
                 Lastname = "Mustermann",
                 UserType = UserType.Arzt,

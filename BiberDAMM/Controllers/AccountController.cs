@@ -84,6 +84,7 @@ namespace BiberDAMM.Controllers
             var editUser = new EditViewModel
             {
                 Id = user.Id,
+                Title = user.Title,
                 Surname = user.Surname,
                 Lastname = user.Lastname,
                 UserType = user.UserType,
@@ -103,6 +104,7 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Account", new {userId = model.Id});
+
             if (ModelState.IsValid)
             {
                 var changeRole = false;
@@ -116,6 +118,7 @@ namespace BiberDAMM.Controllers
                     changeRole = true;
 
                 // get the new data from the EditViewModel
+                editUser.Title = model.Title;
                 editUser.Surname = model.Surname;
                 editUser.Lastname = model.Lastname;
                 editUser.Email = model.Email;
@@ -171,7 +174,6 @@ namespace BiberDAMM.Controllers
             return View(model);
         }
 
-        // TODO [KrabsJ] add edit method and view
         // TODO [KrabsJ] add delete method and view
         // TODO [KrabsJ] add NewPassword method
 
@@ -307,6 +309,7 @@ namespace BiberDAMM.Controllers
                 {
                     UserName = username,
                     Email = model.Email,
+                    Title = model.Title,
                     Surname = model.Surname,
                     Lastname = model.Lastname,
                     Active = model.Active,
@@ -652,6 +655,7 @@ namespace BiberDAMM.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+        #endregion
 
         // the method generates the userName from surname and lastname [KrabsJ]
         private string CreateUserName(string surname, string lastname)
@@ -694,7 +698,5 @@ namespace BiberDAMM.Controllers
             }
             return username;
         }
-
-        #endregion
     }
 }

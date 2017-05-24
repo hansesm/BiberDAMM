@@ -21,6 +21,9 @@ namespace BiberDAMM.Models
     // Change PrimaryKey of identity package to int [public class ApplicationUser : IdentityUser] //KrabsJ
     public class ApplicationUser : IdentityUser<int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
+        [Display(Name = "Titel")]
+        public string Title { get; set; }
+
         [Required]
         [Display(Name = "Vorname")]
         public string Surname { get; set; }

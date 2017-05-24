@@ -31,7 +31,15 @@ author: KrabsJ
 
     @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
-    <!--Section added: to create a new User a Surname, Lastname, Usertype and the active value have to be set; inserting a phonenumber is optional [KrabsJ]-->
+    <!--Section added: to create a new User a Surname, Lastname, Usertype and the active value have to be set; inserting a phonenumber or a title is optional [KrabsJ]-->
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
     <div class="form-group">
         @Html.LabelFor(m => m.Surname, new {@class = "col-md-2 control-label"})
         <div class="col-md-10">
