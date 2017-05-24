@@ -23,19 +23,7 @@ author: KrabsJ
     @Html.ActionLink("Benutzer hinzufügen", "Register")
 </p>
 
-<p>
-
-    @using (Html.BeginForm())
-    {
-        <p>
-            @Html.TextBox("SearchString")
-            <input type="submit" value="Suchen"/>
-        </p>
-    }
-
-</p>
-
-<table class="table table-striped table-hover">
+<table id="userIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
     <tr>
         <th>
@@ -79,3 +67,7 @@ author: KrabsJ
         </tr>
     }
 </table>
+
+@section Scripts{
+    <script> $(function () { $("#userIndexTable").dataTable();})</script>
+}

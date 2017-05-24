@@ -46,20 +46,11 @@ namespace BiberDAMM.Controllers
         // GET: /Account/Index
         // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
-        public ActionResult Index(string searchString)
+        public ActionResult Index()
         {
             var ApplicationUsers = db.Users.ToList();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var filterResult =
-                    ApplicationUsers.Where(a => a.UserName.Contains(searchString) || a.Surname.Contains(searchString) ||
-                                                a.Lastname.Contains(searchString) ||
-                                                a.UserType.ToString().Contains(searchString));
-                return View(filterResult.OrderBy(a => a.UserName));
-            }
-
-            return View(ApplicationUsers.OrderBy(a => a.UserName));
+  
+            return View(ApplicationUsers);
         }
 
         // GET: /Account/Details
