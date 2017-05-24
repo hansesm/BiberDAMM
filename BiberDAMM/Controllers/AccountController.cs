@@ -46,20 +46,11 @@ namespace BiberDAMM.Controllers
         // GET: /Account/Index
         // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
-        public ActionResult Index(string searchString)
+        public ActionResult Index()
         {
             var ApplicationUsers = db.Users.ToList();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var filterResult =
-                    ApplicationUsers.Where(a => a.UserName.Contains(searchString) || a.Surname.Contains(searchString) ||
-                                                a.Lastname.Contains(searchString) ||
-                                                a.UserType.ToString().Contains(searchString));
-                return View(filterResult.OrderBy(a => a.UserName));
-            }
-
-            return View(ApplicationUsers.OrderBy(a => a.UserName));
+  
+            return View(ApplicationUsers);
         }
 
         // GET: /Account/Details
@@ -93,6 +84,7 @@ namespace BiberDAMM.Controllers
             var editUser = new EditViewModel
             {
                 Id = user.Id,
+                Title = user.Title,
                 Surname = user.Surname,
                 Lastname = user.Lastname,
                 UserType = user.UserType,
@@ -112,6 +104,7 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Account", new {userId = model.Id});
+
             if (ModelState.IsValid)
             {
                 var changeRole = false;
@@ -125,6 +118,7 @@ namespace BiberDAMM.Controllers
                     changeRole = true;
 
                 // get the new data from the EditViewModel
+                editUser.Title = model.Title;
                 editUser.Surname = model.Surname;
                 editUser.Lastname = model.Lastname;
                 editUser.Email = model.Email;
@@ -180,7 +174,6 @@ namespace BiberDAMM.Controllers
             return View(model);
         }
 
-        // TODO [KrabsJ] add edit method and view
         // TODO [KrabsJ] add delete method and view
         // TODO [KrabsJ] add NewPassword method
 
@@ -304,45 +297,11 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index", "Account");
+
             if (ModelState.IsValid)
             {
-                // TODO [KrabsJ] algorithm in own method
-                // section added: variables for the algorithm of creating the Username [KrabsJ]
-                var username = model.Lastname + model.Surname[0];
-                string usernameWithNumber;
-                ApplicationUser userdb;
-                var surnameCounter = model.Surname.Length;
-                var userNameNumber = 1;
-
-                //section added: algorithm of creating the Username [KrabsJ]
-                //Username should be the Lastname plus the first character of the Surname
-                //If there is already another user with the same name the next character of the surname will be added and so on
-                //If there is already another user with the same name including the whole lastname plus surname a sequential number will be added
-                for (var i = 0; i < surnameCounter; i++)
-                {
-                    userdb = UserManager.FindByName(username);
-                    if (userdb == null)
-                        break;
-                    if (i + 1 < surnameCounter)
-                    {
-                        username = username + model.Surname[i + 1];
-                    }
-                    else
-                    {
-                        usernameWithNumber = username + userNameNumber;
-                        while (true)
-                        {
-                            userdb = UserManager.FindByName(usernameWithNumber);
-                            if (userdb == null)
-                            {
-                                username = usernameWithNumber;
-                                break;
-                            }
-                            userNameNumber++;
-                            usernameWithNumber = username + userNameNumber;
-                        }
-                    }
-                }
+                // create username from surname and lastname
+                string username = CreateUserName(model.Surname, model.Lastname);
 
                 //section changed: depending on the expansion of the ApplicationUser class there are more attributes that are necessary to create a new user
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -350,6 +309,7 @@ namespace BiberDAMM.Controllers
                 {
                     UserName = username,
                     Email = model.Email,
+                    Title = model.Title,
                     Surname = model.Surname,
                     Lastname = model.Lastname,
                     Active = model.Active,
@@ -695,6 +655,7 @@ namespace BiberDAMM.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+        #endregion
 
         // the method generates the userName from surname and lastname [KrabsJ]
         private string CreateUserName(string surname, string lastname)
@@ -737,7 +698,5 @@ namespace BiberDAMM.Controllers
             }
             return username;
         }
-
-        #endregion
     }
 }

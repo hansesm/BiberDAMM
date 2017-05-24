@@ -36,6 +36,17 @@ author: KrabsJ
             @Html.DisplayFor(model => model.UserName)
         </dd>
 
+        @if (!Model.Title.IsEmpty())
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        }
+
         <dt>
             @Html.DisplayNameFor(model => model.Surname)
         </dt>
@@ -102,8 +113,8 @@ author: KrabsJ
 
         <div class="form-actions no-color">*@
 
-    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Bearbeiten</button>
-    <button onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn-primary">Löschen</button>
+    <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button title="Löschen" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
 
 
     @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind

@@ -34,21 +34,24 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Geburtsdatum")]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Birthdate { get; set; }
 
-        [Display(Name = "Versicherungsnummer")]
+        [Display(Name = "Versichertennummer")]
         public int? InsuranceNumber { get; set; }
 
         [Display(Name = "Kommentar")]
         public string Comment { get; set; }
 
         [Display(Name = "Erfassung")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime Captured { get; set; }
 
         [Display(Name = "Letzte Aktualisierung")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime LastUpdated { get; set; }
 
+        // TODO [HansesM, ChristesR, KrabsJ] check if there is way to handle rowversion automatically by database
         [Display(Name = "Datensatzversion")]
         public int RowVersion { get; set; }
 

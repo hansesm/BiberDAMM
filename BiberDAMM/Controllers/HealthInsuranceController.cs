@@ -102,6 +102,24 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
 
+        //Function for Redirecting HealthInsurance to Client
+        public ActionResult AddInsuranceToClient(int id )
+        {
+            HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
+            if (healthInsurance == null)
+                return HttpNotFound();
+            Client temp = (Client)Session["TempClient"];
+
+            temp.HealthInsurance = healthInsurance;
+            temp.HealthInsuranceId = healthInsurance.Id;
+
+            Session["TempClient"] = temp;
+
+            return RedirectToAction("Edit", "Client", new { id = temp.Id });
+        }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

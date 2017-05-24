@@ -76,7 +76,10 @@ namespace BiberDAMM.Models
 
     public class RegisterViewModel
     {
-        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed and PhoneNumber ist optional [KrabsJ]
+        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed; phoneNumber and title are optional [KrabsJ]
+        [Display(Name = "Titel")]
+        public string Title { get; set; }
+
         [Required]
         [Display(Name = "Vorname")]
         public string Surname { get; set; }
@@ -147,6 +150,9 @@ namespace BiberDAMM.Models
     public class EditViewModel
     {
         public int Id { get; set; }
+
+        [Display(Name = "Titel")]
+        public string Title { get; set; }
 
         [Required]
         [Display(Name = "Vorname")]

@@ -23,7 +23,7 @@ author: KrabsJ
 }
 
 <p>
-    @Html.ActionLink("Neues Initialpasswort für dieses Nutzer vergeben", "NewPassword")
+    @Html.ActionLink("Neues Initialpasswort für diesen Benutzer vergeben", "NewPassword")
 </p>
 
 <p>
@@ -36,6 +36,14 @@ author: KrabsJ
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
         @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Title, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(m => m.Surname, new {@class = "col-md-2 control-label"})
@@ -86,8 +94,8 @@ author: KrabsJ
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" name="command" value="Änderungen speichern" class="btn-primary"/>
-                <input type="submit" name="command" value=@ConstVariables.AbortButton class="btn-primary" formnovalidate="formnovalidate"/>
+                <input title="Speichern" type="submit" name="command" value="Änderungen speichern" class="btn btn-outline-primary btn-sm"/>
+                <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate"/>
             </div>
         </div>
     }

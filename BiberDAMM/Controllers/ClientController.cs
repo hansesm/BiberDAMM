@@ -25,7 +25,7 @@ namespace BiberDAMM.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 clients = from m in db.Clients
-                    select m;
+                          select m;
                 clients = clients.Where(s => s.Lastname.Contains(searchString) || s.Surname.Contains(searchString)
                                              || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString()
                                                  .Contains(searchString));
@@ -85,7 +85,19 @@ namespace BiberDAMM.Controllers
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
-            ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name", client.HealthInsuranceId);
+
+
+            Client tempClient = (Client)Session["TempClient"];
+
+            if (tempClient != null && tempClient.Id==client.Id)
+            {
+                client = tempClient;
+            }
+            else
+            {
+                Session["TempClient"] = null;
+            }
+
             return View(client);
         }
 
@@ -94,18 +106,25 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Client client)
         {
-            if (ModelState.IsValid)
+            //Check if the Contents should only be temporarly saved for adding e Healthinsurance
+            if (Request.Form["Save"] != null)
             {
                 client.LastUpdated = DateTime.Now;
-                client.RowVersion += 1;
-                db.Entry(client).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    client.RowVersion +=1;
+                    db.Entry(client).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(client);
             }
-            ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name", client.HealthInsuranceId);
-            return View(client);
+            else
+            {
+                Session["TempClient"] = client;
+                return RedirectToAction("Index", "HealthInsurance");
+            }
         }
-
 
         protected override void Dispose(bool disposing)
         {
