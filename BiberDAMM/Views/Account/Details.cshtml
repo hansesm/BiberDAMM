@@ -32,10 +32,6 @@ author: KrabsJ
     </div>
 }
 
-<p>
-    @Html.ActionLink("Zurück zur Übersicht", "Index")
-</p>
-
 <div>
     <hr/>
     <dl class="dl-horizontal">
@@ -126,6 +122,7 @@ author: KrabsJ
 
     <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button title="Löschen" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index", "Account")'" class="btn btn-outline-primary btn-sm">Zurück</button>
 
 
     @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind

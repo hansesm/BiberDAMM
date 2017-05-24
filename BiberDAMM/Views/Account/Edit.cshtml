@@ -9,7 +9,8 @@ author: KrabsJ
     ViewBag.Title = "Benutzer ändern";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2 style="display: inline-block;">@ViewBag.Title</h2>
+<button style="float: right;" title="Neues Passwort vergeben" onclick="location.href = '@Url.Action("NewInitialPassword", "Account", new { userId = Model.Id })'" class="btn btn-outline-primary btn-sm">Neues Passwort</button>
 
 <!--show alert "EditUserFailed" if the edit-method failed-->
 @if (TempData["EditUserFailed"] != null)
@@ -22,16 +23,11 @@ author: KrabsJ
     </div>
 }
 
-<p>
-    @Html.ActionLink("Neues Initialpasswort für diesen Benutzer vergeben", "NewInitialPassword", new { userId = Model.Id })
-</p>
+<hr />
 
-<p>
     @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
     {
         @Html.AntiForgeryToken()
-
-        <hr/>
 
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
@@ -94,13 +90,12 @@ author: KrabsJ
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input title="Speichern" type="submit" name="command" value="Änderungen speichern" class="btn btn-outline-primary btn-sm"/>
+                <input title="Änderungen speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm"/>
                 <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate"/>
             </div>
         </div>
     }
-</p>
-<p>
+
 
 <!--enable scripts for validation-->
 @section Scripts {
