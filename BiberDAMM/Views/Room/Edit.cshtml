@@ -38,7 +38,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Speichern" class="btn btn-outline-primary btn-sm"/>
-                <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
+                <button title="Zur Detailssicht" onclick="location.href='@Url.Action("Details", "Room", new {id = Model.Id}))';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
             </div>   
         </div>
     </div>
