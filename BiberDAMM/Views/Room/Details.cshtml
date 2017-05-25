@@ -8,16 +8,16 @@
 
 <h2>@ViewBag.Title</h2>
 
-<!--show alert "EditUserSuccess" if a user was successfully updated-->
-@*@if (TempData["EditUserSuccess"] != null)
+<!--show alert "EditRoomSuccess" if a room was successfully updated-->
+@if (TempData["EditRoomSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Änderungen gespeichert!</strong>@TempData["EditUserSuccess"]
+        <strong>Änderungen gespeichert!</strong>@TempData["EditRoomSuccess"]
     </div>
-}*@
+}
 
 <div>
     <hr />
@@ -43,6 +43,30 @@
 </div>
 <p>  
     <button title="Bearbeiten" onclick="location.href='@Url.Action("Edit", new { id= Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button title="Löschen" onclick="location.href='@Url.Action("Delete", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>  
+    <!-- Trigger the modal with a button -->
+    <button title="Löschen" type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#myModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    @*<button title="Löschen" onclick="location.href='@Url.Action("Delete", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>*@  
     <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
 </p>
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Raum löschen</h4>
+            </div>
+            <div class="modal-body">
+                <p>Sind Sie sicher, dass sie "@Html.DisplayFor(model => model.RoomNumber)" löschen möchten?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

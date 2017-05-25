@@ -1,9 +1,8 @@
 ﻿@* AUTHOR     : [JEL] *@
 
 @* Class to edit rooms *@
-
+@using BiberDAMM.Helpers
 @model BiberDAMM.Models.Room
-
 @{
     ViewBag.Title = "Raum bearbeiten";
 }
@@ -37,8 +36,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Speichern" class="btn btn-outline-primary btn-sm"/>
-                <button title="Zur Detailssicht" onclick="location.href='@Url.Action("Details", "Room", new {id = Model.Id}))';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
+                <input title="Speichern" type="submit" name="command" value="Änderungen speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
             </div>   
         </div>
     </div>
