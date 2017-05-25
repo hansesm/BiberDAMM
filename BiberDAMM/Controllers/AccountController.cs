@@ -214,7 +214,54 @@ namespace BiberDAMM.Controllers
             return View(userPassword);
         }
 
-        // TODO [KrabsJ] add delete method and view
+        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
+        // POST: /Acount/Delete
+        // Deletes an user if possible [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult Delete(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
+
+            var id = userId ?? default(int);
+            ApplicationUser deleteUser = UserManager.FindById(id);
+
+            // check if there are dependencies
+            Stay dependentStay = db.Stays.Where(s => s.ApplicationUserId == id).FirstOrDefault();
+            Treatment dependentTreatment = db.Users.Where(u => u.Id == id).SelectMany(u => u.Treatments).FirstOrDefault();
+
+            // if there is a treatment or stay that is linked to the user, the user can't be deleted
+            if (dependentStay != null || dependentTreatment != null )
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Es bestehen Abhängigkeiten zu anderen Krankenhausdaten.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+
+            // delete user if there are no dependencies
+            try
+            {
+                var deleteResult = UserManager.Delete(deleteUser);
+                if (deleteResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["DeleteSuccess"] = " Der Benutzer \"" + deleteUser.UserName + "\" wurde erfolgreich gelöscht.";
+                    return RedirectToAction("Index", "Account");
+                }
+                AddErrors(deleteResult);
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+            catch (System.Exception)
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+        }
 
         // GET: /Account/Login
         [AllowAnonymous]
