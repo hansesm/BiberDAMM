@@ -21,9 +21,27 @@ author: KrabsJ
     </div>
 }
 
-<p>
-    @Html.ActionLink("Zurück zur Übersicht", "Index")
-</p>
+<!--show alert "NewInitialPasswordSuccess" if a new password was successfully set-->
+@if (TempData["NewInitialPasswordSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderungen gespeichert!</strong>@TempData["NewInitialPasswordSuccess"]
+    </div>
+}
+
+<!--show alert "DeleteFailed" if deleting an user failed-->
+@if (TempData["DeleteFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Löschen nicht möglich!</strong>@TempData["DeleteFailed"]
+    </div>
+}
 
 <div>
     <hr/>
@@ -102,33 +120,70 @@ author: KrabsJ
 
     </dl>
 </div>
-<p>
 
-    <!--TODO [KrabsJ] delte unnecessary comments-->
+<button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+<button type ="button" title="Löschen"  class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+<button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index", "Account")'" class="btn btn-outline-primary btn-sm">Zurück</button>
 
-    @*@using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Id)
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-        <div class="form-actions no-color">*@
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Benutzer löschen</h4>
+                <i class="fa fa-exclamation-triangle fa-3x btn-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+            <div class="modal-body">
+                <p>Möchten Sie diesen Benutzer wirklich löschen?</p>
+                <table class="table" style="width:50%">
+                    <tr>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    Benutzername
+                                </dt>
 
-    <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button title="Löschen" onclick="location.href = '@Url.Action("Edit", "Account", new {userId = Model.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                <dd>
+                                    @Html.DisplayFor(model => model.UserName)
+                                </dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Surname)
+                                </dt>
 
+                                <dd>
+                                    @Html.DisplayFor(model => model.Surname)
+                                </dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <dl>
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Lastname)
+                                </dt>
 
-    @* Eine Krankenkasse darf nur gelöscht werden, wenn ihr keine Patienten zugeordnet sind
-            @if (Model.Client.Count == 0)
-            {
+                                <dd>
+                                    @Html.DisplayFor(model => model.Lastname)
+                                </dd>
+                            </dl>
+                            </td>
+                        </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Delete", "Account", new { userId = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />
+                    <button title="Abbrechen" type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                }
+            </div>
+        </div>
 
-                <input type="submit" value="Löschen" class="btn btn-default" />
-            }
-            else
-            {
-                <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
-            }*@
-    <br/>
-    <br/>
-    @*</div>
-    }*@
-</p>
+    </div>
+</div>

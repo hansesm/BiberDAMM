@@ -174,10 +174,95 @@ namespace BiberDAMM.Controllers
             return View(model);
         }
 
-        // TODO [KrabsJ] add delete method and view
-        // TODO [KrabsJ] add NewPassword method
+        // GET: /Acount/NewInitialPassword
+        // returns the View for awarding a new password to an user [KrabsJ]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
 
-        //
+            var id = userId ?? default(int);
+            var userPassword = new NewInitialPasswordViewModel { UserId = id, UserName = UserManager.FindById(id).UserName};
+            return View(userPassword);
+        }
+
+        // POST: /Acount/NewInitialPassword
+        // Awards a new password to an user [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(NewInitialPasswordViewModel userPassword, string command)
+        {
+            if (command.Equals(ConstVariables.AbortButton))
+                return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+
+            if (ModelState.IsValid)
+            {
+                string resetToken = UserManager.GeneratePasswordResetToken(userPassword.UserId);
+                IdentityResult passwordChangeResult = UserManager.ResetPassword(userPassword.UserId, resetToken, userPassword.Password);
+                if (passwordChangeResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["NewInitialPasswordSuccess"] = " Das Passwort wurde erfolgreich aktualisiert.";
+                    return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+                }
+                AddErrors(passwordChangeResult);
+            }
+            // failure-message for alert-statement [KrabsJ]
+            TempData["NewInitialPasswordFailed"] = " Das neue Passwort konnte nicht gespeichert werden.";
+            return View(userPassword);
+        }
+
+        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
+        // POST: /Acount/Delete
+        // Deletes an user if possible [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult Delete(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
+
+            var id = userId ?? default(int);
+            ApplicationUser deleteUser = UserManager.FindById(id);
+
+            // check if there are dependencies
+            Stay dependentStay = db.Stays.Where(s => s.ApplicationUserId == id).FirstOrDefault();
+            Treatment dependentTreatment = db.Users.Where(u => u.Id == id).SelectMany(u => u.Treatments).FirstOrDefault();
+
+            // if there is a treatment or stay that is linked to the user, the user can't be deleted
+            if (dependentStay != null || dependentTreatment != null )
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Es bestehen Abhängigkeiten zu anderen Krankenhausdaten.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+
+            // delete user if there are no dependencies
+            try
+            {
+                var deleteResult = UserManager.Delete(deleteUser);
+                if (deleteResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["DeleteSuccess"] = " Der Benutzer \"" + deleteUser.UserName + "\" wurde erfolgreich gelöscht.";
+                    return RedirectToAction("Index", "Account");
+                }
+                AddErrors(deleteResult);
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+            catch (System.Exception)
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+        }
+
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -230,7 +315,7 @@ namespace BiberDAMM.Controllers
                 //Added errormessage name to dispay in loginview [HansesM]
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort");
+                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort. Falls Sie Ihr Passwort vergessen haben, wenden Sie sich bitte an einen Administrator.");
                     return View(model);
             }
         }
