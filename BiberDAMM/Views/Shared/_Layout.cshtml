@@ -1,4 +1,5 @@
 ﻿@using System.IdentityModel.Tokens
+@using BiberDAMM.Helpers
 <!--
 * CoreUI - Open Source Bootstrap Admin Template
 * version v1.0.0-alpha.5
@@ -46,10 +47,10 @@
 <!-- The following code specifies the layout of our application! [HansesM]-->
 <body class="app header-fixed">
 
-<!-- The App-Header, with Logo, sidebar Toggler and User-Information ! [HansesM] -->
+    <!-- The App-Header, with Logo, sidebar Toggler and User-Information ! [HansesM] -->
     <header class="app-header navbar">
         <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
-        
+
         <ul class="nav navbar-nav d-md-down-none">
             <li class="nav-item">
                 <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
@@ -65,72 +66,33 @@
 
     <!-- The App-Body, containing a sidebar and a full-with container for dynamic contend [HansesM] -->
     <div class="app-body">
+
         <!-- The sidebar witch can be toggled off [HansesM]-->
-        <!-- TODO: sourceout the sidebar-code to separate classes and load contend dynamic dependig on user-role [HansesM]-->
-        <div class="sidebar">
-            <nav class="sidebar-nav">
-                <ul class="nav">
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-university" aria-hidden="true"></i> Krankenkasse</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/HealthInsurance/index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/HealthInsurance/create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-hospital-o" aria-hidden="true"></i>Räume</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Room/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                                <a class="nav-link" href="/Room/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-bed" aria-hidden="true"></i>Betten</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Bed/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                                <a class="nav-link" href="/Bed/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-id-badge" aria-hidden="true"></i>Kontakttyp</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/ContactType/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                                <a class="nav-link" href="/ContactType/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-address-card fa-lg"></i>Nutzer</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Account/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Account/Register"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-heart" aria-hidden="true"></i>Patienten</a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/Client/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                                <a class="nav-link" href="/Client/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        @{
+            /*
+                Sidebar-conted ist loaded dynamicaly depending on the User-Role. A partial sidebar view for each role [HansesM].
+            */
+
+            switch (User.Identity.GetUserType())
+            {
+                case ConstVariables.RoleAdministrator:
+                    @Html.Partial("_SidebarAdministrator")
+                    break;
+
+                case ConstVariables.RoleDoctor:
+                    @Html.Partial("_SidebarDoctor")
+                    break;
+
+                case ConstVariables.RoleNurse:
+                    @Html.Partial("_SidebarNurse")
+                    break;
+
+                case ConstVariables.RoleTherapist:
+                    @Html.Partial("_SidebarTherapist")
+                    break;
+            }
+
+        }
 
         <!-- Main contend of the application inside a full-with container! [HansesM] -->
         <main class="main">
