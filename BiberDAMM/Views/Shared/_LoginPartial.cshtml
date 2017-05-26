@@ -7,6 +7,7 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
+                <!--TODO [KrabsJ] Redirect to a userdetailspage-->
                 @Html.ActionLink("Hallo " + User.Identity.GetUserName() + "!", "Index", "Manage", null, new {title = "Manage"})
             </li>
             <li>
