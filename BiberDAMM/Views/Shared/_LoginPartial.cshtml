@@ -8,10 +8,12 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <!--TODO [KrabsJ] Redirect to a userdetailspage-->
-                @Html.ActionLink("Hallo " + User.Identity.GetUserName() + "!", "Index", "Manage", null, new {title = "Manage"})
+                <!--TODO [HansesM] Display User-Surename + Lastname or Title + Lastname if Doctor !, remove ugly link color.-->
+                @Html.ActionLink("Herzlich Willkommen  " + User.Identity.GetUserName() + " ", "Index", "Manage", null, new {title = "Manage"})
             </li>
+            
             <li>
-                <a href="javascript:document.getElementById('logoutForm').submit()">Abmelden</a>
+                <a href="javascript:document.getElementById('logoutForm').submit()"> Abmelden</a>
             </li>
         </ul>
     }

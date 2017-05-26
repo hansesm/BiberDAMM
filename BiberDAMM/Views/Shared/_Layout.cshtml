@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="~/Content/img/favicon.png">
 
     <title>DAMM - Daily Assistant in Medical Management</title>
-    
+
     <!-- Plugins and scripts required by this views  [HansesM]-->
 
 </head>
@@ -42,123 +42,138 @@
 
 // Footer options
 1. '.footer-fixed' - Fixed footer
-
 -->
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
-<header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
-    <a class="navbar-brand" href="#"></a>
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item">
-            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
-        </li>
-    </ul>
-    <!--Ja ich weiss ist noch nicht schoen, aber ich brauchte die Funktionalitaet schon mal zum testen-->
-    @Html.Partial("_LoginPartial")
-</header>
-<div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-university" aria-hidden="true"></i> Krankenkasse</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/HealthInsurance/index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/HealthInsurance/create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-hospital-o" aria-hidden="true"></i>Räume</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Room/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            <a class="nav-link" href="/Room/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-bed" aria-hidden="true"></i>Betten</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Bed/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            <a class="nav-link" href="/Bed/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-id-badge" aria-hidden="true"></i>Kontakttyp</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/ContactType/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            <a class="nav-link" href="/ContactType/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-address-card fa-lg"></i>Nutzer</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Account/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Account/Register"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item nav-dropdown">
-                    <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-heart" aria-hidden="true"></i>Patienten</a>
-                    <ul class="nav-dropdown-items">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Client/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
-                            <a class="nav-link" href="/Client/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <!-- Main content -->
-    <main class="main">
-        <div class="container-fluid">
-            @RenderBody()
+<!-- The following code specifies the layout of our application! [HansesM]-->
+<body class="app header-fixed">
 
+<!-- The App-Header, with Logo, sidebar Toggler and User-Information ! [HansesM] -->
+    <header class="app-header navbar">
+        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
+        
+        <ul class="nav navbar-nav d-md-down-none">
+            <li class="nav-item">
+                <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+            </li>
+        </ul>
+
+        <a class="navbar-brand" href="#"></a>
+
+        <!--Ja ich weiss ist noch nicht schoen, aber ich brauchte die Funktionalitaet schon mal zum testen-->
+        @Html.Partial("_LoginPartial")
+    </header>
+
+
+    <!-- The App-Body, containing a sidebar and a full-with container for dynamic contend [HansesM] -->
+    <div class="app-body">
+        <!-- The sidebar witch can be toggled off [HansesM]-->
+        <!-- TODO: sourceout the sidebar-code to separate classes and load contend dynamic dependig on user-role [HansesM]-->
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-university" aria-hidden="true"></i> Krankenkasse</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/HealthInsurance/index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/HealthInsurance/create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-hospital-o" aria-hidden="true"></i>Räume</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Room/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                                <a class="nav-link" href="/Room/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-bed" aria-hidden="true"></i>Betten</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Bed/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                                <a class="nav-link" href="/Bed/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-id-badge" aria-hidden="true"></i>Kontakttyp</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/ContactType/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                                <a class="nav-link" href="/ContactType/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-address-card fa-lg"></i>Nutzer</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Account/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Account/Register"><i class="fa fa-plus-circle" aria-hidden="true"></i> Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-heart" aria-hidden="true"></i>Patienten</a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Client/Index"><i class="fa fa-eye" aria-hidden="true"></i> Anzeigen</a>
+                                <a class="nav-link" href="/Client/Create"><i class="fa fa-plus-circle" aria-hidden="true"></i>Anlegen</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <!-- /.conainer-fluid -->
-    </main>
 
-</div>
-<footer class="app-footer">
-    <a href="http://coreui.io">CoreUI</a> © 2017 creativeLabs.
-    <span class="float-right">
-        Powered by <a href="http://coreui.io">CoreUI</a>
-    </span>
-</footer>
+        <!-- Main contend of the application inside a full-with container! [HansesM] -->
+        <main class="main">
 
-<!-- Bootstrap and necessary plugins -->
-@*<script src="~/Scripts/jquery.js"></script>*@
-@*<script src="~/Scripts/jquery.validate.js"></script>*@
+            <!-- container-fluid for margins arround the contend [HansesM]-->
+            <div class="container-fluid">
 
-@*<script src="~/Content/tether/dist/js/tether.min.js"></script>*@
-@*<script src="~/Scripts/bootstrap.min.js"></script>*@
+                @RenderBody()
 
-<!--<script src="~/Content/pace/pace.min.js"></script> -->
+            </div>
 
-<!-- GenesisUI main scripts -->
-@*<script src="~/Scripts/app.js"></script>*@
-    
+        </main>
 
-<!-- Import Bundels for Java-Script and HTML [HansesM]-->
-@Styles.Render("~/Content/css")
-@RenderSection("styles", false)
-   
+    </div>
 
-@Scripts.Render("~/bundles/scripts")
-@Scripts.Render("~/bundles/bootstrap")
-@RenderSection("Scripts", false)
-    
+    <!-- The footer of our Application containing some Copy-rights etc. [HansesM]-->
+    <footer class="app-footer">
+        DAMM - Daily Assistant in Medical Management</a> © 2017 Biber Consulting.
+        <span class="float-right">
+            Powered by Anna, Jonas, Jean-Pierre, Robin & Michael </a>
+        </span>
+    </footer>
+
+    <!-- Bootstrap and necessary plugins -->
+    @*<script src="~/Scripts/jquery.js"></script>*@
+    @*<script src="~/Scripts/jquery.validate.js"></script>*@
+
+    @*<script src="~/Content/tether/dist/js/tether.min.js"></script>*@
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+
+    <!--<script src="~/Content/pace/pace.min.js"></script> -->
+    <!-- GenesisUI main scripts -->
+    @*<script src="~/Scripts/app.js"></script>*@
+
+
+    <!-- Import Bundels for Java-Script and HTML [HansesM]-->
+    @Styles.Render("~/Content/css")
+    @RenderSection("styles", false)
+
+
+    @Scripts.Render("~/bundles/scripts")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", false)
+
 </body>
 </html>
