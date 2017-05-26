@@ -3,12 +3,15 @@ using System.Collections;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
+using System.Net;
+using System.Linq;
 
 namespace BiberDAMM.Controllers
 {
     public class ContactTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
+        private object[] id;
 
         public ContactType ContactTypes { get; private set; }
 
@@ -20,24 +23,25 @@ namespace BiberDAMM.Controllers
         }
 
         //CREATE: ContactType [JEL] [ANNAS]
-        [HttpGet]
+        //[HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public void Create(ContactType ContactType)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ContactType ContactType)
         {
-            try
+            ContactType checkContactType = db.ContactTypes.Where(c => c.Name == ContactType.Name).FirstOrDefault();
+            if (checkContactType != null)
             {
-                ContactType.Name = "";
+                // Fehler alert schreiben
+                return View();
+            }
                 db.ContactTypes.Add(ContactType);
                 db.SaveChanges();
-            }
-            catch (Exception)
-            {
-            }
+                return RedirectToAction("Index");
         }
 
         //CHANGE: ContactType [JEL] [ANNAS]
@@ -47,16 +51,17 @@ namespace BiberDAMM.Controllers
         }
 
         //GET SINGLE: ContactType [JEL] [ANNAS]
-        public ActionResult Details(int? id)
+        public ActionResult Details (int? contactTypeId)
         {
-            if (id == null)
+            if (contactTypeId == null)
+            {
                 return RedirectToAction("Index");
-            var ContactTyp = db.ContactTypes.Find(id);
-            if (ContactTyp == null)
-                return HttpNotFound();
-            return View(ContactTyp);
-        }
+            }
+            var id = contactTypeId ?? default(int);
+            ContactType _contactType = db.ContactTypes.Where(c => c.Id == contactTypeId).FirstOrDefault();
 
+                return View(_contactType);
+        }
         //SAVE: ContactType [JEL] [ANNAS]
         public ActionResult Save()
         {
