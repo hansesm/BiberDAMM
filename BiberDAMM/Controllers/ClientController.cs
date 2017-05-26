@@ -112,16 +112,22 @@ namespace BiberDAMM.Controllers
                 client.LastUpdated = DateTime.Now;
                 if (ModelState.IsValid)
                 {
-                    client.RowVersion +=1;
+                    client.RowVersion += 1;
                     db.Entry(client).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 return View(client);
             }
-            else
+            //Set HealthInsurance
+            else if (Request.Form["ChangeHealthInsurance"] != null)
             {
                 Session["TempClient"] = client;
+                return RedirectToAction("Index", "HealthInsurance");
+            }
+            //Add Contacts
+            else
+            {
                 return RedirectToAction("Index", "HealthInsurance");
             }
         }
