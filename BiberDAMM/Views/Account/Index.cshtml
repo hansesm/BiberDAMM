@@ -19,6 +19,17 @@ author: KrabsJ
     </div>
 }
 
+<!--show alert "DeleteSuccess" if an user was successfully deleted-->
+@if (TempData["DeleteSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Benutzer gelöscht!</strong>@TempData["DeleteSuccess"]
+    </div>
+}
+
 <hr/>
 
 <table id="userIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
