@@ -119,6 +119,11 @@ namespace BiberDAMM.Controllers
                 }
                 return View(client);
             }
+            else if (Request.Form["Cancel"] != null)
+            {
+                Session["TempClient"] = null;
+                return RedirectToAction("Index");
+            }
             else
             {
                 Session["TempClient"] = client;
