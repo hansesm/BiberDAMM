@@ -791,6 +791,9 @@
     <Content Include="Views\Room\Details.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Views\Account\NewInitialPassword.cshtml" />
+    <Content Include="Views\ContactType\Delete.cshtml" />
+    <Content Include="Views\Bed\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -820,7 +823,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52291</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

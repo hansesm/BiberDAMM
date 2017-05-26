@@ -46,20 +46,11 @@ namespace BiberDAMM.Controllers
         // GET: /Account/Index
         // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
-        public ActionResult Index(string searchString)
+        public ActionResult Index()
         {
             var ApplicationUsers = db.Users.ToList();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                var filterResult =
-                    ApplicationUsers.Where(a => a.UserName.Contains(searchString) || a.Surname.Contains(searchString) ||
-                                                a.Lastname.Contains(searchString) ||
-                                                a.UserType.ToString().Contains(searchString));
-                return View(filterResult.OrderBy(a => a.UserName));
-            }
-
-            return View(ApplicationUsers.OrderBy(a => a.UserName));
+  
+            return View(ApplicationUsers);
         }
 
         // GET: /Account/Details
@@ -93,6 +84,7 @@ namespace BiberDAMM.Controllers
             var editUser = new EditViewModel
             {
                 Id = user.Id,
+                Title = user.Title,
                 Surname = user.Surname,
                 Lastname = user.Lastname,
                 UserType = user.UserType,
@@ -112,6 +104,7 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Account", new {userId = model.Id});
+
             if (ModelState.IsValid)
             {
                 var changeRole = false;
@@ -125,6 +118,7 @@ namespace BiberDAMM.Controllers
                     changeRole = true;
 
                 // get the new data from the EditViewModel
+                editUser.Title = model.Title;
                 editUser.Surname = model.Surname;
                 editUser.Lastname = model.Lastname;
                 editUser.Email = model.Email;
@@ -180,11 +174,95 @@ namespace BiberDAMM.Controllers
             return View(model);
         }
 
-        // TODO [KrabsJ] add edit method and view
-        // TODO [KrabsJ] add delete method and view
-        // TODO [KrabsJ] add NewPassword method
+        // GET: /Acount/NewInitialPassword
+        // returns the View for awarding a new password to an user [KrabsJ]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
 
-        //
+            var id = userId ?? default(int);
+            var userPassword = new NewInitialPasswordViewModel { UserId = id, UserName = UserManager.FindById(id).UserName};
+            return View(userPassword);
+        }
+
+        // POST: /Acount/NewInitialPassword
+        // Awards a new password to an user [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult NewInitialPassword(NewInitialPasswordViewModel userPassword, string command)
+        {
+            if (command.Equals(ConstVariables.AbortButton))
+                return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+
+            if (ModelState.IsValid)
+            {
+                string resetToken = UserManager.GeneratePasswordResetToken(userPassword.UserId);
+                IdentityResult passwordChangeResult = UserManager.ResetPassword(userPassword.UserId, resetToken, userPassword.Password);
+                if (passwordChangeResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["NewInitialPasswordSuccess"] = " Das Passwort wurde erfolgreich aktualisiert.";
+                    return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
+                }
+                AddErrors(passwordChangeResult);
+            }
+            // failure-message for alert-statement [KrabsJ]
+            TempData["NewInitialPasswordFailed"] = " Das neue Passwort konnte nicht gespeichert werden.";
+            return View(userPassword);
+        }
+
+        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
+        // POST: /Acount/Delete
+        // Deletes an user if possible [KrabsJ]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
+        public ActionResult Delete(int? userId)
+        {
+            if (userId == null)
+                return RedirectToAction("Index");
+
+            var id = userId ?? default(int);
+            ApplicationUser deleteUser = UserManager.FindById(id);
+
+            // check if there are dependencies
+            Stay dependentStay = db.Stays.Where(s => s.ApplicationUserId == id).FirstOrDefault();
+            Treatment dependentTreatment = db.Users.Where(u => u.Id == id).SelectMany(u => u.Treatments).FirstOrDefault();
+
+            // if there is a treatment or stay that is linked to the user, the user can't be deleted
+            if (dependentStay != null || dependentTreatment != null )
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Es bestehen Abhängigkeiten zu anderen Krankenhausdaten.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+
+            // delete user if there are no dependencies
+            try
+            {
+                var deleteResult = UserManager.Delete(deleteUser);
+                if (deleteResult.Succeeded)
+                {
+                    // success-message for alert-statement [KrabsJ]
+                    TempData["DeleteSuccess"] = " Der Benutzer \"" + deleteUser.UserName + "\" wurde erfolgreich gelöscht.";
+                    return RedirectToAction("Index", "Account");
+                }
+                AddErrors(deleteResult);
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+            catch (System.Exception)
+            {
+                // failure-message for alert-statement [KrabsJ]
+                TempData["DeleteFailed"] = " Unbekannter Fehler beim Löschen.";
+                return RedirectToAction("Details", "Account", new { userId = deleteUser.Id });
+            }
+        }
+
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -237,7 +315,7 @@ namespace BiberDAMM.Controllers
                 //Added errormessage name to dispay in loginview [HansesM]
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort");
+                    ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort. Falls Sie Ihr Passwort vergessen haben, wenden Sie sich bitte an einen Administrator.");
                     return View(model);
             }
         }
@@ -304,45 +382,11 @@ namespace BiberDAMM.Controllers
         {
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index", "Account");
+
             if (ModelState.IsValid)
             {
-                // TODO [KrabsJ] algorithm in own method
-                // section added: variables for the algorithm of creating the Username [KrabsJ]
-                var username = model.Lastname + model.Surname[0];
-                string usernameWithNumber;
-                ApplicationUser userdb;
-                var surnameCounter = model.Surname.Length;
-                var userNameNumber = 1;
-
-                //section added: algorithm of creating the Username [KrabsJ]
-                //Username should be the Lastname plus the first character of the Surname
-                //If there is already another user with the same name the next character of the surname will be added and so on
-                //If there is already another user with the same name including the whole lastname plus surname a sequential number will be added
-                for (var i = 0; i < surnameCounter; i++)
-                {
-                    userdb = UserManager.FindByName(username);
-                    if (userdb == null)
-                        break;
-                    if (i + 1 < surnameCounter)
-                    {
-                        username = username + model.Surname[i + 1];
-                    }
-                    else
-                    {
-                        usernameWithNumber = username + userNameNumber;
-                        while (true)
-                        {
-                            userdb = UserManager.FindByName(usernameWithNumber);
-                            if (userdb == null)
-                            {
-                                username = usernameWithNumber;
-                                break;
-                            }
-                            userNameNumber++;
-                            usernameWithNumber = username + userNameNumber;
-                        }
-                    }
-                }
+                // create username from surname and lastname
+                string username = CreateUserName(model.Surname, model.Lastname);
 
                 //section changed: depending on the expansion of the ApplicationUser class there are more attributes that are necessary to create a new user
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -350,6 +394,7 @@ namespace BiberDAMM.Controllers
                 {
                     UserName = username,
                     Email = model.Email,
+                    Title = model.Title,
                     Surname = model.Surname,
                     Lastname = model.Lastname,
                     Active = model.Active,
@@ -614,6 +659,7 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
@@ -695,6 +741,7 @@ namespace BiberDAMM.Controllers
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
+        #endregion
 
         // the method generates the userName from surname and lastname [KrabsJ]
         private string CreateUserName(string surname, string lastname)
@@ -737,7 +784,5 @@ namespace BiberDAMM.Controllers
             }
             return username;
         }
-
-        #endregion
     }
 }

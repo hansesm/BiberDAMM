@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
-
+using BiberDAMM.Helpers;
 namespace BiberDAMM.Controllers
 {
     public class RoomController : Controller
@@ -35,8 +35,9 @@ namespace BiberDAMM.Controllers
             return View();
         }
 
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, string command)
         {
+            
             if (id == null)
                 return RedirectToAction("Index");
             var room = db.Rooms.Find(id);
@@ -48,8 +49,13 @@ namespace BiberDAMM.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, string command)
         {
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                return RedirectToAction("Details", "Room", id);
+            }
+            
             var room = db.Rooms.Find(id);
             db.Rooms.Remove(room);
             db.SaveChanges();
@@ -69,14 +75,19 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,RoomNumber,RoomTypeId")] Room room)
-        {
+        public ActionResult Edit(Room room, string command){
+            if (command.Equals(ConstVariables.AbortButton))
+                return RedirectToAction("Details", "Room", new { id = room.Id });
+
             if (ModelState.IsValid)
             {
                 db.Entry(room).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //if update succeeded #ToDo fehlermeldung einfügen falls nciht möglich
+                TempData["EditRoomSuccess"] = " Die Raumdetails wurden aktualisiert.";
+                return RedirectToAction("Details", "room", new { id = room.Id });
             }
+           
             return View(room);
         }
 

@@ -66,17 +66,20 @@ namespace BiberDAMM.Models
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort")]
         public string Password { get; set; }
+
+        //section deleted: for security reasons there should be no rememberme function [KrabsJ]
         /*
         [Display(Name = "Speichern?")]
         public bool RememberMe { get; set; }
         */
-
-        //section deleted: for security reasons there should be no rememberme function [KrabsJ]
     }
 
     public class RegisterViewModel
     {
-        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed and PhoneNumber ist optional [KrabsJ]
+        // section added: for registration of a new user the Surname, Lastname, UserType and ActiveFlag are needed; phoneNumber and title are optional [KrabsJ]
+        [Display(Name = "Titel")]
+        public string Title { get; set; }
+
         [Required]
         [Display(Name = "Vorname")]
         public string Surname { get; set; }
@@ -148,6 +151,9 @@ namespace BiberDAMM.Models
     {
         public int Id { get; set; }
 
+        [Display(Name = "Titel")]
+        public string Title { get; set; }
+
         [Required]
         [Display(Name = "Vorname")]
         public string Surname { get; set; }
@@ -170,5 +176,25 @@ namespace BiberDAMM.Models
         [EmailAddress]
         [Display(Name = "E-Mail")]
         public string Email { get; set; }
+    }
+
+    // ViewModel for creating a new password for an user by administrator [KrabsJ]
+    public class NewInitialPasswordViewModel
+    {
+        public int UserId { get; set; }
+
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "\"{0}\" muss mindestens {2} Zeichen lang sein.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Kennwort")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Kennwort bestätigen")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage =
+            "Das Kennwort stimmt nicht mit dem Bestätigungskennwort überein.")]
+        public string ConfirmPassword { get; set; }
     }
 }
