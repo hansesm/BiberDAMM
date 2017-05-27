@@ -659,6 +659,7 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }

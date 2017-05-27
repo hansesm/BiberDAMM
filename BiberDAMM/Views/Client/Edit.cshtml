@@ -11,7 +11,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Patienten Bearbeiten</h2>
 
 
 @using (Html.BeginForm("Edit", "Client"))
@@ -76,6 +76,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.DisplayNameFor(model => model.HealthInsurance.Name)
+                <input type="submit" name="ChangeHealthInsurance" value="Krankenversicherung ändern" class="btn btn-default" />
 
                 <br />
 
@@ -97,8 +98,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" name="ChangeHealthInsurance" value="Krankenversicherung ändern" class="btn btn-default" />
+                <input type="submit" name="EditContacts" value="Hinterlegte Kontaktdaten bearbeiten" class="btn btn-default" />
                 <input type="submit" name="Save" value="Speichern" class="btn btn-default" />
+                <input type="submit" name="Cancel" value="Bearbeitung abbrechen" class="btn btn-default" />
             </div>
         </div>
     </div>

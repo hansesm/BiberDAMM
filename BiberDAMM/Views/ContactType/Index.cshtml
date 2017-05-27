@@ -12,30 +12,41 @@
 
 <h2>Kontakttypübersicht</h2>
 
-<p>
-    @Html.ActionLink("Kontakttype hinzufügen", "Create", "ContactType")
-    @using (Html.BeginForm())
-    {
-        @Html.TextBox("SearchString")<input type="submit" value="Filtern"/>
-    }
-</p>
-<table class="table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.Id)</th>
-        <th>@Html.DisplayNameFor(model => model.Name)</th>
-        <th>Status</th>
-        <th>Aktionen</th>
-    </tr>
+<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+       
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="2">
+
+                <button title="Kontakttype hinzufügen" onclick="location.href='@(Url.Action("Create", "ContactType"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+
+            </td>
+        </tr>
+    </tfoot>
     @foreach (var item in Model)
     {
-        <tr>
-            <th>@Html.DisplayFor(modeliten => item.Id)</th>
-            <th>@Html.DisplayFor(modelItem => item.Name)</th>
-            <th></th>
-            <th>
-                <button onclick="location.href = '@Url.Action("Details", new {id = item.Name})';return false;" class="btn btn-default">Details</button>
-                <button onclick="location.href = '@Url.Action("Edit", new {id = item.Name})';return false;" class="btn btn-default">Bearbeiten</button>
-            </th>
+        <tr onclick="location.href = '@(Url.Action("Details", "ContactType", new {contactTypeId = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.Name)
+            </td>
         </tr>
     }
 </table>
+
+
+@section Scripts{
+    <script> $(function () { $("#example").dataTable();})</script>
+}

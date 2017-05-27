@@ -17,12 +17,12 @@ namespace BiberDAMM.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         //GET /Bed/
-        /*public ActionResult Index()
+        public ActionResult Index()
         {
             return View(db.Beds.ToList());
         }
-        */
-        public ActionResult Index(string searchString)
+  
+        /*public ActionResult Index(string searchString)
         {
             var beds = from m in db.Beds
                 select m;
@@ -32,16 +32,17 @@ namespace BiberDAMM.Controllers
 
             return View(beds.OrderBy(o => o.Id));
         }
-
+        */
         //GET /Bed/Create to add a bed 
         public ActionResult Create()
         {
+            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Model,RoomId")] Bed bed)
+        public ActionResult Create(Bed bed)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +50,6 @@ namespace BiberDAMM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(bed);
         }
 
@@ -67,7 +67,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Model,RoomId")] Bed bed)
+        public ActionResult Edit(Bed bed)
         {
             if (ModelState.IsValid)
             {
@@ -87,6 +87,28 @@ namespace BiberDAMM.Controllers
             if (bed == null)
                 return HttpNotFound();
             return View(bed);
+        }
+
+        //Function for deleting Datasets
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("Index");
+            var bed = db.Beds.Find(id);
+            if (bed == null)
+                return HttpNotFound();
+            return View(bed);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var bed = db.Beds.Find(id);
+            db.Beds.Remove(bed);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

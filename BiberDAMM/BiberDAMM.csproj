@@ -713,6 +713,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Content\Images\LogoDamm.png" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
@@ -792,10 +793,16 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Account\NewInitialPassword.cshtml" />
+    <Content Include="Views\ContactType\Delete.cshtml" />
+    <Content Include="Views\Bed\Delete.cshtml" />
+    <Content Include="Views\Shared\_SidebarAdministrator.cshtml" />
+    <Content Include="Views\Shared\_SidebarDoctor.cshtml" />
+    <Content Include="Views\Shared\_SidebarCleaner.cshtml" />
+    <Content Include="Views\Shared\_SidebarNurse.cshtml" />
+    <Content Include="Views\Shared\_SidebarTherapist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\" />
     <Folder Include="Views\Blocks\" />
     <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
