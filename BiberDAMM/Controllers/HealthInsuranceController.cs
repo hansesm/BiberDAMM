@@ -19,7 +19,7 @@ namespace BiberDAMM.Controllers
         public ActionResult Index(string searchString)
         {
             var healthInsurances = from m in db.HealthInsurances
-                select m;
+                                   select m;
 
             if (!string.IsNullOrEmpty(searchString))
                 healthInsurances =
@@ -97,28 +97,64 @@ namespace BiberDAMM.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var healthInsurance = db.HealthInsurances.Find(id);
+            if (healthInsurance.Client.Count != 0)
+            {
+                TempData["HealthInsuranceError"] = "Der Versicherung sind noch Patienten zugeordnet";
+                return RedirectToAction("Details", "HealthInsurance", new { id = healthInsurance.Id });
+            }
             db.HealthInsurances.Remove(healthInsurance);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
         //Function for Redirecting HealthInsurance to Client
-        public ActionResult AddInsuranceToClient(int id )
+        public ActionResult AddInsuranceToClient(int id)
         {
             HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
             if (healthInsurance == null)
                 return HttpNotFound();
-            Client temp = (Client)Session["TempClient"];
+
+            Client temp = new Client();
+
+            //Referencing to a editing Client Method
+            if (Session["TempClient"] != null)
+            {
+                temp = (Client)Session["TempClient"];
+            }
+            //Referencing to a new Client Method
+            else
+            {
+                temp = (Client)Session["TempNewClient"];
+            }
+
 
             temp.HealthInsurance = healthInsurance;
             temp.HealthInsuranceId = healthInsurance.Id;
 
-            Session["TempClient"] = temp;
 
-            return RedirectToAction("Edit", "Client", new { id = temp.Id });
+            if (Session["TempClient"] != null)
+            {
+                Session["TempClient"] = temp;
+
+                return RedirectToAction("Edit", "Client", new { id = temp.Id });
+            }
+            else
+            {
+                Session["TempNewClient"] = temp;
+
+                return RedirectToAction("Create", "Client");
+            }
+
+
         }
 
 
+        public ActionResult CancelEditingOrCreatingClient()
+        {
+            Session["TempClient"] = null;
+            Session["TempNewClient"] = null;
+            return RedirectToAction("Index", "HealthInsurance");
+        }
 
         protected override void Dispose(bool disposing)
         {

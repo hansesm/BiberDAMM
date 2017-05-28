@@ -8,10 +8,21 @@
     ViewBag.Title = "Versicherungsdetails";
 }
 
-<h2>Versicherungsdetails</h2>
+<h2>@ViewBag.Title</h2>
+
+<!--show alert if the HealthInsurance could not be deleted-->
+@if (TempData["HealthInsuranceError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Löschen fehlgeschlagen! </strong>@TempData["HealthInsuranceError"]
+    </div>
+}
 
 <div>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -43,18 +54,10 @@
 
             <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
 
+            <input type="submit" value="Löschen" class="btn btn-default" />
 
-            @* A HealthInsurance can only be deleted, if there are no Clients using this *@
-            @if (Model.Client.Count == 0)
-            {
-                <input type="submit" value="Löschen" class="btn btn-default"/>
-            }
-            else
-            {
-                <h5>Versicherung kann nicht gelöscht werden, da ihr noch Patienten zugeordnet sind.</h5>
-            }
-            <br/>
-            <br/>
+            <br />
+            <br />
             <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
         </div>
     }
