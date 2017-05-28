@@ -17,5 +17,7 @@ namespace BiberDAMM.Helpers
                 return claimIdentity.FindFirstValue("UserType");
             return null;
         }
+
+        //TODO Add funtions to get User-Surname and Lastname to Display in _LoginPartial ! [HansesM]
     }
 }
