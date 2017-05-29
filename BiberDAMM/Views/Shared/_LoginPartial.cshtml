@@ -8,9 +8,8 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <!--TODO [KrabsJ] Redirect to a userdetailspage-->
                 <!--TODO [HansesM] remove ugly link color.-->
-                @Html.ActionLink("Herzlich Willkommen  " + User.Identity.GetDisplayName() + " ", "Index", "Manage", null, new {title = "Manage"})
+                @Html.ActionLink("Herzlich Willkommen  " + User.Identity.GetDisplayName() + " ", "UserDetails", "Account")
             </li>
             
             <li>

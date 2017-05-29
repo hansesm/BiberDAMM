@@ -45,17 +45,17 @@ namespace BiberDAMM.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Aktuelles Kennwort")]
+        [Display(Name = "Aktuelles Passwort")]
         public string OldPassword { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "\"{0}\" muss mindestens {2} Zeichen lang sein.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Neues Kennwort")]
+        [Display(Name = "Neues Passwort")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Neues Kennwort bestätigen")]
+        [Display(Name = "Neues Passwort bestätigen")]
         [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage =
             "Das neue Kennwort stimmt nicht mit dem Bestätigungskennwort überein.")]
         public string ConfirmPassword { get; set; }
