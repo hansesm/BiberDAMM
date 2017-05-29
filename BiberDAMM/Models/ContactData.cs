@@ -31,7 +31,7 @@ namespace BiberDAMM.Models
         public string City { get; set; }
 
 
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public virtual Client Client { get; set; }
 
         public int ContactTypeId { get; set; }

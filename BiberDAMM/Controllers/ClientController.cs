@@ -82,6 +82,23 @@ namespace BiberDAMM.Controllers
                     client.RowVersion = 1;
                     db.Clients.Add(client);
                     db.SaveChanges();
+
+                    int clientID = db.Clients.Max(u => u.Id);
+
+                    //Update Contact-Rows which are temporary inserted with Null-Value  
+
+                    var results = from p in db.ContactDatas select p;
+                    results = results.Where(s =>  s.ClientId==null);
+
+                    foreach (ContactData c in results)
+                    {
+                        c.ClientId = clientID;
+                    }
+
+                    db.SaveChanges();
+
+
+
                     return RedirectToAction("Index");
                 }
                 return View(client);
@@ -97,10 +114,12 @@ namespace BiberDAMM.Controllers
                 TempData["RedirectFromClient"]=true;
                 return RedirectToAction("Index", "HealthInsurance");
             }
-            else
+            else 
             {
-                //Add Contact Data
-                return RedirectToAction("Index");
+                //Redirect to ContactData
+                Session["TempNewClient"] = client;
+                TempData["RedirectFromClient"] = true;
+                return RedirectToAction("Index", "ContactData");
             }
 
         }
@@ -156,8 +175,15 @@ namespace BiberDAMM.Controllers
                 Session["TempClient"] = null;
                 return RedirectToAction("Index");
             }
+            else if (Request.Form["EditContacts"] != null)
+            {
+                Session["TempClient"] = client;
+                TempData["RedirectFromClient"] = true;
+                return RedirectToAction("Index", "ContactData");
+            }
             else
             {
+                //Redirect to edit HealthInsurances
                 Session["TempClient"] = client;
                 TempData["RedirectFromClient"] = true;
                 return RedirectToAction("Index", "HealthInsurance");

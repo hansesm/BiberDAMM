@@ -5,11 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
+
+@if (TempData["ContactDeleteConfirmation"] != null)
+{
+    Html.BeginForm("DeleteConfirmed", "ContactData", new { id = Model.Id });
+    {
+        @Html.AntiForgeryToken()
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Zum Löschen des Kontaktes bitte</strong>
+            <input type="submit" name="Confirm" value="Bestätigen" class="btn btn-default" />
+        </div>
+    }
+}
 
 <div>
-    <h4>ContactData</h4>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Client.Surname)
@@ -86,6 +100,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
-    @Html.ActionLink("Back to List", "Index")
+    <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+    <button onclick="location.href = '@Url.Action("DeleteCheck", new { id = Model.Id })';return false;" class="btn btn-default">Löschen</button>
+    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
+    <button onclick="location.href = '@Url.Action("GoBackToClient")';return false;" class="btn btn-default">Zurück zu Patienten</button>
 </p>

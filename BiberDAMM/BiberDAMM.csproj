@@ -781,7 +781,6 @@
     <Content Include="Views\Client\Edit.cshtml" />
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\ContactData\Create.cshtml" />
-    <Content Include="Views\ContactData\Delete.cshtml" />
     <Content Include="Views\ContactData\Details.cshtml" />
     <Content Include="Views\ContactData\Edit.cshtml" />
     <Content Include="Views\ContactData\Index.cshtml" />
