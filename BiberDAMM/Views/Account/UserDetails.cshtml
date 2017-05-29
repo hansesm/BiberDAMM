@@ -1,0 +1,114 @@
+﻿<!-- details page for the account details of the logged in user
+author: KrabsJ
+-->
+
+@using BiberDAMM.Helpers;
+
+@model BiberDAMM.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Mein Account";
+}
+
+<h2 style="display: inline-block;">@ViewBag.Title</h2>
+<button style="float: right;" title="Passwort ändern" onclick="location.href = '@Url.Action("ChangePassword", "Manage", new { userId = Model.Id })'" class="btn btn-outline-primary btn-sm">Passwort ändern</button>
+
+<!--show alert "ChangePasswordSuccess" if the password was successfully updated-->
+@if (TempData["ChangePasswordSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderungen gespeichert!</strong>@TempData["ChangePasswordSuccess"]
+    </div>
+}
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Benutzername
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        @if (!Model.Title.IsEmpty())
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+        }
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Surname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lastname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lastname)
+        </dd>
+
+        <dt>
+            E-Mail
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            Telefonnummer
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        @if (Model.Active)
+        {
+            <dd>ja</dd>
+        }
+        else
+        {
+            <dd>nein</dd>
+        }
+
+    </dl>
+</div>
+
+<hr />
+
+@if (User.Identity.GetUserType() == ConstVariables.RoleAdministrator)
+{
+    <p>Für Änderungen an Ihrem persönlichen Account verwenden Sie bitte die Benutzerverwaltung.</p>
+}
+else
+{
+    <p>Für Änderungen an Ihrem persönlichen Account wenden Sie sich bitte an einen Administrator.</p>
+}

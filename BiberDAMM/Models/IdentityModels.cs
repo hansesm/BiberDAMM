@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BiberDAMM.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace BiberDAMM.Models
 {
@@ -56,6 +57,21 @@ namespace BiberDAMM.Models
             // Benutzerdefinierte Benutzeransprüche hier hinzufügen
             // custom claim for getting the usertype of the logged in user [KrabsJ]
             userIdentity.AddClaim(new Claim("UserType", UserType.ToString()));
+
+            // custom claim for getting the displayName (shown in _LoginPartial) of the logged in user [KrabsJ]
+            // the displayName should consist of surname and lastname if the title of the user is null or empty
+            // if the user has got a title the displayName should consist of title and lastname
+            string displayName;
+            if (String.IsNullOrEmpty(Title))
+            {
+                displayName = Surname + " " + Lastname;
+            }
+            else
+            {
+                displayName = Title + " " + Lastname;
+            }
+            userIdentity.AddClaim(new Claim("DisplayName", displayName));
+
             return userIdentity;
         }
     }

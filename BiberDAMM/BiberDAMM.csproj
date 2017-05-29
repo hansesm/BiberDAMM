@@ -799,6 +799,7 @@
     <Content Include="Views\Shared\_SidebarCleaner.cshtml" />
     <Content Include="Views\Shared\_SidebarNurse.cshtml" />
     <Content Include="Views\Shared\_SidebarTherapist.cshtml" />
+    <Content Include="Views\Account\UserDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
