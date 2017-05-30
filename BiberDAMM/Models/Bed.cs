@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BiberDAMM.Models
@@ -18,5 +19,15 @@ namespace BiberDAMM.Models
         public virtual Room Room { get; set; }
 
         public virtual ICollection<Blocks> Blocks { get; set; }
+
+        internal static ApplicationUser FindById(int? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static object Delete(ApplicationUser deleteBed)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
