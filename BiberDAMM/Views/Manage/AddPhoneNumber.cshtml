@@ -5,6 +5,7 @@
 
 <h2>@ViewBag.Title.</h2>
 
+@* TODO: Check if we need this, when not delete [HansesM]*@
 @using (Html.BeginForm("AddPhoneNumber", "Manage", FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
 {
     @Html.AntiForgeryToken()
