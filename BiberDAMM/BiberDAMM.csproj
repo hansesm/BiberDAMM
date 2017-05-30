@@ -235,6 +235,7 @@
     <Compile Include="ViewModels\CreationStay.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentType.cs" />
+    <Compile Include="ViewModels\StayIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

@@ -433,6 +433,7 @@ namespace BiberDAMM.DAL
                 new Stay
                 {
                     BeginDate = DateTime.Today.Date,
+                    EndDate = DateTime.Today.Date.AddDays(10),
                     ICD10 = "FF-365",
                     StayType = StayType.stationär,
                     RowVersion = 1,
@@ -448,7 +449,29 @@ namespace BiberDAMM.DAL
                     LastUpdated = DateTime.Now,
                     ClientId = 4,
                     ApplicationUserId = 3
+                },
+
+                new Stay
+                {
+                BeginDate = DateTime.Today.Date.AddDays(-10),
+                EndDate = DateTime.Today.Date.AddDays(10),
+                StayType = StayType.ambulant,
+                RowVersion = 1,
+                LastUpdated = DateTime.Now,
+                ClientId = 4,
+                ApplicationUserId = 3
+                },
+
+                new Stay
+                {
+                    BeginDate = DateTime.Today.Date,
+                    StayType = StayType.ambulant,
+                    RowVersion = 1,
+                    LastUpdated = DateTime.Now,
+                    ClientId = 4,
+                    ApplicationUserId = 3
                 }
+
             };
             stays.ForEach(s => _context.Stays.Add(s));
             _context.SaveChanges();
