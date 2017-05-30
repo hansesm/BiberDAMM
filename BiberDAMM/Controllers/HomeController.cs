@@ -10,6 +10,12 @@ namespace BiberDAMM.Controllers
         // load the different homepages based on the usertype of the logged in user [KrabsJ]
         public ActionResult Index()
         {
+            // show warning alert statement if the initialPassword flag is true
+            if (User.Identity.GetInitialPassword() == true.ToString())
+            {
+                TempData["InitialPasswordTrue"] = " Sie verwenden ein Initialpasswort. Bitte vergeben Sie hier ein eigenes Passwort:";
+            }
+
             switch (User.Identity.GetUserType())
             {
                 case ConstVariables.RoleAdministrator:

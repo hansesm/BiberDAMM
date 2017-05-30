@@ -59,7 +59,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Lustig",
                 UserType = UserType.Administrator,
                 Active = true,
-                PhoneNumber = "12345670"
+                PhoneNumber = "12345670",
+                InitialPassword = true,
             };
 
             // create user and add the role Administator
@@ -81,7 +82,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Becker",
                 UserType = UserType.Arzt,
                 Active = true,
-                PhoneNumber = "5236984"
+                PhoneNumber = "5236984",
+                InitialPassword = true
             };
             userManager.Create(user2, "BiberDamm!");
             userManager.AddToRole(user2.Id, ConstVariables.RoleDoctor);
@@ -95,7 +97,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Mueller",
                 UserType = UserType.Arzt,
                 Active = true,
-                PhoneNumber = "1452398"
+                PhoneNumber = "1452398",
+                InitialPassword = true
             };
             userManager.Create(user3, "BiberDamm!");
             userManager.AddToRole(user3.Id, ConstVariables.RoleDoctor);
@@ -109,7 +112,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Mustermann",
                 UserType = UserType.Arzt,
                 Active = false,
-                PhoneNumber = "6354720"
+                PhoneNumber = "6354720",
+                InitialPassword = true
             };
             userManager.Create(user4, "BiberDamm!");
             userManager.AddToRole(user4.Id, ConstVariables.RoleDoctor);
@@ -123,7 +127,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Reis",
                 UserType = UserType.Pflegekraft,
                 Active = true,
-                PhoneNumber = "6985324"
+                PhoneNumber = "6985324",
+                InitialPassword = true
             };
             userManager.Create(user5, "BiberDamm!");
             userManager.AddToRole(user5.Id, ConstVariables.RoleNurse);
@@ -136,7 +141,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Fleischer",
                 UserType = UserType.Pflegekraft,
                 Active = true,
-                PhoneNumber = "1153369"
+                PhoneNumber = "1153369",
+                InitialPassword = true
             };
             userManager.Create(user6, "BiberDamm!");
             userManager.AddToRole(user6.Id, ConstVariables.RoleNurse);
@@ -149,7 +155,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Weiss",
                 UserType = UserType.Pflegekraft,
                 Active = false,
-                PhoneNumber = "9968534"
+                PhoneNumber = "9968534",
+                InitialPassword = true
             };
             userManager.Create(user7, "BiberDamm!");
             userManager.AddToRole(user7.Id, ConstVariables.RoleNurse);
@@ -163,7 +170,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Wolf",
                 UserType = UserType.Reinigungskraft,
                 Active = true,
-                PhoneNumber = "6653842"
+                PhoneNumber = "6653842",
+                InitialPassword = true
             };
             userManager.Create(user8, "BiberDamm!");
             userManager.AddToRole(user8.Id, ConstVariables.RoleCleaner);
@@ -176,7 +184,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Jaeger",
                 UserType = UserType.Reinigungskraft,
                 Active = false,
-                PhoneNumber = "8853364"
+                PhoneNumber = "8853364",
+                InitialPassword = true
             };
             userManager.Create(user9, "BiberDamm!");
             userManager.AddToRole(user9.Id, ConstVariables.RoleCleaner);
@@ -190,7 +199,8 @@ namespace BiberDAMM.DAL
                 Lastname = "Friedrich",
                 UserType = UserType.Therapeut,
                 Active = true,
-                PhoneNumber = "5586694"
+                PhoneNumber = "5586694",
+                InitialPassword = true
             };
             userManager.Create(user10, "BiberDamm!");
             userManager.AddToRole(user10.Id, ConstVariables.RoleTherapist);

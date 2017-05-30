@@ -251,10 +251,17 @@ namespace BiberDAMM.Controllers
                 // Change PrimaryKey of identity package to int [var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());] //KrabsJ
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
+                {
+                    // set initialPassword flag to false [KrabsJ]
+                    user.InitialPassword = false;
+                    UserManager.Update(user);
+
                     await SignInManager.SignInAsync(user, false, false);
-                // success message for alert-statement [KrabsJ]
-                TempData["ChangePasswordSuccess"] = " Das Passwort wurde erfolgreich geändert.";
-                return RedirectToAction("UserDetails", "Account");
+
+                    // success message for alert-statement [KrabsJ]
+                    TempData["ChangePasswordSuccess"] = " Das Passwort wurde erfolgreich geändert.";
+                    return RedirectToAction("UserDetails", "Account");
+                }
             }
             AddErrors(result);
             // failure message for alert-statement [KrabsJ]
