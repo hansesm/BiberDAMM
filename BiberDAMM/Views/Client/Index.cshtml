@@ -40,12 +40,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.InsuranceNumber)
             </th>
-            <th>Verfügbare Aktionen</th>
         </tr>
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
-            <td colspan="6">
+            <td colspan="5">
                 <button title="Benutzer hinzufügen" onclick="location.href='@(Url.Action("Create", "Client"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
             </td>
         </tr>
@@ -68,9 +67,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.InsuranceNumber)
-                </td>
-                <td>
-                    <button onclick="location.href = '@Url.Action("Edit", new {id = item.Id})';return false;" class="btn btn-default">Bearbeiten</button>
                 </td>
             </tr>
         }

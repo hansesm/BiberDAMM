@@ -52,7 +52,16 @@
 
         <div class="form-actions no-color">
 
-            <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
+            @if (Session["TempClient"] != null || Session["TempNewClient"] != null)
+            {
+
+                <button onclick="location.href = '@Url.Action("AddInsuranceToClient", new { id = Model.Id })';return false;" class="btn btn-default">Krankenversicherung hinzufügen</button>
+            }
+            else
+            {
+                <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+
+            }
 
             <input type="submit" value="Löschen" class="btn btn-default" />
 

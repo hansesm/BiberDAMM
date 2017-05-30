@@ -125,9 +125,27 @@ namespace BiberDAMM.Controllers
         }
 
 
-        //Getter and Setter for the Editing Page
+        //Redirect to the Overview-Page of ContactData
+        public ActionResult ViewContactsFromClient(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("Index");
+            var client = db.Clients.Find(id);
+            if (client == null)
+                return HttpNotFound();
 
-        public ActionResult Edit(int? id)
+
+            Session["TempViewClient"] =client;
+            TempData["RedirectFromClient"] = true;
+            return RedirectToAction("Index", "ContactData");
+
+        }
+
+
+
+            //Getter and Setter for the Editing Page
+
+            public ActionResult Edit(int? id)
         {
             if (id == null)
                 return RedirectToAction("Index");
