@@ -22,11 +22,6 @@ namespace BiberDAMM.Models
     // Change PrimaryKey of identity package to int [public class ApplicationUser : IdentityUser] //KrabsJ
     public class ApplicationUser : IdentityUser<int, CustomUserLogin, CustomUserRole, CustomUserClaim>
     {
-        // TODO [KrabsJ] include attribute InitialPassword
-        // add this attribute to Initializer
-        // add this attribute to Views?! check if necessary
-        // add this attribute to ViewModal?! check if necessary
-
         [Display(Name = "Titel")]
         public string Title { get; set; }
 
@@ -44,6 +39,8 @@ namespace BiberDAMM.Models
 
         [Display(Name = "Aktiviert")]
         public bool Active { get; set; }
+
+        public bool InitialPassword { get; set; }
 
         public virtual ICollection<Stay> Stays { get; set; }
 
@@ -71,6 +68,9 @@ namespace BiberDAMM.Models
                 displayName = Title + " " + Lastname;
             }
             userIdentity.AddClaim(new Claim("DisplayName", displayName));
+
+            // custom claim for getting the value of the initialPassword flag of the logged in user [KrabsJ]
+            userIdentity.AddClaim(new Claim("InitialPassword", InitialPassword.ToString()));
 
             return userIdentity;
         }

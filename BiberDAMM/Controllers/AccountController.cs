@@ -203,6 +203,11 @@ namespace BiberDAMM.Controllers
                 IdentityResult passwordChangeResult = UserManager.ResetPassword(userPassword.UserId, resetToken, userPassword.Password);
                 if (passwordChangeResult.Succeeded)
                 {
+                    // set initialPassword flag to true [KrabsJ]
+                    ApplicationUser user = UserManager.FindById(userPassword.UserId);
+                    user.InitialPassword = true;
+                    UserManager.Update(user);
+
                     // success-message for alert-statement [KrabsJ]
                     TempData["NewInitialPasswordSuccess"] = " Das Passwort wurde erfolgreich aktualisiert.";
                     return RedirectToAction("Details", "Account", new { userId = userPassword.UserId });
@@ -412,7 +417,8 @@ namespace BiberDAMM.Controllers
                     Lastname = model.Lastname,
                     Active = model.Active,
                     UserType = model.UserType,
-                    PhoneNumber = model.PhoneNumber
+                    PhoneNumber = model.PhoneNumber,
+                    InitialPassword = true,
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

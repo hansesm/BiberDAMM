@@ -3,7 +3,17 @@
     ViewBag.Title = "Home Arzt";
 }
 
-<!--TODO [KrabsJ] add alert for InitialPassword-->
+<!--show alert "InitialPasswordTrue" if the user uses an initial password set by an administrator [KrabsJ]-->
+@if (TempData["InitialPasswordTrue"] != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Achtung!</strong>@TempData["InitialPasswordTrue"] @Html.ActionLink("Passwort ändern", "ChangePassword", "Manage")
+    </div>
+}
+
 <div class="jumbotron">
     <h1>Willkommen @User.Identity.GetUserName()</h1>
     <p class="lead">Dies ist die Homeseite für Ärzte</p>

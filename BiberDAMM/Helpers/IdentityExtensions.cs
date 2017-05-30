@@ -28,5 +28,16 @@ namespace BiberDAMM.Helpers
                 return claimIdentity.FindFirstValue("DisplayName");
             return null;
         }
+
+        // custom identity extensions for getting the value of the initialPassword flag of the logged in user [KrabsJ]
+        public static string GetInitialPassword(this IIdentity identity)
+        {
+            if (identity == null)
+                throw new ArgumentNullException("identity");
+            var claimIdentity = identity as ClaimsIdentity;
+            if (claimIdentity != null)
+                return claimIdentity.FindFirstValue("InitialPassword");
+            return null;
+        }
     }
 }
