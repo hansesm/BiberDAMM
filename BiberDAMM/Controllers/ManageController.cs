@@ -7,6 +7,7 @@ using BiberDAMM.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using BiberDAMM.Helpers;
 
 namespace BiberDAMM.Controllers
 {
@@ -229,10 +230,18 @@ namespace BiberDAMM.Controllers
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model, string command)
         {
+            // return to details page without changes if abortbutton was clicked [KrabsJ]
+            if (command.Equals(ConstVariables.AbortButton))
+                return RedirectToAction("UserDetails", "Account");
+
             if (!ModelState.IsValid)
+            {
+                // failure message for alert-statement [KrabsJ]
+                TempData["ChangePasswordFailed"] = " Das neue Passwort konnte nicht gespeichert werden.";
                 return View(model);
+            }
             // Change PrimaryKey of identity package to int [var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);] //KrabsJ
             var result =
                 await UserManager.ChangePasswordAsync(User.Identity.GetUserId<int>(), model.OldPassword,
@@ -243,9 +252,13 @@ namespace BiberDAMM.Controllers
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                 if (user != null)
                     await SignInManager.SignInAsync(user, false, false);
-                return RedirectToAction("Index", new {Message = ManageMessageId.ChangePasswordSuccess});
+                // success message for alert-statement [KrabsJ]
+                TempData["ChangePasswordSuccess"] = " Das Passwort wurde erfolgreich geändert.";
+                return RedirectToAction("UserDetails", "Account");
             }
             AddErrors(result);
+            // failure message for alert-statement [KrabsJ]
+            TempData["ChangePasswordFailed"] = " Das neue Passwort konnte nicht gespeichert werden.";
             return View(model);
         }
 

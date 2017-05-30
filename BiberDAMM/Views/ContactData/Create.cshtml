@@ -1,11 +1,11 @@
 ﻿@model BiberDAMM.Models.ContactData
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Kontakt erstellen";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>@ViewBag.Title</h2>
 
 
 @using (Html.BeginForm())
@@ -13,8 +13,17 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>ContactData</h4>
         <hr/>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactTypeId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ContactTypeId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ContactTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
         <div class="form-group">
             @Html.LabelFor(model => model.Description, new {@class = "control-label col-md-2"})
@@ -71,34 +80,15 @@
                 @Html.ValidationMessageFor(model => model.City, "", new {@class = "text-danger"})
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClientId, "ClientId", new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.DropDownList("ClientId", null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.ClientId, "", new {@class = "text-danger"})
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ContactTypeId, "ContactTypeId", new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.DropDownList("ContactTypeId", null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.ContactTypeId, "", new {@class = "text-danger"})
-            </div>
-        </div>
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default"/>
+                <input type="submit" name="Save" value="Kontakt hinzufügen" class="btn btn-default" />
+                <input type="submit" name="Cancel" value="Daten verwerfen" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

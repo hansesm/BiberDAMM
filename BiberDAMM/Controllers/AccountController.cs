@@ -263,6 +263,19 @@ namespace BiberDAMM.Controllers
             }
         }
 
+        // show the AccountDetails of the logged in user [KrabsJ]
+        public ActionResult UserDetails()
+        {
+            int userId = User.Identity.GetUserId<int>();
+            ApplicationUser loggedInUser = UserManager.FindById(userId);
+            if (loggedInUser == null)
+            {
+                // failure
+                RedirectToAction("Login");
+            }
+            return View(loggedInUser);
+        }
+
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -659,6 +672,7 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }

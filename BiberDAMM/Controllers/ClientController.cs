@@ -52,8 +52,17 @@ namespace BiberDAMM.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name");
-            return View();
+
+            Client client = (Client)Session["TempNewClient"];
+
+            if (client == null)
+            {
+                client = new Client();
+                client.Birthdate = DateTime.Now;
+
+            }
+
+            return View(client);
         }
 
 
@@ -61,18 +70,58 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Client client)
         {
-            if (ModelState.IsValid)
+            //Null the Editing Client for preventing user to get into undefined state
+            Session["TempClient"] = null;
+
+            if (Request.Form["Save"] != null)
             {
-                client.Captured = DateTime.Now;
-                client.LastUpdated = DateTime.Now;
-                client.RowVersion = 1;
-                db.Clients.Add(client);
-                db.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    client.Captured = DateTime.Now;
+                    client.LastUpdated = DateTime.Now;
+                    client.RowVersion = 1;
+                    db.Clients.Add(client);
+                    db.SaveChanges();
+
+                    int clientID = db.Clients.Max(u => u.Id);
+
+                    //Update Contact-Rows which are temporary inserted with Null-Value  
+
+                    var results = from p in db.ContactDatas select p;
+                    results = results.Where(s =>  s.ClientId==null);
+
+                    foreach (ContactData c in results)
+                    {
+                        c.ClientId = clientID;
+                    }
+
+                    db.SaveChanges();
+
+
+
+                    return RedirectToAction("Index");
+                }
+                return View(client);
+            }
+            else if (Request.Form["Cancel"] != null)
+            {
+                Session["TempNewClient"] = null;
                 return RedirectToAction("Index");
             }
+            else if (Request.Form["ChangeHealthInsurance"] != null)
+            {
+                Session["TempNewClient"] = client;
+                TempData["RedirectFromClient"]=true;
+                return RedirectToAction("Index", "HealthInsurance");
+            }
+            else 
+            {
+                //Redirect to ContactData
+                Session["TempNewClient"] = client;
+                TempData["RedirectFromClient"] = true;
+                return RedirectToAction("Index", "ContactData");
+            }
 
-            ViewBag.HealthInsuranceId = new SelectList(db.HealthInsurances, "Id", "Name", client.HealthInsuranceId);
-            return View(client);
         }
 
 
@@ -89,7 +138,7 @@ namespace BiberDAMM.Controllers
 
             Client tempClient = (Client)Session["TempClient"];
 
-            if (tempClient != null && tempClient.Id==client.Id)
+            if (tempClient != null && tempClient.Id == client.Id)
             {
                 client = tempClient;
             }
@@ -106,13 +155,15 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Client client)
         {
+            //Null the New Client for preventing user to get into undefined state
+            Session["TempNewClient"] = null;
             //Check if the Contents should only be temporarly saved for adding e Healthinsurance
             if (Request.Form["Save"] != null)
             {
                 client.LastUpdated = DateTime.Now;
                 if (ModelState.IsValid)
                 {
-                    client.RowVersion +=1;
+                    client.RowVersion += 1;
                     db.Entry(client).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -124,9 +175,17 @@ namespace BiberDAMM.Controllers
                 Session["TempClient"] = null;
                 return RedirectToAction("Index");
             }
-            else
+            else if (Request.Form["EditContacts"] != null)
             {
                 Session["TempClient"] = client;
+                TempData["RedirectFromClient"] = true;
+                return RedirectToAction("Index", "ContactData");
+            }
+            else
+            {
+                //Redirect to edit HealthInsurances
+                Session["TempClient"] = client;
+                TempData["RedirectFromClient"] = true;
                 return RedirectToAction("Index", "HealthInsurance");
             }
         }
