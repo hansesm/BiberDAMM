@@ -14,7 +14,7 @@
 @if (TempData["HealthInsuranceError"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <strong>Löschen fehlgeschlagen! </strong>@TempData["HealthInsuranceError"]
@@ -45,29 +45,28 @@
 <p>
 
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Id)
 
-        <div class="form-actions no-color">
 
-            @if (Session["TempClient"] != null || Session["TempNewClient"] != null)
+    <div class="form-actions no-color">
+
+        @if (Session["TempClient"] != null || Session["TempNewClient"] != null)
             {
 
-                <button onclick="location.href = '@Url.Action("AddInsuranceToClient", new { id = Model.Id })';return false;" class="btn btn-default">Krankenversicherung hinzufügen</button>
-            }
-            else
-            {
-                <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-default">Bearbeiten</button>
+            <button onclick="location.href = '@Url.Action("AddInsuranceToClient", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Krankenversicherung hinzufügen</button>
+        }
+        else
+        {
+            <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
 
-            }
+        }
 
-            <input type="submit" value="Löschen" class="btn btn-default" />
 
-            <br />
-            <br />
-            <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
-        </div>
-    }
+
+        <button onclick="location.href = '@Url.Action("DeleteConfirmed", new { id=Model.Id})';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+
+        <br />
+        <br />
+        <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zur Übersicht</button>
+    </div>
+
 </p>

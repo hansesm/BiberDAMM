@@ -16,17 +16,10 @@ namespace BiberDAMM.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         //Generating Index Page
-        public ActionResult Index(string searchString)
+        public ActionResult Index()
         {
             var healthInsurances = from m in db.HealthInsurances
                                    select m;
-
-            if (!string.IsNullOrEmpty(searchString))
-                healthInsurances =
-                    healthInsurances.Where(s => s.Name.Contains(searchString) ||
-                                                s.Type.ToString().Contains(searchString) ||
-                                                s.Number.Contains(searchString));
-
             return View(healthInsurances.OrderBy(o => o.Name));
         }
 
@@ -91,9 +84,9 @@ namespace BiberDAMM.Controllers
 
 
         //Function for deleting Datasets
-        [HttpPost]
-        [ActionName("Details")]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ActionName("Details")]
+        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             var healthInsurance = db.HealthInsurances.Find(id);

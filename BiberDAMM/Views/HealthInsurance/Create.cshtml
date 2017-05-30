@@ -43,15 +43,13 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Anlegen" class="btn btn-default"/>
+                <input type="submit" value="Anlegen" class="btn btn-outline-primary btn-sm"/>
+                <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zur Übersicht</button>
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Zurück zur Übersicht", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
