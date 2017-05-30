@@ -1,13 +1,20 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using BiberDAMM.DAL;
 
 namespace BiberDAMM.Controllers
 {
     public class StayController : Controller
     {
-        // GET all: Stay [JEL] [ANNAS]
+        //The Database-Context [HansesM]
+        private readonly ApplicationDbContext _db = new ApplicationDbContext();
+
+        // Method to get all stays 
         public ActionResult Index()
         {
-            return View();
+            var stays = _db.Stays.SqlQuery(
+                "select * from stays where CAST(CURRENT_TIMESTAMP AS DATE) between BeginDate and EndDate;").ToList();
+            return View(stays);
         }
 
         //CREATE: Stay [JEL] [ANNAS]

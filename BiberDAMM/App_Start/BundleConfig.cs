@@ -13,7 +13,7 @@ namespace BiberDAMM
                 "~/Scripts/jquery.validate.js",
                 "~/Scripts/app.js",
                 "~/Scripts/jquery.dynamicDataTable.js",
-                "~/Scripts/main.js"
+                "~/Scripts/Chart.js"
                 ));
 
             //TODO Change Modenizr-Version [HansesM]
