@@ -12,6 +12,7 @@ namespace BiberDAMM.Models
         public string RoomNumber { get; set; }
 
         [Required]
+        [Display(Name = "Raumtyp")]
         public int RoomTypeId { get; set; }
 
         public virtual RoomType RoomType { get; set; }

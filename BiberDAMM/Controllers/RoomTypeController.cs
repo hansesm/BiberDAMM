@@ -1,13 +1,19 @@
-﻿using System.Web.Mvc;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Web.Mvc;
+using BiberDAMM.DAL;
+using BiberDAMM.Models;
+using BiberDAMM.Helpers;
 
-namespace BiberDAMM.Controllers
-{
+namespace BiberDAMM.Controllers {
+
     public class RoomTypeController : Controller
     {
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
         // GET all: RoomType [JEL] [ANNAS]
         public ActionResult Index()
         {
-            return View();
+            return View(db.RoomTypes.ToList());
         }
 
         //CREATE: RoomType [JEL] [ANNAS]

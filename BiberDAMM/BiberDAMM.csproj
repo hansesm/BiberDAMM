@@ -800,11 +800,11 @@
     <Content Include="Views\Shared\_SidebarNurse.cshtml" />
     <Content Include="Views\Shared\_SidebarTherapist.cshtml" />
     <Content Include="Views\Account\UserDetails.cshtml" />
+    <Content Include="Views\RoomType\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Blocks\" />
-    <Folder Include="Views\RoomType\" />
     <Folder Include="Views\Stay\" />
     <Folder Include="Views\TreatmentType\" />
     <Folder Include="Views\Treatment\" />

@@ -10,13 +10,13 @@ namespace BiberDAMM.Controllers
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET all: Room [JEL] [ANNAS]
+        // GET all: Room [JEL]
         public ActionResult Index()
         {
             return View(db.Rooms.ToList());
         }
 
-        //CREATE: Room [JEL] [ANNAS]
+        //CREATE: Room [JEL]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Room Room)
@@ -32,12 +32,12 @@ namespace BiberDAMM.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.RoomTypeId = new SelectList(db.RoomTypes, "Id", "Name");
             return View();
         }
 
-        public ActionResult Delete(int? id, string command)
+        public ActionResult Delete(int? id)
         {
-            
             if (id == null)
                 return RedirectToAction("Index");
             var room = db.Rooms.Find(id);
@@ -49,22 +49,51 @@ namespace BiberDAMM.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id, string command)
+        public ActionResult DeleteConfirmed(int id)
         {
-            if (command.Equals(ConstVariables.AbortButton))
-            {
-                return RedirectToAction("Details", "Room", id);
-            }
-            
             var room = db.Rooms.Find(id);
             db.Rooms.Remove(room);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+    
 
-        //CHANGE: Room [JEL] [ANNAS]
-        public ActionResult Edit(int? id)
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public ActionResult Delete(int? id)
+    //{
+
+    //    if (id == null)
+    //        return RedirectToAction("Index");
+    //    var room = db.Rooms.Find(id);
+    //    if (room == null)
+    //        return HttpNotFound();
+    //    db.Rooms.Remove(room);
+    //    db.SaveChanges();
+    //    return RedirectToAction("Index");
+
+    //}
+
+    //[HttpPost]
+    //[ActionName("Delete")]
+    //[ValidateAntiForgeryToken]
+    //public ActionResult DeleteConfirmed(int id)
+    //{
+    //    if (command.Equals(ConstVariables.AbortButton))
+    //    {
+    //        return RedirectToAction("Details", "Room", id);
+    //    }
+
+    //    var room = db.Rooms.Find(id);
+    //    db.Rooms.Remove(room);
+    //    db.SaveChanges();
+    //    return RedirectToAction("Index");
+    //}
+
+    //CHANGE: Room [JEL] 
+    public ActionResult Edit(int? id)
         {
+            ViewBag.RoomTypeId = new SelectList(db.RoomTypes, "Id", "Name");
             if (id == null)
                 return RedirectToAction("Index");
             var room = db.Rooms.Find(id);
@@ -91,7 +120,7 @@ namespace BiberDAMM.Controllers
             return View(room);
         }
 
-        //GET SINGLE: Room [JEL] [ANNAS]
+        //GET SINGLE: Room [JEL]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -101,7 +130,8 @@ namespace BiberDAMM.Controllers
                 return HttpNotFound();
             return View(room);
         }
-        //SAVE: Room [JEL] [ANNAS]
+        
+        //SAVE: Room [JEL] 
             public ActionResult Save()
         {
             return View();
