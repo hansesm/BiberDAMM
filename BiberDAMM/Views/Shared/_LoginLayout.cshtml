@@ -15,23 +15,21 @@
 
     <title>DAMM-@ViewBag.Title</title>
 
-    @Styles.Render("~/Content/css")
-
-    <!-- No modenizr required in this view [HansesM]-->
-    @*@Scripts.Render("~/bundles/modernizr")*@
-
-
 </head>
 <body>
 <div>
     @RenderBody()
 </div>
+    
+@Styles.Render("~/Content/css")
+@RenderSection("styles", false)
+
 <!-- jquery bundle is needed for highlighting and client-side-validation [HansesM]-->
-@Scripts.Render("~/bundles/jquery")
+<!-- bootstrap for look and feel !-->
 
-<!-- No need for Bootstrap-Bundle in this Class because of custom-Stylesheel [HansesM]-->
-@*@Scripts.Render("~/bundles/bootstrap")*@
+@Scripts.Render("~/bundles/scripts")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("Scripts", false)
 
-@RenderSection("scripts", false)
 </body>
 </html>

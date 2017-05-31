@@ -12,7 +12,9 @@ namespace BiberDAMM.Controllers
     public class ContactTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
-        private object[] id;
+        
+        //ToDo remove ? [HansesM]
+        //private object[] id;
 
         public ContactType ContactTypes { get; private set; }
 

@@ -12,7 +12,6 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Client</h4>
     <hr/>
     <dl class="dl-horizontal">
         <dt>
@@ -98,7 +97,7 @@
     </dl>
 </div>
 <p>
-    <button onclick="location.href = '@Url.Action("ViewContactsFromClient", new {id = Model.Id})';return false;" class="btn btn-default">Hinterlegte Kontakte anzeigen</button>
-    <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-default">Bearbeiten</button>
-    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
+    <button onclick="location.href = '@Url.Action("ViewContactsFromClient", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm">Hinterlegte Kontakte anzeigen</button>
+    <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm" >Zurück zur Übersicht</button>
 </p>

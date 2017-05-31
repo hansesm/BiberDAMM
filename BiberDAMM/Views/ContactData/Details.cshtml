@@ -26,14 +26,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Client.Surname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Client.Surname)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.ContactType.Name)
         </dt>
 
@@ -100,8 +92,8 @@
     </dl>
 </div>
 <p>
-    <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-default">Bearbeiten</button>
-    <button onclick="location.href = '@Url.Action("DeleteCheck", new { id = Model.Id })';return false;" class="btn btn-default">Löschen</button>
-    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-default">Zurück zur Übersicht</button>
-    <button onclick="location.href = '@Url.Action("GoBackToClient")';return false;" class="btn btn-default">Zurück zu Patienten</button>
+    <button onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button onclick="location.href = '@Url.Action("DeleteCheck", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zur Übersicht</button>
+    <button onclick="location.href = '@Url.Action("GoBackToClient")';return false;" class="btn btn-outline-primary btn-sm">Zurück zu Patienten</button>
 </p>

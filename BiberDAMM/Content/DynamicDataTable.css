@@ -19,6 +19,7 @@ table.dataTable thead th {
 table.dataTable tfoot th {
     padding: 3px 18px 3px 10px;
     border-top: 1px solid black;
+    color: red;
     font-weight: bold;
 }
 

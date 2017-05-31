@@ -1,0 +1,82 @@
+﻿@model IEnumerable<BiberDAMM.Models.Stay>
+
+@*
+    Author: HansesM
+    The stays Index-Page shows all Stays for a given day. It allows to change the Day.
+*@
+
+
+@{
+    ViewBag.Title = "Aufenthaltsübersicht";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date.AddDays(-1) </button>
+<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date </button>
+<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date.AddDays(+1) </button>
+<hr/>
+
+<table id="staysAtDay" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BeginDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StayType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ICD10)
+            </th>
+
+        </tr>
+    </thead>
+
+    @foreach (var item in Model)
+    {
+
+        <tr onclick="location.href = '@(Url.Action("Details", "Stay", new {stayId = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.Client.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.BeginDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.StayType)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.ICD10)
+            </td>
+        </tr>
+    }
+
+    <tfoot style="background-color: #263238; color: white; text-align: left;">
+        <tr>
+            <td colspan="6">
+                Abgerufen am @DateTime.Now
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+@section Scripts{
+    <script> $(function () { $("#staysAtDay").dataTable(); })</script>
+}
