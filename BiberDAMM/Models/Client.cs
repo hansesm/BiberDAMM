@@ -20,7 +20,7 @@ namespace BiberDAMM.Models
 
         [Required]
 //        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]
-        [Display(Name = "Vormame")]
+        [Display(Name = "Vorname")]
         public string Surname { get; set; }
 
         [Required]
