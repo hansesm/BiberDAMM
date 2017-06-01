@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
+using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
@@ -14,30 +15,31 @@ namespace BiberDAMM.Controllers
         // Method to get all stays of a given day [HansesM]
         public ActionResult Index(string date)
         {
+            //Initalizes the requested Date to now.
+            var requestedDate = DateTime.Now;
+
+            //If there is no date given use toay. [HansesM]
             if (string.IsNullOrEmpty(date))
             {
                 var stays = _db.Stays.SqlQuery(
                     "select * from stays where CAST(CURRENT_TIMESTAMP AS DATE) between BeginDate and EndDate or CAST(CURRENT_TIMESTAMP AS DATE) = CAST(BeginDate AS DATE);").ToList();
-                return View(stays);
+                return View(new StayIndexViewModel(stays, requestedDate));
             }
             else
             {
-
-
-                //var requestedDate = DateTime.ParseExact(date, "yyyy-MM-dddd", CultureInfo.InvariantCulture);
-
-                DateTime requestedDate;
+                //Parse the given string into a datetime-object. [HansesM]
+                
                 if (!DateTime.TryParse(date, out requestedDate))
                 {
+                    //If parsing wasn't succsessfull return a empty page [HansesM]
+                    //ToDo add nice errorpage for parsing error [HansesM]
                     return new EmptyResult();
                 }
-                
-                //TODO Find Errors ! [HansesM]
-                var stays = _db.Stays.SqlQuery("select * from stays where CAST('" + requestedDate.ToString("dd/MM/yyyy") + "' AS DATE) between BeginDate and EndDate or CAST('" + requestedDate.ToString("dd/MM/yyyy") + "' AS DATE) = CAST(BeginDate AS DATE);").ToList();
+                //Request all stays matching the given date from the DB using a sql-querry [HansesM]
+                var stays = _db.Stays.SqlQuery("select * from stays where CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) between BeginDate and EndDate or CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) = CAST(BeginDate AS DATE);").ToList();
 
-                return View(stays);
-
-
+                //Returns the result [HansesM]
+                return View(new StayIndexViewModel(stays, requestedDate));
             }
         }
 

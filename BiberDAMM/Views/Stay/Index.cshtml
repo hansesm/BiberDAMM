@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BiberDAMM.Models.Stay>
+﻿@model BiberDAMM.ViewModels.StayIndexViewModel
 
 @*
     Author: HansesM
@@ -13,37 +13,41 @@
 
 <h2>@ViewBag.Title</h2>
 
-<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date.AddDays(-1) </button>
-<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date </button>
-<button class="btn btn-outline-primary btn-sm"> @DateTime.Now.Date.AddDays(+1) </button>
+@* Display 3 Buttons to toggle the Date, they change automaticall, depending on the selected date. [HansesM]*@
+@Html.ActionLink(@Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy"), "Index", "Stay", new{@date = @Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy")}, new {@class = "btn btn-outline-primary btn-sm"})
+@Html.ActionLink(@Model.RequestedDate.ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.ToString("dd.MM.yyyy") }, new {@class = "btn btn-outline-primary active btn-sm"})
+@Html.ActionLink(@Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy") }, new {@class = "btn btn-outline-primary btn-sm"})
+
 <hr/>
+@* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the stay-list is empty. [HansesM] *@
+@{ var staysHeaderHelper = Model.Stays.FirstOrDefault();}
 
 <table id="staysAtDay" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Client.Surname)
+                @Html.DisplayNameFor(model => staysHeaderHelper.Client.Surname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Client.Lastname)
+                @Html.DisplayNameFor(model => staysHeaderHelper.Client.Lastname)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BeginDate)
+                @Html.DisplayNameFor(model => staysHeaderHelper.BeginDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                @Html.DisplayNameFor(model => staysHeaderHelper.EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StayType)
+                @Html.DisplayNameFor(model => staysHeaderHelper.StayType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ICD10)
+                @Html.DisplayNameFor(model => staysHeaderHelper.ICD10)
             </th>
 
         </tr>
     </thead>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Stays)
     {
 
         <tr onclick="location.href = '@(Url.Action("Details", "Stay", new {stayId = item.Id}))'">
