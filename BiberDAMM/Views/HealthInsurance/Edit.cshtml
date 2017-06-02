@@ -39,15 +39,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Type, new {@class = "form-control"})
+                @Html.EnumDropDownListFor(model => model.Type, new { @class = "btn btn.btn-outline-secondary dropdown-toggle"})
                 @Html.ValidationMessageFor(model => model.Type, "", new {@class = "text-danger"})
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Speichern" class="btn btn-outline-primary btn-sm"/>
-                <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zur Übersicht</button>
+                <input title="Speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm"/>
+                <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
             </div>
         </div>
     </div>

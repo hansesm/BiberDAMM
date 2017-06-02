@@ -97,7 +97,7 @@
     </dl>
 </div>
 <p>
-    <button onclick="location.href = '@Url.Action("ViewContactsFromClient", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm">Hinterlegte Kontakte anzeigen</button>
-    <button onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm" >Zurück zur Übersicht</button>
+    <button title="Hinterlegte Kontakte bearbeiten" onclick="location.href = '@Url.Action("ViewContactsFromClient", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm">Hinterlegte Kontakte anzeigen</button>
+    <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm" >Zurück</button>
 </p>

@@ -97,6 +97,8 @@ namespace BiberDAMM.Controllers
             }
             db.HealthInsurances.Remove(healthInsurance);
             db.SaveChanges();
+
+            TempData["HealthInsuranceSuccess"] = "Versicherung erfolgreich gelöscht";
             return RedirectToAction("Index");
         }
 

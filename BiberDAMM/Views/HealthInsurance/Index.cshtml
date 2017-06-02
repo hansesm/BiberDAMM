@@ -11,6 +11,20 @@
 
 <h2>@ViewBag.Title</h2>
 
+
+
+<!--show alert if a healthInsurance was successfully changed-->
+@if (TempData["HealthInsuranceSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["HealthInsuranceSuccess"]</strong>
+    </div>
+}
+
+
 <!--show alert if editing or creating for a client is activated-->
 @if ((Session["TempClient"] != null || Session["TempNewClient"] != null) && TempData["RedirectFromClient"] == null)
 {
@@ -24,44 +38,45 @@
 }
 
 
-    <table id="healthInsuranceIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
-        <thead class="thead-inverse">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Type)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Number)
-                </th>
-            </tr>
-        </thead>
-        <tfoot style="background-color: #263238; text-align: right;">
-            <tr>
-                <td colspan="3">
-                    <button title="Benutzer hinzufügen" onclick="location.href='@(Url.Action("Create", "HealthInsurance"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-        </tfoot>
-        @foreach (var item in Model)
-            {
-            <tr onclick="location.href = '@(Url.Action("Details", new {id = item.Id}))'">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Number)
-                </td>
-            </tr>
-        }
+<table id="healthInsuranceIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
 
-    </table>
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="3">
+                <button title="Benutzer hinzufügen" onclick="location.href='@(Url.Action("Create", "HealthInsurance"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    </tfoot>
+    @foreach (var item in Model)
+            {
+        <tr onclick="location.href = '@(Url.Action("Details", new {id = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+        </tr>
+    }
+
+</table>
 
 @section Scripts{
-    <script> $(function () { $("#healthInsuranceIndexTable").dataTable();})</script>
+    <script> $(function () { $("#healthInsuranceIndexTable").dataTable(); })</script>
 }

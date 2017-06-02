@@ -204,6 +204,7 @@ namespace BiberDAMM.Controllers
             var contactData = db.ContactDatas.Find(id);
             db.ContactDatas.Remove(contactData);
             db.SaveChanges();
+            TempData["ContactDataSuccess"] = "Kontakt erfolgreich gelöscht";
             return RedirectToAction("Index");
         }
 
