@@ -30,6 +30,14 @@ namespace BiberDAMM.Controllers
                                              || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString()
                                                  .Contains(searchString));
             }
+            else
+            {
+                clients = from m in db.Clients
+                          select m;
+                clients.OrderBy(o => o.LastUpdated);
+
+                return View(clients.Take(30).OrderBy(o => o.Lastname));
+            }
 
             return View(clients.OrderBy(o => o.Lastname));
         }
@@ -38,6 +46,16 @@ namespace BiberDAMM.Controllers
         //Gettter for the Details-Page
 
         public ActionResult Details(int? id)
+        {
+            if (id == null)
+                return RedirectToAction("Index");
+            var client = db.Clients.Find(id);
+            if (client == null)
+                return HttpNotFound();
+            return View(client);
+        }
+
+        public ActionResult TempDetails(int? id)
         {
             if (id == null)
                 return RedirectToAction("Index");
