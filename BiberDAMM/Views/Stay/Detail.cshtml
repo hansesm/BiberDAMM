@@ -1,0 +1,147 @@
+﻿@*
+    View for displaying stay information
+    Author: [HansesM]
+*@
+
+@using BiberDAMM.Helpers
+@model BiberDAMM.ViewModels.DetailsStayViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@* Displays the main Stayinformation [HansesM]*@
+<h2>Aufenthalt von @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname)</h2>
+@{
+    @* Displays date-information depending if a end-date is set. [HansesM]*@
+if (Model.Stay.EndDate.HasValue)
+{
+    <h4>vom @Html.Raw(Model.Stay.BeginDate.ToString("dd.MM.yyyy")) - @Html.Raw((Model.Stay.EndDate != null ? Model.Stay.EndDate.GetValueOrDefault().ToString("dd.MM.yyyy") : ""))</h4>
+}
+else
+{
+    <h4>am @Html.Raw(Model.Stay.BeginDate.ToString("dd.MM.yyyy"))</h4>
+}
+}
+
+<hr />
+
+<div class="container">
+    @using (Html.BeginForm("Edit", "Stay"))
+    {
+        @Html.HiddenFor(m => m.Stay.Id)
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+
+            <div class="form-group col-md-8">
+                @Html.LabelFor(model => model.Stay.ICD10, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.ICD10, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Stay.ApplicationUser, "Behandelnder Arzt", new { @class = "col-form-label" })
+                @Html.DropDownList("ListDoctors", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new { @class = "text-danger" })
+            </div>
+
+        </div> <!-- row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Stay.Result, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.Result, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.Result, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- TODO Datepicker [HansesM]-->
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Stay.BeginDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
+            </div>
+
+        </div> <!--row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+                @Html.LabelFor(model => model.Stay.Comment, null, new { @class = "col-form-label" })
+                @Html.TextAreaFor(model => model.Stay.Comment, new { @class = "form-control", rows = "6" })
+            </div>
+
+        </div> <!--row-->
+
+
+        <div class="form-group">
+            <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
+            <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
+        </div>
+    }
+</div>
+
+<hr />
+
+<h4> Behandlungsübersicht</h4>
+
+@* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the treatment-list is empty. [HansesM] *@
+@{ var treatmentHeaderHelper = Model.Stay.Treatments.FirstOrDefault();}
+
+
+<div class="container">
+    <table id="treatmentsOfUser" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+        <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
+            </th>
+        </tr>
+        </thead>
+        <tfoot style="background-color: #263238; color: white; text-align: right;">
+        <tr>
+            <td colspan="4">
+                <button title="Treatment hinzufügen" onclick="location.href='@(Url.Action("Create", "Treatment", new {Id = Model.Stay.Id}))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+        </tfoot> 
+
+        @foreach (var item in Model.Stay.Treatments)
+        {
+            <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {Id = item.Id}))'">
+                <td>
+                    @Html.DisplayFor(modelItem => item.TreatmentType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modeItem => item.Begin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modeItem => item.End)
+                </td>
+
+            </tr>
+        }
+    </table>
+
+    @section Scripts{
+        <script> $(function () { $("#treatmentsOfUser").dataTable();})</script>
+    }
+</div>
+
