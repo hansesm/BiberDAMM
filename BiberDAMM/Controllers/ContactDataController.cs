@@ -29,7 +29,7 @@ namespace BiberDAMM.Controllers
             {
                 client = (Client)Session["TempClient"];
             }
-            
+
             return client;
 
         }
@@ -63,11 +63,11 @@ namespace BiberDAMM.Controllers
             }
 
             ViewBag.Title = "Kontaktübersicht für Patient " + getCachedClient().Id;
-            
+
 
             //To show values which are linked to a new Client with a 0-ID
             int? clientID = cachedClient.Id;
-            if(clientID==0)
+            if (clientID == 0)
             {
                 clientID = null;
             }
@@ -103,7 +103,7 @@ namespace BiberDAMM.Controllers
                 if (ModelState.IsValid)
                 {
                     Client cachedClient = (Client)getCachedClient();
-                    if(cachedClient.Id!=0)
+                    if (cachedClient.Id != 0)
                     {
                         contactData.ClientId = cachedClient.Id;
                     }
@@ -114,15 +114,17 @@ namespace BiberDAMM.Controllers
 
                     db.ContactDatas.Add(contactData);
                     db.SaveChanges();
+                    TempData["ContactDataSuccess"] = "Daten erfolgreich gespeichert";
                     return RedirectToAction("Index");
                 }
 
-
+                TempData["ContactDataError"] = "Eingegebene Daten unvollständig oder fehlerhaft";
                 return View(contactData);
             }
             else
             {
                 //Creating was canceled
+                TempData["ContactDataError"] = "Bearbeitung abgebrochen";
                 return RedirectToAction("Index");
             }
         }
@@ -148,27 +150,30 @@ namespace BiberDAMM.Controllers
             if (Request.Form["Save"] != null)
             {
                 if (ModelState.IsValid)
-            {
+                {
 
-                Client cachedClient = (Client)getCachedClient();
-                if (cachedClient.Id != 0)
-                {
-                    contactData.ClientId = cachedClient.Id;
+                    Client cachedClient = (Client)getCachedClient();
+                    if (cachedClient.Id != 0)
+                    {
+                        contactData.ClientId = cachedClient.Id;
+                    }
+                    else
+                    {
+                        contactData.ClientId = null;
+                    }
+                    db.Entry(contactData).State = EntityState.Modified;
+                    db.SaveChanges();
+                    TempData["ContactDataSuccess"] = "Daten erfolgreich gespeichert";
+                    return RedirectToAction("Index");
                 }
-                else
-                {
-                    contactData.ClientId = null;
-                }
-                db.Entry(contactData).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.ContactTypeId = new SelectList(db.ContactTypes, "Id", "Name", contactData.ContactTypeId);
-            return View(contactData);
+                ViewBag.ContactTypeId = new SelectList(db.ContactTypes, "Id", "Name", contactData.ContactTypeId);
+                TempData["ContactDataError"] = "Eingaben fehlerhaft oder unvollständig";
+                return View(contactData);
             }
             else
             {
                 //Editing was canceled
+                TempData["ContactDataError"] = "Bearbeitung wurde abgebrochen";
                 return RedirectToAction("Index");
             }
         }
@@ -208,7 +213,7 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
 
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

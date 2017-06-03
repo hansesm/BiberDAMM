@@ -54,11 +54,13 @@ namespace BiberDAMM.Controllers
         {
 
             Client client = (Client)Session["TempNewClient"];
+            TempData["ClientSuccess"] = "Werte erfolgreich hinzugefügt";
 
             if (client == null)
             {
                 client = new Client();
                 client.Birthdate = DateTime.Now;
+                TempData["ClientSuccess"] = null;
 
             }
 
@@ -88,7 +90,7 @@ namespace BiberDAMM.Controllers
                     //Update Contact-Rows which are temporary inserted with Null-Value  
 
                     var results = from p in db.ContactDatas select p;
-                    results = results.Where(s =>  s.ClientId==null);
+                    results = results.Where(s => s.ClientId == null);
 
                     foreach (ContactData c in results)
                     {
@@ -98,23 +100,26 @@ namespace BiberDAMM.Controllers
                     db.SaveChanges();
 
 
-
+                    TempData["ClientSuccess"] = "Patient erfolgreich gespeichert!";
                     return RedirectToAction("Index");
                 }
+                TempData["ClientError"] = "Daten unvollständig oder fehlerhaft";
                 return View(client);
             }
             else if (Request.Form["Cancel"] != null)
             {
                 Session["TempNewClient"] = null;
+
+                TempData["ClientError"] = "Bearbeitung abgebrochen";
                 return RedirectToAction("Index");
             }
             else if (Request.Form["ChangeHealthInsurance"] != null)
             {
                 Session["TempNewClient"] = client;
-                TempData["RedirectFromClient"]=true;
+                TempData["RedirectFromClient"] = true;
                 return RedirectToAction("Index", "HealthInsurance");
             }
-            else 
+            else
             {
                 //Redirect to ContactData
                 Session["TempNewClient"] = client;
@@ -135,7 +140,7 @@ namespace BiberDAMM.Controllers
                 return HttpNotFound();
 
 
-            Session["TempViewClient"] =client;
+            Session["TempViewClient"] = client;
             TempData["RedirectFromClient"] = true;
             return RedirectToAction("Index", "ContactData");
 
@@ -143,9 +148,9 @@ namespace BiberDAMM.Controllers
 
 
 
-            //Getter and Setter for the Editing Page
+        //Getter and Setter for the Editing Page
 
-            public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
                 return RedirectToAction("Index");
@@ -184,13 +189,16 @@ namespace BiberDAMM.Controllers
                     client.RowVersion += 1;
                     db.Entry(client).State = EntityState.Modified;
                     db.SaveChanges();
+                    TempData["ClientSuccess"] = "Änderungen gespeichert";
                     return RedirectToAction("Index");
                 }
+                TempData["ClientError"] = "Eingaben fehlerhaft oder unvollständig";
                 return View(client);
             }
             else if (Request.Form["Cancel"] != null)
             {
                 Session["TempClient"] = null;
+                TempData["ClientError"] = "Bearbeitung abgebrochen";
                 return RedirectToAction("Index");
             }
             else if (Request.Form["EditContacts"] != null)
