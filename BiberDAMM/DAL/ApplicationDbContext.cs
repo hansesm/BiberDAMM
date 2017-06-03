@@ -46,6 +46,7 @@ namespace BiberDAMM.DAL
         public DbSet<Stay> Stays { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<TreatmentType> TreatmentTypes { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 
         public static ApplicationDbContext Create()
