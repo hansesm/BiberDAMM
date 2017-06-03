@@ -59,7 +59,7 @@ namespace BiberDAMM.Controllers
         {
             if (id == null)
                 return RedirectToAction("Index");
-            var client = db.Clients.Find(id);
+            Client client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
             return View(client);
@@ -208,7 +208,7 @@ namespace BiberDAMM.Controllers
                     db.Entry(client).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["ClientSuccess"] = "Änderungen gespeichert";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details" ,new { id = client.Id });
                 }
                 TempData["ClientError"] = "Eingaben fehlerhaft oder unvollständig";
                 return View(client);

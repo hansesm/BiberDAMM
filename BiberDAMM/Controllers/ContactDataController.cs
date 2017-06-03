@@ -164,7 +164,7 @@ namespace BiberDAMM.Controllers
                     db.Entry(contactData).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["ContactDataSuccess"] = "Daten erfolgreich gespeichert";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", new { id = contactData.Id });
                 }
                 ViewBag.ContactTypeId = new SelectList(db.ContactTypes, "Id", "Name", contactData.ContactTypeId);
                 TempData["ContactDataError"] = "Eingaben fehlerhaft oder unvollständig";

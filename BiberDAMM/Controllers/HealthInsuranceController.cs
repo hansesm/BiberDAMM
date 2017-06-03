@@ -81,7 +81,7 @@ namespace BiberDAMM.Controllers
                 db.SaveChanges();
 
                 TempData["HealthInsuranceSuccess"] = "Daten erfolgreich gespeichert";
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = healthInsurance.Id });
             }
 
             TempData["HealthInsuranceError"] = "Eingaben fehlerhaft oder unvollständig";
