@@ -1,7 +1,6 @@
 ﻿/*
  * Controller for Bed
- * Initially created by: JEL, ANNAS
- * Edited: Jean-PierreK
+ * Author: Jean-PierreK 
  */
 
 using System.Data.Entity;
@@ -10,30 +9,35 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 using BiberDAMM.Helpers;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class BedController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        //GET /Bed/
+        //-- GET Index page /Bed/ --//
         public ActionResult Index()
         {
             return View(db.Beds.ToList());
         }
   
-        //GET /Bed/Create to add a bed 
+        //-- GET page /Bed/Create to add a bed --//
         public ActionResult Create()
         {
             ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
             return View();
         }
 
+        //-- SET method to create a new entry for bed --//
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Bed bed, string command)
         {
+            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
+
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index");
 
@@ -41,13 +45,14 @@ namespace BiberDAMM.Controllers
             {
                 db.Beds.Add(bed);
                 db.SaveChanges();
+                //-- Return notification if adding a new bed was successful --//
                 TempData["CreateBedSuccess"] = " Das Bett wurde hinzugefügt";
                 return RedirectToAction("Index");
             }
             return View(bed);
         }
 
-        //Get /Bed/Edit for id
+        //-- GET /Bed/Edit to edit selected bed entry --//
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -59,7 +64,7 @@ namespace BiberDAMM.Controllers
             return View(bed);
         }
 
-
+       //-- SET method to change details of selected entry --// 
        [HttpPost]
        [ValidateAntiForgeryToken]
           public ActionResult Edit(Bed bed, string command)
@@ -71,14 +76,15 @@ namespace BiberDAMM.Controllers
               {
                   db.Entry(bed).State = EntityState.Modified;
                   db.SaveChanges();
-                //TODO: Add error message if editing fails
+                // TODO: Add error message if editing fails
+                //-- Return notification if editing bed was successful --//
                 TempData["EditBedSuccess"] = " Die Eigenschaften wurden erfolgreich geändert";
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
             }
               return View(bed);
           }
        
-        //GET Bed/Details for Bed with id
+        //-- GET Bed/Details page for Bed with id --//
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -86,11 +92,10 @@ namespace BiberDAMM.Controllers
             var bed = db.Beds.Find(id);
             if (bed == null)
                 return HttpNotFound();
-            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
             return View(bed);
         }
 
-        //Function for deleting Datasets
+        //-- Function to delete Bed datasets --//
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -109,9 +114,11 @@ namespace BiberDAMM.Controllers
             var bed = db.Beds.Find(id);
             db.Beds.Remove(bed);
             db.SaveChanges();
+            //-- Return notification if deleting bed was successful --//
             TempData["DeleteBedSuccess"] = " Das Bett wurde entfernt";
             return RedirectToAction("Index");
         }
+
         public ActionResult Save()
         {
             return View();

@@ -794,7 +794,6 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Account\NewInitialPassword.cshtml" />
     <Content Include="Views\ContactType\Delete.cshtml" />
-    <Content Include="Views\Bed\Delete.cshtml" />
     <Content Include="Views\Shared\_SidebarAdministrator.cshtml" />
     <Content Include="Views\Shared\_SidebarDoctor.cshtml" />
     <Content Include="Views\Shared\_SidebarCleaner.cshtml" />
