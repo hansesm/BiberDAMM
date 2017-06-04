@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
+using BiberDAMM.Models;
 using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
@@ -28,7 +31,7 @@ namespace BiberDAMM.Controllers
             else
             {
                 //Parse the given string into a datetime-object. [HansesM]
-                
+
                 if (!DateTime.TryParse(date, out requestedDate))
                 {
                     //If parsing wasn't succsessfull return a empty page [HansesM]
@@ -56,15 +59,39 @@ namespace BiberDAMM.Controllers
         }
 
         //GET SINGLE: Stay [JEL] [ANNAS]
-        public ActionResult Detail()
+        public ActionResult Detail(int id)
         {
-            return View();
+            //Gets the stay from the database [HansesM]
+            var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
+
+            //Gets all doctors from the database [HansesM]
+            var listDoctors = _db.Users.AsQueryable();
+            listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
+
+            //Fits all Doctors into a selectetList [HansesM]
+            var selectetListDoctors = new List<SelectListItem>();
+            foreach (var m in listDoctors)
+            {
+                selectetListDoctors.Add(new SelectListItem { Text = (m.Title +" "+ m.Lastname), Value = (m.Id.ToString()) });
+            }
+            
+            //_db.ApplicationUser.SqlQuery("select Id, Title, Surname, Lastname from AspNetUsers where UserType = 3;");
+
+            //Creats a new View-Model with the list of Doctors and the stay [HansesM]
+            var viewModel = new DetailsStayViewModel(stay, selectetListDoctors);
+            return View(viewModel);
         }
 
         //SAVE: Stay [JEL] [ANNAS]
         public ActionResult Save()
         {
             return View();
+        }
+
+        //Override on Dispose for security reasons. [HansesM]
+        protected override void Dispose(bool disposing)
+        {
+            _db.Dispose();
         }
     }
 }

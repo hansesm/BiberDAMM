@@ -10,6 +10,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@if (TempData["ClientSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ClientSuccess"]</strong>
+    </div>
+}
+
+@if (TempData["ClientError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ClientError"]</strong>
+    </div>
+}
+
 <h2>Neuen Patienten anlegen</h2>
 
 
@@ -90,9 +111,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" name="EditContacts" value="Kontaktdaten hinterlegen" class="btn btn-outline-primary btn-sm"  />
-                <input type="submit" name="Save" value="Patienten hinzufügen" class="btn btn-outline-primary btn-sm"  />
-                <input type="submit" name="Cancel" value="Daten verwerfen" class="btn btn-outline-primary btn-sm" />
+                <input title="Kontaktdaten hinterlegen" type="submit" name="EditContacts" value="Kontaktdaten hinterlegen" class="btn btn-outline-primary btn-sm"  />
+                <input title="Patienten hinzufügen" type="submit" name="Save" value="Hinzufügen" class="btn btn-outline-primary btn-sm"  />
+                <input title="Daten verwerfen" type="submit" name="Cancel" value="Abbrechen" class="btn btn-outline-primary btn-sm" />
             </div>
         </div>
     </div>

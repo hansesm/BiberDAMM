@@ -50,9 +50,11 @@ namespace BiberDAMM.Controllers
             {
                 db.HealthInsurances.Add(healthInsurance);
                 db.SaveChanges();
+                TempData["HealthInsuranceSuccess"] = "Daten erfolgreich gespeichert";
                 return RedirectToAction("Index");
             }
 
+            TempData["HealthInsuranceError"] = "Eingaben fehlerhaft oder unvollständig";
             return View(healthInsurance);
         }
 
@@ -77,8 +79,12 @@ namespace BiberDAMM.Controllers
             {
                 db.Entry(healthInsurance).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                TempData["HealthInsuranceSuccess"] = "Daten erfolgreich gespeichert";
+                return RedirectToAction("Details", new { id = healthInsurance.Id });
             }
+
+            TempData["HealthInsuranceError"] = "Eingaben fehlerhaft oder unvollständig";
             return View(healthInsurance);
         }
 
@@ -97,6 +103,8 @@ namespace BiberDAMM.Controllers
             }
             db.HealthInsurances.Remove(healthInsurance);
             db.SaveChanges();
+
+            TempData["HealthInsuranceSuccess"] = "Versicherung erfolgreich gelöscht";
             return RedirectToAction("Index");
         }
 
@@ -146,6 +154,7 @@ namespace BiberDAMM.Controllers
         {
             Session["TempClient"] = null;
             Session["TempNewClient"] = null;
+            TempData["HealthInsuranceError"] = "Bearbeitung abgebrochen";
             return RedirectToAction("Index", "HealthInsurance");
         }
 

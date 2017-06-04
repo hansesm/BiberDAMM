@@ -235,6 +235,7 @@
     <Compile Include="ViewModels\CreationStay.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentType.cs" />
+    <Compile Include="ViewModels\DetailsStayViewModel.cs" />
     <Compile Include="ViewModels\StayIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -802,6 +803,8 @@
     <Content Include="Views\Account\UserDetails.cshtml" />
     <Content Include="Views\Stay\Index.cshtml" />
     <Content Include="Views\RoomType\Index.cshtml" />
+    <Content Include="Views\Stay\Detail.cshtml" />
+    <Content Include="Views\Client\TempDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

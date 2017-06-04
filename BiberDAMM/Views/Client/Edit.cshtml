@@ -11,6 +11,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["ClientSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ClientSuccess"]</strong>
+    </div>
+}
+
+@if (TempData["ClientError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ClientError"]</strong>
+    </div>
+}
+
 <h2>Patienten Bearbeiten</h2>
 
 
@@ -97,9 +117,9 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" name="EditContacts" value="Hinterlegte Kontaktdaten bearbeiten" class="btn btn-outline-primary btn-sm" />
-                <input type="submit" name="Save" value="Speichern" class="btn btn-outline-primary btn-sm" />
-                <input type="submit" name="Cancel" value="Bearbeitung abbrechen" class="btn btn-outline-primary btn-sm" />
+                <input title="Hinterlegte Kontakte bearbeiten" type="submit" name="EditContacts" value="Hinterlegte Kontaktdaten bearbeiten" class="btn btn-outline-primary btn-sm" />
+                <input title="Speichern" type="submit" name="Save" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Bearbeitung abbrechen und zurück zur Übersicht" type="submit" name="Cancel" value="Zurück" class="btn btn-outline-primary btn-sm" />
             </div>
         </div>
     </div>
