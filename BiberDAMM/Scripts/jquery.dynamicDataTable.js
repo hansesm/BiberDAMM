@@ -10,7 +10,7 @@
                 d[c] = e, "o" === b[1] && Y(a[e])
         }); a._hungarianMap = d
     } function J(a, b, c) { a._hungarianMap || Y(a); var d; h.each(b, function (e) { d = a._hungarianMap[e]; if (d !== k && (c || b[d] === k)) "o" === d.charAt(0) ? (b[d] || (b[d] = {}), h.extend(!0, b[d], b[e]), J(a[d], b[d], c)) : b[d] = b[e] }) } function Fa(a) {
-        var b = m.defaults.oLanguage, c = a.sZeroRecords; !a.sEmptyTable && (c && "No data available in table" === b.sEmptyTable) && F(a, a, "sZeroRecords", "sEmptyTable"); !a.sLoadingRecords && (c && "Loading..." === b.sLoadingRecords) && F(a, a, "sZeroRecords", "sLoadingRecords");
+        var b = m.defaults.oLanguage, c = a.sZeroRecords; !a.sEmptyTable && (c && /*[JEL]*/"Keine Daten verfügbar" === b.sEmptyTable) && F(a, a, "sZeroRecords", "sEmptyTable"); !a.sLoadingRecords && (c && "Loading..." === b.sLoadingRecords) && F(a, a, "sZeroRecords", "sLoadingRecords");
         a.sInfoThousands && (a.sThousands = a.sInfoThousands); (a = a.sDecimal) && fb(a)
     } function gb(a) {
         A(a, "ordering", "bSort"); A(a, "orderMulti", "bSortMulti"); A(a, "orderClasses", "bSortClasses"); A(a, "orderCellsTop", "bSortCellsTop"); A(a, "order", "aaSorting"); A(a, "orderFixed", "aaSortingFixed"); A(a, "paging", "bPaginate"); A(a, "pagingType", "sPaginationType"); A(a, "pageLength", "iDisplayLength"); A(a, "searching", "bFilter"); "boolean" === typeof a.sScrollX && (a.sScrollX = a.sScrollX ? "100%" : ""); "boolean" === typeof a.scrollX && (a.scrollX =
@@ -507,7 +507,7 @@
                             "_" + location.pathname, JSON.stringify(b))
                     } catch (c) { }
                 }, fnStateSaveParams: null, iStateDuration: 7200, iDeferLoading: null, iDisplayLength: 10, iDisplayStart: 0, iTabIndex: 0, oClasses: {}, oLanguage: {
-                    oAria: { sSortAscending: ": activate to sort column ascending", sSortDescending: ": activate to sort column descending" }, /*JEL*/ oPaginate: { sFirst: "Erste", sLast: "Lezter", sNext: ">>", sPrevious: "<<" }, sEmptyTable: "No data available in table", sInfo:/*EDIT [JEL]*/ "Zeige _START_ bis _END_ von _TOTAL_ Einträgen", sInfoEmpty: /*EDIT [JEL]*/ "Zeige 0 bis 0 von 0 Einträgen",
+                    oAria: { sSortAscending: ": activate to sort column ascending", sSortDescending: ": activate to sort column descending" }, /*JEL*/ oPaginate: { sFirst: "Erste", sLast: "Lezter", sNext: ">>", sPrevious: "<<" }, sEmptyTable: /*EDIT [JEL]*/ "Keine Daten verfügbar", sInfo:/*EDIT [JEL]*/ "Zeige _START_ bis _END_ von _TOTAL_ Einträgen", sInfoEmpty: /*EDIT [JEL]*/ "Zeige 0 bis 0 von 0 Einträgen",
                     sInfoFiltered: /*EDIT [JEL]*/"( _MAX_ Einträge gefiltert)", sInfoPostFix: "", sDecimal: "", sThousands: ",", sLengthMenu: /*EDIT [JEL]*/ "Zeige _MENU_ Einträge", sLoadingRecords:/*EDIT [JEL]*/ "Lädt...", sProcessing:/*EDIT [JEL]*/ "In Bearbeitung...", sSearch:/*EDIT [JEL]*/ "Suche: ", sSearchPlaceholder: "", sUrl: "", sZeroRecords: /*EDIT [JEL]*/"Keine Einträge gefunden."
                 }, oSearch: h.extend({}, m.models.oSearch), sAjaxDataProp: "data", sAjaxSource: null, sDom: "lfrtip", searchDelay: null, sPaginationType: "simple_numbers", sScrollX: "", sScrollXInner: "", sScrollY: "", sServerMethod: "GET", renderer: null, rowId: "DT_RowId"
             };
