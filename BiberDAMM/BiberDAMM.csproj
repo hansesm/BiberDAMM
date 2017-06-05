@@ -248,11 +248,14 @@
     <Content Include="Content\fonts\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\fonts\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\Logo_Damm260.png" />
+    <Content Include="Content\img\favicon2.png" />
+    <Content Include="Content\img\favicon1.png" />
     <Content Include="Content\img\favicon.png" />
     <Content Include="Content\img\glyphicons-404-sorting.png" />
     <Content Include="Content\img\glyphicons-409-sort-by-attributes.png" />
     <Content Include="Content\img\glyphicons-410-sort-by-attributes-alt.png" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\Logo_Damm260.png" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\app.js" />
     <Content Include="Content\LoginStyle.css" />
