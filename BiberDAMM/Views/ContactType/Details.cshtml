@@ -10,7 +10,26 @@
     
 }
 
-<h3>Detailansicht für Kontakttype @Html.DisplayFor(model => model.Id)</h3>
+<h3>Detailansicht für Kontakttyp @Html.DisplayFor(model => model.Name)</h3>
+
+@if (TempData["ContactTypeSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ContactTypeSuccess"]</strong>
+    </div>
+}
+@if (TempData["ContactTypeError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>@TempData["ContactTypeError"]</strong>
+    </div>
+}
 
 <div>
     <hr />
@@ -28,14 +47,79 @@
         </dt>
 
         <dd>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayFor(model => model.Name)
         </dd>
 
 
     </dl>
 </div>
 <p>
-    <button title="Bearbeiten" onclick="location.href='@Url.Action("Edit", new { id= Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button title="Löschen" onclick="location.href='@Url.Action("Delete", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-    <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+<div class="form-actions no-color">
+
+    @if (Session["TempClient"] != null || Session["TempNewClient"] != null)
+            {
+
+        <button title="Kontakttyp hinzufügen" onclick="location.href = '@Url.Action("AddContactTypeToClient", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Hinzufügen</button>
+    }
+    else
+    {
+        <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+
+    }
+
+    <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+</div>
+
 </p>
+
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Kontakttyp löschen</h4>
+                <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true" style="float: right;color:deepskyblue"></i>
+            </div>
+            <div class="modal-body">
+                <p>Möchten Sie den Kontakttyp "<b>@Html.DisplayFor(model => model.Name)</b>" wirklich löschen?</p>
+                <table class="table" style="width:50%">
+                    <tr>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Name)
+                                </dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Id)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Id)
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Delete", "ContactType", new { ContacktTypeId = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button title="Löschen" type="submit" class="btn btn-outline-primary btn-sm">Löschen</button>
+                    <button title="Abbrechen" type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

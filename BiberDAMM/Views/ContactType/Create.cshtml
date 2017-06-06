@@ -8,38 +8,56 @@
 
 <h2>Neuen Kontakttyp anlegen</h2>
 
+@if (TempData["CreateContactTypeSaved_Bool"].ToString() == "0")
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Erstellung ist fehlgeschlagen!</strong>@TempData["CreateContactTypeFailed"]
+    </div>
+}
+
+@if (TempData["CreateContactTypeSaved_Bool"].ToString() == "1")
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Erstellung war erfolgreich!</strong>@TempData["CreateContactTypeSaved"]
+    </div>
+}
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <hr/>
-        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
         @*<div class="form-group">
-            @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @type = "Id", @min = "1", @step = "1", Value = "1" } })
-                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @type = "Id", @min = "1", @step = "1", Value = "1" } })
+                    @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Hinzufügen" class="btn btn-default"/>
+                <input type="submit" value="Hinzufügen" class="btn btn-outline-primary btn-sm" />
+                <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
             </div>
         </div>
     </div>
+
 }
 
-<div>
-    @Html.ActionLink("Zurück zur Übersicht", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
