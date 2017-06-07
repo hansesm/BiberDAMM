@@ -768,7 +768,6 @@
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Room\Create.cshtml" />
     <Content Include="Views\AccessDenied\Index.cshtml" />
-    <Content Include="Views\Room\Delete.cshtml" />
     <Content Include="Views\Bed\Index.cshtml" />
     <Content Include="Views\Bed\Details.cshtml" />
     <Content Include="Views\Bed\Edit.cshtml" />
@@ -808,6 +807,9 @@
     <Content Include="Views\RoomType\Index.cshtml" />
     <Content Include="Views\Stay\Detail.cshtml" />
     <Content Include="Views\Client\TempDetails.cshtml" />
+    <Content Include="Views\RoomType\Details.cshtml" />
+    <Content Include="Views\RoomType\Create.cshtml" />
+    <Content Include="Views\RoomType\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -7,6 +7,17 @@
 @{
     ViewBag.Title = "Raum bearbeiten";
 }
+<!--If changing roomdetails failed-->
+@if (TempData["EditRoomFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Der Raum konnte nicht geändert werden!</strong>@TempData["EditRoomFailed"]
+    </div>
+}
+
 
 <h2>Raum bearbeiten</h2>
 
@@ -26,18 +37,18 @@
                 @Html.EditorFor(model => model.RoomNumber, new {htmlAttributes = new {@class = "form-control"}})
                 @Html.ValidationMessageFor(model => model.RoomNumber, "", new {@class = "text-danger"})
             </div>
-        </div>
-
+        </div>              
         <div class="form-group">
-            @Html.LabelFor(model => model.RoomTypeId, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.RoomTypeId, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.DropDownList("RoomTypeId", null, new { @class = "form-control" })
+                @Html.DropDownList("RoomTypeId", null, new { @class = "btn btn.btn-outline-secondary dropdown-toggle" })
                 @Html.ValidationMessageFor(model => model.RoomTypeId, "", new { @class = "text-danger" })
+                
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input title="Speichern" type="submit" name="command" value="Änderungen speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Änderungen speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
                 <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
             </div>   
         </div>

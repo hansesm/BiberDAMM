@@ -9,7 +9,16 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
+<!--If room deleted unsuccessfully-->
+@if (TempData["DeleteRoomFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Raum konnte nicht gelöscht werden!</strong>@TempData["DeleteRoomFailed"]
+    </div>
+}
 <!--show alert "EditRoomSuccess" if a room was successfully updated-->
 @if (TempData["EditRoomSuccess"] != null)
 {
@@ -20,6 +29,7 @@
         <strong>Änderungen gespeichert!</strong>@TempData["EditRoomSuccess"]
     </div>
 }
+
 
 <div>
     <hr />
@@ -90,7 +100,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("Delete", "Room", new { roomId = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Delete", "Room", new { Id = Model.Id}, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />
