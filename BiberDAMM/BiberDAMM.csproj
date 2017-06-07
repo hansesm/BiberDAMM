@@ -190,7 +190,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BedController.cs" />
     <Compile Include="Controllers\BlocksController.cs" />
-    <Compile Include="Controllers\CalendarBackendController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ContactDataController.cs" />
     <Compile Include="Controllers\ContactTypeController.cs" />
@@ -814,7 +813,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Blocks\" />
-    <Folder Include="Views\CalendarBackend\" />
     <Folder Include="Views\TreatmentType\" />
     <Folder Include="Views\Treatment\" />
   </ItemGroup>
