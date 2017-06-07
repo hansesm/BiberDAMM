@@ -15,6 +15,15 @@ namespace BiberDAMM.Controllers
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
+        //A Json-Event for displaying treatment-data in a calendar view [HansesM]
+        public class JsonEvent
+        {
+            public string id { get; set; }
+            public string text { get; set; }
+            public string start { get; set; }
+            public string end { get; set; }
+        }
+
         // Method to get all stays of a given day [HansesM]
         public ActionResult Index(string date)
         {
@@ -58,12 +67,12 @@ namespace BiberDAMM.Controllers
             return View();
         }
 
-        //GET SINGLE: Stay [JEL] [ANNAS]
+        //GET SINGLE: Stay [HansesM]
         public ActionResult Detail(int id)
         {
             //Gets the stay from the database [HansesM]
             var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
-
+            
             //Gets all doctors from the database [HansesM]
             var listDoctors = _db.Users.AsQueryable();
             listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
@@ -72,13 +81,30 @@ namespace BiberDAMM.Controllers
             var selectetListDoctors = new List<SelectListItem>();
             foreach (var m in listDoctors)
             {
-                selectetListDoctors.Add(new SelectListItem { Text = (m.Title +" "+ m.Lastname), Value = (m.Id.ToString()) });
+                selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
             }
-            
+
             //_db.ApplicationUser.SqlQuery("select Id, Title, Surname, Lastname from AspNetUsers where UserType = 3;");
 
+            //var listTreatments = _db.Treatments.AsQueryable();
+            //listTreatments = listTreatments.Where(t => t.Stay.ClientId == id);
+
+            var events = stay.Treatments.ToList();
+
+            var result = events.Select(e => new JsonEvent()
+            {
+                start = e.Begin.ToString("s"),
+                end = e.End.ToString("s"),
+                text = e.TreatmentType.Name.ToString(),
+                id = e.Id.ToString()
+
+            }).ToList();
+
+            JsonResult resultJson = new JsonResult { Data = result };
+
+
             //Creats a new View-Model with the list of Doctors and the stay [HansesM]
-            var viewModel = new DetailsStayViewModel(stay, selectetListDoctors);
+            var viewModel = new DetailsStayViewModel(stay, selectetListDoctors, resultJson);
             return View(viewModel);
         }
 

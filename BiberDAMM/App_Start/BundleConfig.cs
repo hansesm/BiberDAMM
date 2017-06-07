@@ -13,7 +13,9 @@ namespace BiberDAMM
                 "~/Scripts/jquery.validate.js",
                 "~/Scripts/app.js",
                 "~/Scripts/jquery.dynamicDataTable.js",
-                "~/Scripts/Chart.js"
+                "~/Scripts/Chart.js",
+                "~/Scripts/moment.min.js",
+                "~/Scripts/fullcalendar.js"
                 ));
 
             //TODO Change Modenizr-Version [HansesM]
@@ -34,6 +36,7 @@ namespace BiberDAMM
                 .Include("~/Content/css/style.css")
                 .Include("~/Content/fonts/font-awesome/css/font-awesome.min.css")
                 .Include("~/Content/dynamicDataTable.css")
+                .Include("~/Content/css/fullcalendar.css")
                 );
 
             //Sets bundle-opzimizations to false (minimalization etc.) [HansesM]

@@ -14,11 +14,11 @@
 <h2>@ViewBag.Title</h2>
 
 @* Display 3 Buttons to toggle the Date, they change automaticall, depending on the selected date. [HansesM]*@
-@Html.ActionLink(@Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy"), "Index", "Stay", new{@date = @Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy")}, new {@class = "btn btn-outline-primary btn-sm"})
-@Html.ActionLink(@Model.RequestedDate.ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.ToString("dd.MM.yyyy") }, new {@class = "btn btn-outline-primary active btn-sm"})
-@Html.ActionLink(@Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy") }, new {@class = "btn btn-outline-primary btn-sm"})
+@Html.ActionLink(@Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.AddDays(-1).ToString("dd.MM.yyyy") }, new { @class = "btn btn-outline-primary btn-sm" })
+@Html.ActionLink(@Model.RequestedDate.ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.ToString("dd.MM.yyyy") }, new { @class = "btn btn-outline-primary active btn-sm" })
+@Html.ActionLink(@Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy"), "Index", "Stay", new { @date = @Model.RequestedDate.AddDays(+1).ToString("dd.MM.yyyy") }, new { @class = "btn btn-outline-primary btn-sm" })
 
-<hr/>
+<hr />
 @* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the stay-list is empty. [HansesM] *@
 @{ var staysHeaderHelper = Model.Stays.FirstOrDefault();}
 
@@ -79,6 +79,7 @@
             </td>
         </tr>
     </tfoot>
+
 </table>
 
 @section Scripts{
