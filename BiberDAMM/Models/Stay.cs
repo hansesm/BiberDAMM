@@ -15,10 +15,11 @@ namespace BiberDAMM.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Aufnahmedatum")]
+        [Display(Name = "Aufnahmezeitpunkt")]
+        [DataType(DataType.Date)]
         public DateTime BeginDate { get; set; }
 
-        [Display(Name = "Entlassungsdatum")]
+        [Display(Name = "Entlassungszeitpunkt")]
         public DateTime? EndDate { get; set; }
 
         [Display(Name = "Diagnosekennzahl(ICD10)")]
@@ -34,7 +35,7 @@ namespace BiberDAMM.Models
         [Display(Name = "Behandlungstyp")]
         public StayType StayType { get; set; }
 
-        // TODO [HansesM, ChristesR, KrabsJ] check if there is way to handle rowversion automatically by database
+        //Rowversion will be updated in the controller [HansesM]
         public int RowVersion { get; set; }
 
         public DateTime LastUpdated { get; set; }

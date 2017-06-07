@@ -6,16 +6,16 @@ using BiberDAMM.Models;
 using System.Net;
 using System.Linq;
 using BiberDAMM.Helpers;
+using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace BiberDAMM.Controllers
 {
     public class ContactTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
-        
-        //ToDo remove ? [HansesM]
-        //private object[] id;
 
+        
         public ContactType ContactTypes { get; private set; }
 
         // GET all: ContactType [JEL] [ANNAS]
@@ -29,6 +29,7 @@ namespace BiberDAMM.Controllers
         //[HttpGet]
         public ActionResult Create()
         {
+            TempData["CreateContactTypeSaved_Bool"] = "";
             return View();
         }
 
@@ -39,18 +40,46 @@ namespace BiberDAMM.Controllers
             ContactType checkContactType = db.ContactTypes.Where(c => c.Name == ContactType.Name).FirstOrDefault();
             if (checkContactType != null)
             {
-                // Fehler alert schreiben
+                // Fehler alert schreiben und wenn es erfolgreich gespeichert ist
+                TempData["CreateContactTypeSaved_Bool"] = "0";
+                TempData["CreateContactTypeFailed"] = " Bei der Erstellung ist ein Fehler aufgetreten";
                 return View();
             }
             db.ContactTypes.Add(ContactType);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            TempData["CreateContactTypeSaved_Bool"] = "1";
+            TempData["CreateContactTypeSaved"] = " Die Erstellung war erfolgreich";
+            return View();
+            //return RedirectToAction("Index");
         }
 
+        [HttpGet]
         //CHANGE: ContactType [JEL] [ANNAS]
-        public ActionResult Edit()
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+                return RedirectToAction("Index");
+            var ContactType = db.ContactTypes.Find(id);
+            if (ContactType == null)
+                return HttpNotFound();
+            return View(ContactType);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ContactType ContactType)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(ContactType).State = EntityState.Modified;
+                db.SaveChanges();
+
+                TempData["ContactTypeSuccess"] = "Daten erfolgreich gespeichert";
+                return RedirectToAction("Details", new { id = ContactType.Id });
+            }
+
+            TempData["ContactTypeError"] = "Eingaben fehlerhaft oder unvollständig";
+            return View(ContactType);
         }
 
         //GET SINGLE: ContactType [JEL] [ANNAS]
@@ -65,6 +94,12 @@ namespace BiberDAMM.Controllers
 
             return View(_contactType);
         }
+
+        //new ActionResult RedirectToAction(string v)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         //SAVE: ContactType [JEL] [ANNAS]
         public ActionResult Save()
         {
@@ -74,30 +109,31 @@ namespace BiberDAMM.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var contactType = db.ContactTypes.Find(id);
-            if (contactType == null)
+                return RedirectToAction("Index");
+            var ContactType = db.ContactTypes.Find(id);
+            if (ContactType == null)
                 return HttpNotFound();
-            return View(contactType);
+            return View(ContactType);
         }
 
-        // POST: ContactType/Delete/5
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed()
         {
-            var contactType = db.ContactTypes.Find(id);
-            db.ContactTypes.Remove(contactType);
+            var id = int.Parse(Request.QueryString["ContacktTypeId"]);
+            var ContactType = db.ContactTypes.Find(id);
+            IQueryable<ContactData> cd = db.ContactDatas.Where(c => c.ContactTypeId == id);
+            if (cd.Count() != 0)
+            {
+                TempData["ContactTypeError"] = "Der Kontakttyp ist noch Patienten zugeordnet";
+                return RedirectToAction("Details", "ContactType", new { id = ContactType.Id });
+            }
+            db.ContactTypes.Remove(ContactType);
             db.SaveChanges();
-            return RedirectToAction("Index");
-        }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                db.Dispose();
-            base.Dispose(disposing);
+            TempData["ContactTypeSuccess"] = "Kontakttyp erfolgreich gelöscht";
+            return RedirectToAction("Index");
         }
     }
 }

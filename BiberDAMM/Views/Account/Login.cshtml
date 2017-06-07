@@ -17,15 +17,13 @@
 
             @Html.AntiForgeryToken()
 
-            @Html.ValidationMessage("InactiveUser")
-            ;
+            @Html.ValidationMessage("InactiveUser");
 
             @Html.TextBoxFor(m => m.Username, new {placeholder = "Nutzername"})
 
             @Html.PasswordFor(m => m.Password, new {placeholder = "Passwort"})
 
-            @Html.ValidationMessage("WrongUsernameOrPass")
-            ;
+            @Html.ValidationMessage("WrongUsernameOrPass");
 
             <button>login</button>
 

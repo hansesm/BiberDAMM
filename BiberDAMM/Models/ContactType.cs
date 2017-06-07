@@ -15,5 +15,6 @@ namespace BiberDAMM.Models
         public string Name { get; set; }
 
         public virtual ICollection<ContactData> ContactData { get; set; }
+        public object Client { get; internal set; }
     }
 }
