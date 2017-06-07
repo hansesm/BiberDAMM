@@ -50,7 +50,7 @@
     @foreach (var item in Model.Stays)
     {
 
-        <tr onclick="location.href = '@(Url.Action("Detail", "Stay", new {id = item.Id}))'">
+        <tr onclick="location.href = '@(Url.Action("Details","Stay", new {id = item.Id}))'">
             <td>
                 @Html.DisplayFor(modelItem => item.Client.Surname)
             </td>
