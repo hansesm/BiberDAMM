@@ -3,6 +3,7 @@
     Author: [HansesM]
 *@
 @using BiberDAMM.Helpers
+@using BiberDAMM.Models
 @model BiberDAMM.ViewModels.DetailsStayViewModel
 
 @{
@@ -144,8 +145,9 @@
     <hr/>
 </div>
 
-<div class="container-fluid">
 
+<!-- Container for a list of all Treatments of the user, witch is initally hidden in a modal -->
+<div class="container-fluid">
     <p>
         <a class="btn btn-outline-primary btn-sm" data-toggle="collapse" href="#collapseTreatmentList" aria-expanded="false" aria-controls="collapseTreatmentList">
             Behandlungsübersicht als Liste anzeigen
@@ -153,7 +155,6 @@
     </p>
     <div class="collapse" id="collapseTreatmentList">
         <div class="card card-block">
-            <!-- A list of all Treatments of the user, witch is initally hidden in a modal -->
 
             <h4> Behandlungsübersicht als Liste</h4>
 
@@ -206,13 +207,67 @@
                 <!-- foot-->
 
             </table>
-
-
         </div>
     </div>
     <hr/>
-
 </div>
+
+<!-- Container for displaying Blocks-Bed information, this will only be shown if the staytype is stationär [HansesM] -->
+@if (Model.Stay.StayType == StayType.stationär)
+{
+    <div class="container-fluid">
+        <h4>Bettenbelegung für den Aufenthalt </h4>
+        <h4>vom @Html.Raw(Model.Stay.BeginDate.ToString("dd.MM.yyyy")) - @Html.Raw(Model.Stay.EndDate != null ? Model.Stay.EndDate.GetValueOrDefault().ToString("dd.MM.yyyy") : "")</h4>
+        
+        @* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the treatment-list is empty. [HansesM] *@
+        @{ var blocksHeaderHelper = Model.Stay.Blocks.FirstOrDefault(); }
+
+        <table id="blocksOfStay" class="table table-striped table-hover table-bordered" style="width: 100%;" border="1" cellspacing="0">
+            <thead class="thead-inverse">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
+                </th>
+            </tr>
+            </thead>
+            <!-- head-->
+            <tbody>
+            @foreach (var item in Model.Stay.Blocks)
+            {
+                <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.BedId}))'">
+                    <td>
+                        @item.Date.ToString("d")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modeItem => item.Bed.Model)
+                    </td>
+                </tr>
+            }
+            </tbody>
+            <!-- body -->
+
+            <tfoot style="background-color: #263238; color: white; text-align: right;">
+            <tr>
+                <td colspan="3">
+                    <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+            </tfoot>
+            <!-- foot-->
+        </table>
+    </div>
+}
 
 
 @section Scripts{
