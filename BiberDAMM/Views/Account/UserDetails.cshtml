@@ -24,91 +24,148 @@ author: KrabsJ
     </div>
 }
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Benutzername
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-
-        @if (!Model.Title.IsEmpty())
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-        }
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Lastname)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Lastname)
-        </dd>
-
-        <dt>
-            E-Mail
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-        <dt>
-            Telefonnummer
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserType)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserType)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-
-        @if (Model.Active)
-        {
-            <dd>ja</dd>
-        }
-        else
-        {
-            <dd>nein</dd>
-        }
-
-    </dl>
-</div>
-
 <hr />
 
-@if (User.Identity.GetUserType() == ConstVariables.RoleAdministrator)
-{
-    <p>Für Änderungen an Ihrem persönlichen Account verwenden Sie bitte die Benutzerverwaltung.</p>
-}
-else
-{
-    <p>Für Änderungen an Ihrem persönlichen Account wenden Sie sich bitte an einen Administrator.</p>
-}
+<div class="container-fluid">
+
+    <h4>Persönliche Daten</h4>
+
+    <div class="row">
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+                <dt>
+                    Benutzername
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UserName)
+                </dd>
+            </dl>
+        </div>
+
+        @if (!Model.Title.IsEmpty())
+            {
+            <div class="form-group col-md-3">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                </dl>
+            </div>
+        }
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Surname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Surname)
+                </dd>
+            </dl>
+        </div>
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Lastname)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Lastname)
+                </dd>
+            </dl>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <h4>Kontakt</h4>
+
+    <div class="row">
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+                <dt>
+                    E-Mail
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+            </dl>
+        </div>
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+
+                <dt>
+                    Telefonnummer
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </dd>
+            </dl>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <h4>Administrative Eigenschaften</h4>
+
+    <div class="row">
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.UserType)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.UserType)
+                </dd>
+
+            </dl>
+        </div>
+
+        <div class="form-group col-md-3">
+            <dl class="dl-horizontal">
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Active)
+                </dt>
+
+                @if (Model.Active)
+            {
+                    <dd>ja</dd>
+                }
+                else
+                {
+                    <dd>nein</dd>
+                }
+
+            </dl>
+        </div>
+    </div>
+</div>
+
+    <hr />
+
+    @if (User.Identity.GetUserType() == ConstVariables.RoleAdministrator)
+    {
+        <p>Für Änderungen an Ihrem persönlichen Account verwenden Sie bitte die Benutzerverwaltung.</p>
+    }
+    else
+    {
+        <p>Für Änderungen an Ihrem persönlichen Account wenden Sie sich bitte an einen Administrator.</p>
+    }
