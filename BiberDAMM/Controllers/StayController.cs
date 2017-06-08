@@ -21,7 +21,7 @@ namespace BiberDAMM.Controllers
         public class JsonEvent
         {
             public string id { get; set; }
-            public string text { get; set; }
+            public string title { get; set; }
             public string start { get; set; }
             public string end { get; set; }
         }
@@ -139,7 +139,7 @@ namespace BiberDAMM.Controllers
             {
                 start = e.Begin.ToString("s"),
                 end = e.End.ToString("s"),
-                text = e.TreatmentType.Name.ToString(),
+                title = e.TreatmentType.Name.ToString(),
                 id = e.Id.ToString()
 
             }).ToList();
