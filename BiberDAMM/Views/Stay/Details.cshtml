@@ -294,9 +294,13 @@
             dateFormat: "dd.mm.yy"
         });
     </script>
+    
+    
 
     <!-- Fullcalendar with settings [HanseM]-->
     <script>
+        console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));
+
         $(document).ready(function() {
             $("#calendar").fullCalendar({
                 theme: true,
@@ -310,12 +314,26 @@
                 },
                 events: @Html.Raw(Json.Encode(Model.ListTreatments.Data)),
                 allDaySlot: false,
-                slotDuration: "00:05:00",
-                scrollTime: "07:30:00",
+                slotDuration: "00:15:00",
+                scrollTime: "08:00:00",
+                minTime: "7:00:00",
+                maxTime: "21:00:00",
+                businessHours: [ // specify an array instead
+                    {
+                        dow: [1, 2, 3, 4], // Monday, Tuesday, Wednesday, Thursday
+                        start: '08:00', // 8am
+                        end: '18:00' // 6pm
+                    },
+                    {
+                        dow: [ 5 ], // Friday
+                        start: '10:00', // 10am
+                        end: '16:00' // 4pm
+                    }
+                ],
 
                 eventClick: function(calEvent, jsEvent, view) {
 
-                    alert("Event mit der ID geklickt: " + calEvent.title);
+                    alert("Event mit der ID geklickt: " + calEvent.id);
 
                     $(this).css('border-color', 'red');
                 }
