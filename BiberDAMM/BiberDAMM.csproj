@@ -234,6 +234,7 @@
     <Compile Include="ViewModels\CreationRoomType.cs" />
     <Compile Include="ViewModels\CreationStay.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
+    <Compile Include="ViewModels\CreationTreatmentSelectType.cs" />
     <Compile Include="ViewModels\CreationTreatmentType.cs" />
     <Compile Include="ViewModels\DetailsStayViewModel.cs" />
     <Compile Include="ViewModels\StayIndexViewModel.cs" />
@@ -856,12 +857,13 @@
     <Content Include="Views\RoomType\Details.cshtml" />
     <Content Include="Views\RoomType\Create.cshtml" />
     <Content Include="Views\RoomType\Edit.cshtml" />
+    <Content Include="Views\Treatment\SelectTreatmentType.cshtml" />
+    <Content Include="Views\Treatment\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Blocks\" />
     <Folder Include="Views\TreatmentType\" />
-    <Folder Include="Views\Treatment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

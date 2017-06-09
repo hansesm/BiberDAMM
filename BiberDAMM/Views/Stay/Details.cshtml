@@ -198,7 +198,7 @@
                 <tfoot style="background-color: #263238; color: white; text-align: right;">
                 <tr>
                     <td colspan="3">
-                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                        <button title="Behandlung hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>
                         </button>
                     </td>
@@ -240,6 +240,7 @@
             <tbody>
             @foreach (var item in Model.Stay.Blocks)
             {
+                <!-- TODO: link to blocks details instead of treatment details??-->
                 <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.BedId}))'">
                     <td>
                         @item.Date.ToString("d")
@@ -258,6 +259,7 @@
             <tfoot style="background-color: #263238; color: white; text-align: right;">
             <tr>
                 <td colspan="3">
+                    <!-- TODO: link to blocks create instead of treatment create??-->
                     <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                         <i class="fa fa-plus-circle" aria-hidden="true"></i>
                     </button>
