@@ -17,9 +17,12 @@ namespace BiberDAMM.Controllers
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        //Getter for the Index-Page requires searchString for filtering entries
+        //Getter for the Index-Page requires searchString for filtering entries, if searchString is empty, nothing will be displayed in order to optimize database-performance
         public ActionResult Index(string searchString)
         {
+            Session["TempClient"] = null;
+            Session["ClientIndexPage"] = "Index";
+
             var clients = new List<Client>().AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -30,16 +33,35 @@ namespace BiberDAMM.Controllers
                                              || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString()
                                                  .Contains(searchString));
             }
-            else
-            {
-                clients = from m in db.Clients
-                          select m;
-                clients.OrderBy(o => o.LastUpdated);
 
-                return View(clients.Take(30).OrderBy(o => o.Lastname));
-            }
 
             return View(clients.OrderBy(o => o.Lastname));
+        }
+
+
+        //Gets the Last N modified Clients, if the given N is null, there will be the last 30 Clients taken
+        public ActionResult LastNIndex(int? count)
+        {
+            Session["TempClient"] = null;
+            Session["ClientIndexPage"] = "LastNIndex";
+            int innerCount = 30;
+            if (count != null && count != 0)
+            {
+                innerCount = count ?? default(int);
+            }
+
+
+            var clients = new List<Client>().AsQueryable();
+
+
+            clients = from m in db.Clients
+                      select m;
+            clients.OrderBy(o => o.LastUpdated);
+
+            return View(clients.Take(innerCount).OrderBy(o => o.Lastname));
+
+
+
         }
 
 
@@ -47,23 +69,16 @@ namespace BiberDAMM.Controllers
 
         public ActionResult Details(int? id)
         {
+            Session["TempClient"] = null;
             if (id == null)
-                return RedirectToAction("Index");
+                return RedirectToAction((String)Session["ClientIndexPage"]);
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
             return View(client);
         }
 
-        public ActionResult TempDetails(int? id)
-        {
-            if (id == null)
-                return RedirectToAction("Index");
-            Client client = db.Clients.Find(id);
-            if (client == null)
-                return HttpNotFound();
-            return View(client);
-        }
+
 
 
         //Getter and Setter for the creating-Page
@@ -103,9 +118,11 @@ namespace BiberDAMM.Controllers
                     db.Clients.Add(client);
                     db.SaveChanges();
 
-                    int clientID = db.Clients.Max(u => u.Id);
+
 
                     //Update Contact-Rows which are temporary inserted with Null-Value  
+                    /*
+                    int clientID = db.Clients.Max(u => u.Id);
 
                     var results = from p in db.ContactDatas select p;
                     results = results.Where(s => s.ClientId == null);
@@ -116,10 +133,10 @@ namespace BiberDAMM.Controllers
                     }
 
                     db.SaveChanges();
-
+                    */
 
                     TempData["ClientSuccess"] = "Patient erfolgreich gespeichert!";
-                    return RedirectToAction("Index");
+                    return RedirectToAction((String)Session["ClientIndexPage"]);
                 }
                 TempData["ClientError"] = "Daten unvollständig oder fehlerhaft";
                 return View(client);
@@ -129,7 +146,7 @@ namespace BiberDAMM.Controllers
                 Session["TempNewClient"] = null;
 
                 TempData["ClientError"] = "Bearbeitung abgebrochen";
-                return RedirectToAction("Index");
+                return RedirectToAction((String)Session["ClientIndexPage"]);
             }
             else if (Request.Form["ChangeHealthInsurance"] != null)
             {
@@ -147,31 +164,13 @@ namespace BiberDAMM.Controllers
 
         }
 
-
-        //Redirect to the Overview-Page of ContactData
-        public ActionResult ViewContactsFromClient(int? id)
-        {
-            if (id == null)
-                return RedirectToAction("Index");
-            var client = db.Clients.Find(id);
-            if (client == null)
-                return HttpNotFound();
-
-
-            Session["TempViewClient"] = client;
-            TempData["RedirectFromClient"] = true;
-            return RedirectToAction("Index", "ContactData");
-
-        }
-
-
-
+        
         //Getter and Setter for the Editing Page
 
         public ActionResult Edit(int? id)
         {
             if (id == null)
-                return RedirectToAction("Index");
+                return RedirectToAction((String)Session["ClientIndexPage"]);
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
@@ -208,7 +207,7 @@ namespace BiberDAMM.Controllers
                     db.Entry(client).State = EntityState.Modified;
                     db.SaveChanges();
                     TempData["ClientSuccess"] = "Änderungen gespeichert";
-                    return RedirectToAction("Details" ,new { id = client.Id });
+                    return RedirectToAction("Details", new { id = client.Id });
                 }
                 TempData["ClientError"] = "Eingaben fehlerhaft oder unvollständig";
                 return View(client);
@@ -217,7 +216,7 @@ namespace BiberDAMM.Controllers
             {
                 Session["TempClient"] = null;
                 TempData["ClientError"] = "Bearbeitung abgebrochen";
-                return RedirectToAction("Index");
+                return RedirectToAction((String)Session["ClientIndexPage"]);
             }
             else if (Request.Form["EditContacts"] != null)
             {

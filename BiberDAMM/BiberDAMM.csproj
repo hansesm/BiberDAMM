@@ -853,7 +853,7 @@
     <Content Include="Views\Stay\Index.cshtml" />
     <Content Include="Views\RoomType\Index.cshtml" />
     <Content Include="Views\Stay\Details.cshtml" />
-    <Content Include="Views\Client\TempDetails.cshtml" />
+    <Content Include="Views\Client\LastNIndex.cshtml" />
     <Content Include="Views\RoomType\Details.cshtml" />
     <Content Include="Views\RoomType\Create.cshtml" />
     <Content Include="Views\RoomType\Edit.cshtml" />
