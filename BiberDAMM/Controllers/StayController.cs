@@ -58,11 +58,11 @@ namespace BiberDAMM.Controllers
         }
 
         //CREATE: Stay [JEL] [ANNAS]
-        public ActionResult New()
+        public ActionResult Create()
         {
             return View();
         }
-
+        
         //CHANGE: Stay [HansesM]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -95,6 +95,7 @@ namespace BiberDAMM.Controllers
                 stayInDb.Comment = stay.Comment;
                 stayInDb.BeginDate = stay.BeginDate;
                 stayInDb.EndDate = stay.EndDate;
+                stayInDb.StayType = stay.StayType;
                 stayInDb.LastUpdated = DateTime.Now;
                 stayInDb.RowVersion++;
 
@@ -148,7 +149,7 @@ namespace BiberDAMM.Controllers
             JsonResult resultJson = new JsonResult { Data = result };
             
             //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
-            var viewModel = new DetailsStayViewModel(stay, selectetListDoctors, resultJson);
+            var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
             //returns the viewmodel [HansesM]
             return View(viewModel);

@@ -4,7 +4,7 @@
 *@
 @using BiberDAMM.Helpers
 @using BiberDAMM.Models
-@model BiberDAMM.ViewModels.DetailsStayViewModel
+@model BiberDAMM.ViewModels.StayDetailsViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -62,7 +62,7 @@
     </div>
 }
 
-<hr/>
+<hr />
 
 <!-- Main form to display stay information [HansesM]-->
 <div class="container-fluid">
@@ -71,43 +71,55 @@
         @Html.HiddenFor(m => m.Stay.Id)
         @Html.HiddenFor(m => m.Stay.RowVersion)
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="row">
 
             <div class="form-group col-md-8">
-                @Html.LabelFor(model => model.Stay.ICD10, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.ICD10, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new {@class = "text-danger"})
+                @Html.LabelFor(model => model.Stay.ICD10, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.ICD10, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.ApplicationUserId, "Behandelnder Arzt", new {@class = "col-form-label"})
-                @Html.DropDownListFor(model => model.Stay.ApplicationUserId, Model.ListDoctors, null, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new {@class = "text-danger"})
+                @Html.LabelFor(model => model.Stay.ApplicationUserId, "Behandelnder Arzt", new { @class = "col-form-label" })
+                @Html.DropDownListFor(model => model.Stay.ApplicationUserId, Model.ListDoctors, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new { @class = "text-danger" })
             </div>
 
         </div>
         <!-- row-->
 
         <div class="row">
-
+           
+            <div class="form-group col-md-8">
+                @Html.LabelFor(model => model.Stay.Result, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.Result, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.Result, "", new { @class = "text-danger" })
+            </div>
+            
             <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.Result, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.Result, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.Stay.Result, "", new {@class = "text-danger"})
+                @Html.LabelFor(model => model.Stay.StayType, "Aufenthaltsart", new { @class = "col-form-label" })
+                @Html.EnumDropDownListFor(model => model.Stay.StayType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.StayType, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.BeginDate, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.BeginDate, new {@class = "form-control", id = "begin"})
-                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new {@class = "text-danger"})
+
+        </div>
+        <!-- row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Stay.BeginDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control", id = "begin" })
+                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new { @class = "text-danger" })
             </div>
 
-            <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.EndDate, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.EndDate, new {@class = "form-control", id = "end"})
-                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new {@class = "text-danger"})
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "end" })
+                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
             </div>
 
         </div>
@@ -116,8 +128,8 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-                @Html.LabelFor(model => model.Stay.Comment, null, new {@class = "col-form-label"})
-                @Html.TextAreaFor(model => model.Stay.Comment, new {@class = "form-control", rows = "6"})
+                @Html.LabelFor(model => model.Stay.Comment, null, new { @class = "col-form-label" })
+                @Html.TextAreaFor(model => model.Stay.Comment, new { @class = "form-control", rows = "6" })
             </div>
 
         </div>
@@ -125,14 +137,14 @@
 
         <div class="row">
             <div class="form-group col-md-12">
-                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm"/>
-                <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm"/>
+                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
             </div>
 
         </div>
         <!-- row-->
     }
-    <hr/>
+    <hr />
 </div>
 
 <!-- Container for displaying the calendar [HansesM]-->
@@ -140,9 +152,9 @@
     <h4> Behandlungsübersicht</h4>
     <div id="calendar"></div>
     <!-- Empty row-->
-    <br/>
+    <br />
     <!-- Horizontal line-->
-    <hr/>
+    <hr />
 </div>
 
 
@@ -163,53 +175,53 @@
 
             <table id="treatmentsOfUser" class="table table-striped table-hover table-bordered" style="width: 100%;" border="1" cellspacing="0">
                 <thead class="thead-inverse">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
-                    </th>
-                </tr>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
+                        </th>
+                    </tr>
                 </thead>
                 <!-- head-->
 
                 <tbody>
-                @foreach (var item in Model.Stay.Treatments)
-                {
-                    <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.Id}))'">
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TreatmentType.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeItem => item.Begin)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeItem => item.End)
-                        </td>
-                    </tr>
-                }
+                    @foreach (var item in Model.Stay.Treatments)
+                    {
+                        <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.Id}))'">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TreatmentType.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modeItem => item.Begin)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modeItem => item.End)
+                            </td>
+                        </tr>
+                    }
                 </tbody>
                 <!-- body -->
 
                 <tfoot style="background-color: #263238; color: white; text-align: right;">
-                <tr>
-                    <td colspan="3">
-                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
-                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
                 </tfoot>
                 <!-- foot-->
 
             </table>
         </div>
     </div>
-    <hr/>
+    <hr />
 </div>
 
 <!-- Container for displaying Blocks-Bed information, this will only be shown if the staytype is stationär [HansesM] -->
@@ -218,63 +230,63 @@
     <div class="container-fluid">
         <h4>Bettenbelegung für den Aufenthalt </h4>
         <h4>vom @Html.Raw(Model.Stay.BeginDate.ToString("dd.MM.yyyy")) - @Html.Raw(Model.Stay.EndDate != null ? Model.Stay.EndDate.GetValueOrDefault().ToString("dd.MM.yyyy") : "")</h4>
-        
+
         @* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the treatment-list is empty. [HansesM] *@
         @{ var blocksHeaderHelper = Model.Stay.Blocks.FirstOrDefault(); }
 
         <table id="blocksOfStay" class="table table-striped table-hover table-bordered" style="width: 100%;" border="1" cellspacing="0">
             <thead class="thead-inverse">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => blocksHeaderHelper.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
-                </th>
-            </tr>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
+                    </th>
+                </tr>
             </thead>
             <!-- head-->
             <tbody>
-            @foreach (var item in Model.Stay.Blocks)
-            {
-                <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.BedId}))'">
-                    <td>
-                        @item.Date.ToString("d")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modeItem => item.Bed.Model)
-                    </td>
-                </tr>
-            }
+                @foreach (var item in Model.Stay.Blocks)
+                {
+                    <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.BedId}))'">
+                        <td>
+                            @item.Date.ToString("d")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeItem => item.Bed.Model)
+                        </td>
+                    </tr>
+                }
             </tbody>
             <!-- body -->
 
             <tfoot style="background-color: #263238; color: white; text-align: right;">
-            <tr>
-                <td colspan="3">
-                    <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
-                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                    </button>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="3">
+                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
             </tfoot>
             <!-- foot-->
         </table>
     </div>
-}
+            }
 
 
 @section Scripts{
 
     <!-- List of treatments [HansesM]-->
     <script>
-        $(function() { $("#treatmentsOfUser").dataTable(); })
+        $(function () { $("#treatmentsOfUser").dataTable(); })
     </script>
 
     <!-- Datetimepicker for begin [HansesM]-->
@@ -294,8 +306,8 @@
             dateFormat: "dd.mm.yy"
         });
     </script>
-    
-    
+
+
 
     <!-- Fullcalendar with settings [HanseM]-->
     <script>
