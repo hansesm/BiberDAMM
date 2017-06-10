@@ -8,10 +8,12 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class StayController : Controller
     {
         //The Database-Context [HansesM]
@@ -95,6 +97,15 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Stay stay, string command)
         {
+            //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                //Returns the user and displays a alert [HansesM]
+                TempData["CreateStayAbort"] = "Anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
+                return RedirectToAction("Details", "Client", new { id = stay.ClientId });
+
+            }
+
             //Checks if Modelstate is valid [HanseM]
             if (!ModelState.IsValid)
             {
