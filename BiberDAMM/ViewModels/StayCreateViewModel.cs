@@ -10,13 +10,22 @@ namespace BiberDAMM.ViewModels
 {
     public class StayCreateViewModel
     {
+        public int Id { get; set; }
         public Stay Stay { get; set; }
+        //public Client Client { get; set; }
         public List<SelectListItem> ListDoctors { get; set; }
 
-        public StayCreateViewModel(Stay stay, List<SelectListItem> listDoctors)
+        public StayCreateViewModel(int id, Stay stay, List<SelectListItem> listDoctors)
         {
+            this.Id = id;
+            //this.Client = client;
             this.Stay = stay;
             this.ListDoctors = listDoctors;
+        }
+
+        public StayCreateViewModel()
+        {
+            
         }
     }
 }
