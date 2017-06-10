@@ -1,0 +1,35 @@
+﻿<!--This is the view for selecting a treatment type in the process of creating a new treatment [KrabsJ]-->
+
+@using BiberDAMM.Helpers
+@model BiberDAMM.ViewModels.CreationTreatmentSelectType
+
+@{
+    ViewBag.Title = "Behandlung anlegen";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr />
+
+<div> 
+@using (Html.BeginForm("SelectTreatmentType", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken();
+    @Html.HiddenFor(m => m.StayId);
+
+    <div style="text-align:center">
+        <h4 class="bottom-one">Bitte wählen Sie zunächst einen Behandlungstyp aus:</h4>
+
+        <div class="col-md-4 bottom-one" style="display: inline-block;">
+            @Html.DropDownListFor(model => model.TreatmentTypeId, Model.ListTreatmentTypes, null, new { @class = "btn btn.btn-outline-secondary dropdown-toggle" })
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-4" style="display: inline-block;">
+                <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
+                <input title="Behandlungsdetails festlegen" type="submit" name="command" value="Weiter" class="btn btn-outline-primary btn-sm" />
+            </div>
+        </div>
+    </div>
+}
+</div>

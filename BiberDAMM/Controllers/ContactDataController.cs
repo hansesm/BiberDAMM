@@ -21,10 +21,6 @@ namespace BiberDAMM.Controllers
             {
                 client = (Client)Session["TempNewClient"];
             }
-            else if (Session["TempViewClient"] != null)
-            {
-                client = (Client)Session["TempViewClient"];
-            }
             else
             {
                 client = (Client)Session["TempClient"];
@@ -34,6 +30,7 @@ namespace BiberDAMM.Controllers
 
         }
 
+        //Method which decides ti which client page should be redirected
         public ActionResult GoBackToClient()
         {
             Client cachedClient = getCachedClient();
@@ -41,13 +38,14 @@ namespace BiberDAMM.Controllers
             {
                 return RedirectToAction("Create", "Client");
             }
-            else if (Session["TempViewClient"] != null)
+            else if (Session["TempClient"] != null)
             {
-                return RedirectToAction("Details", "Client", new { id = cachedClient.Id });
+                return RedirectToAction("Edit", "Client", new { id = cachedClient.Id });
             }
             else
             {
-                return RedirectToAction("Edit", "Client", new { id = cachedClient.Id });
+                ContactData data = (ContactData)Session["DetailViewContact"];
+                return RedirectToAction("Details", "Client", new { id = data.ClientId });
             }
         }
 
@@ -62,7 +60,7 @@ namespace BiberDAMM.Controllers
                 return RedirectToAction("Index", "Client");
             }
 
-            ViewBag.Title = "Kontaktübersicht für Patient " + getCachedClient().Id;
+            ViewBag.Title = "Kontaktübersicht für Patient: " + getCachedClient().Lastname + ", " + getCachedClient().Surname;
 
 
             //To show values which are linked to a new Client with a 0-ID
@@ -83,6 +81,7 @@ namespace BiberDAMM.Controllers
             var contactData = db.ContactDatas.Find(id);
             if (contactData == null)
                 return HttpNotFound();
+            Session["DetailViewContact"] = contactData;
             return View(contactData);
         }
 
@@ -207,9 +206,15 @@ namespace BiberDAMM.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var contactData = db.ContactDatas.Find(id);
+            int clientID = contactData.ClientId ?? default(int);
             db.ContactDatas.Remove(contactData);
             db.SaveChanges();
             TempData["ContactDataSuccess"] = "Kontakt erfolgreich gelöscht";
+            TempData["ClientSuccess"] = "Kontakt erfolgreich gelöscht";
+            if (getCachedClient() == null)
+            {
+                return RedirectToAction("Details", "Client", new { id = clientID });
+            }
             return RedirectToAction("Index");
         }
 
