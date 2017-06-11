@@ -76,7 +76,6 @@ namespace BiberDAMM.Controllers
               {
                   db.Entry(bed).State = EntityState.Modified;
                   db.SaveChanges();
-                // TODO: Add error message if editing fails
                 //-- Return notification if editing bed was successful --//
                 TempData["EditBedSuccess"] = " Die Eigenschaften wurden erfolgreich geändert";
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
@@ -111,6 +110,16 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            //-- Check if bed is blocked --//
+            Blocks dependentBlock = db.Blocks.Where(b => b.BedId == id).FirstOrDefault();
+
+            if (dependentBlock != null )
+            {
+                //-- Return alert-message if deletion of bed not possible --//
+                TempData["DeleteBedFailed"] = " Das Bett ist belegt";
+                return RedirectToAction("Details", "Bed", new { id });
+            }
+
             var bed = db.Beds.Find(id);
             db.Beds.Remove(bed);
             db.SaveChanges();
