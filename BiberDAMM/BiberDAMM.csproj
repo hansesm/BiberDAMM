@@ -235,6 +235,7 @@
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentSelectType.cs" />
     <Compile Include="ViewModels\CreationTreatmentType.cs" />
+    <Compile Include="ViewModels\BlocksCreateViewModel.cs" />
     <Compile Include="ViewModels\StayCreateViewModel.cs" />
     <Compile Include="ViewModels\StayDetailsViewModel.cs" />
     <Compile Include="ViewModels\StayIndexViewModel.cs" />
@@ -861,10 +862,10 @@
     <Content Include="Views\Treatment\SelectTreatmentType.cshtml" />
     <Content Include="Views\Treatment\Create.cshtml" />
     <Content Include="Views\Stay\Create.cshtml" />
+    <Content Include="Views\Blocks\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Blocks\" />
     <Folder Include="Views\TreatmentType\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,115 @@
+﻿@*
+    View for creating a new blocks
+    Author: [HansesM]
+*@
+@using BiberDAMM.Helpers
+@using BiberDAMM.Models
+@model BiberDAMM.ViewModels.BlocksCreateViewModel
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@* Displays the main Stayinformation [HansesM]*@
+<h2>Neuer Übernachtung</h2>
+<h4>für @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname) erfassen</h4>
+
+<hr />
+
+<!-- Main form to display stay information [HansesM]-->
+<div class="container-fluid">
+    @using (Html.BeginForm("Create", "Blocks"))
+    {
+        @Html.HiddenFor(m => m.Stay.ClientId)
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Blocks.BeginDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Blocks.BeginDate, new { @class = "form-control", id = "begin" })
+                @Html.ValidationMessageFor(model => model.Blocks.BeginDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Blocks.EndDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Blocks.EndDate, new { @class = "form-control", id = "end" })
+                @Html.ValidationMessageFor(model => model.Blocks.EndDate, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <!--row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+                @Html.LabelFor(model => model.Blocks.ClienRoomType, "Zimmerart", new { @class = "col-form-label" })
+                @Html.EnumDropDownListFor(model => model.Blocks.ClienRoomType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Blocks.ClienRoomType, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <!-- row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+                @Html.LabelFor(model => model.Blocks.Bed.Model, "Bettenmodell", new { @class = "col-form-label" })
+                @Html.DropDownListFor(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Blocks.Bed.Model, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <!-- row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+
+                @Html.Label("Freie Betten")
+                @Html.DropDownList("Bed", new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control", @disabled = "disabled" })
+            </div>
+
+        </div>
+        <!-- row-->
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Zur Übersicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
+            </div>
+
+        </div>
+        <!-- row-->
+    }
+    <hr />
+</div>
+
+@section Scripts{
+
+    <!-- List of treatments [HansesM]-->
+    <script>
+        $(function () { $("#treatmentsOfUser").dataTable(); })
+    </script>
+
+    <!-- Datetimepicker for begin [HansesM]-->
+    <script>
+        $("#begin").datepicker({
+            sliderAccessArgs: { touchonly: false },
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+    <!-- Datetimepicker for end [HansesM]-->
+    <script>
+        $("#end").datepicker({
+            sliderAccessArgs: { touchonly: false },
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+}

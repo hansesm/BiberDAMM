@@ -238,13 +238,19 @@
             <thead class="thead-inverse">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.Date)
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.BeginDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
+                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Id)
                     </th>
                 </tr>
             </thead>
@@ -252,15 +258,21 @@
             <tbody>
                 @foreach (var item in Model.Stay.Blocks)
                 {
-                    <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.BedId}))'">
+                    <tr onclick="location.href = '@(Url.Action("Details", "Blocks", new {item.Id}))'">
                         <td>
-                            @item.Date.ToString("d")
+                            @item.BeginDate.ToString("d")
+                        </td>
+                        <td>
+                            @item.EndDate.ToString("d")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeItem => item.Bed.Model)
                         </td>
                         <td>
                             @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
                         </td>
                         <td>
-                            @Html.DisplayFor(modeItem => item.Bed.Model)
+                            @Html.DisplayFor(modeItem => item.Bed.Id)
                         </td>
                     </tr>
                 }
@@ -269,8 +281,8 @@
 
             <tfoot style="background-color: #263238; color: white; text-align: right;">
                 <tr>
-                    <td colspan="3">
-                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                    <td colspan="5">
+                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Blocks", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>
                         </button>
                     </td>
