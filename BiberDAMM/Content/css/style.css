@@ -9086,3 +9086,10 @@ hr.transparent {
         width: 900px
     }
 }
+
+/*
+    class for having a margin of 1cm at the bottom of an element [KrabsJ]
+*/
+.bottom-one {
+    margin-bottom: 1cm;
+}

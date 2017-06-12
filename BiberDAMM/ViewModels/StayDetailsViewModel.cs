@@ -8,13 +8,13 @@ using BiberDAMM.Models;
 
 namespace BiberDAMM.ViewModels
 {
-    public class DetailsStayViewModel
+    public class StayDetailsViewModel
     {
         public Stay Stay { get; set; }
         public List<SelectListItem> ListDoctors { get; set; }
         public JsonResult ListTreatments { get; set; }
 
-        public DetailsStayViewModel(Stay stay, List<SelectListItem> listDoctors, JsonResult ListTreatments)
+        public StayDetailsViewModel(Stay stay, List<SelectListItem> listDoctors, JsonResult ListTreatments)
         {
             this.Stay = stay;
             this.ListDoctors = listDoctors;
