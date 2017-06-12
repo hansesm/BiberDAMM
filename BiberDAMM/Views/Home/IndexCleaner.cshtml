@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<BiberDAMM.Models.Room>  
 @{
     ViewBag.Title = "Home Reinigungskraft";
 }
@@ -29,3 +30,40 @@
     <h1>Willkommen @User.Identity.GetUserName()</h1>
     <p class="lead">Dies ist die Homeseite für Reinigungskräfte</p>
 </div>
+
+
+<h2>Räume, welche heute gereinigt werden müssen</h2>
+<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomType.Name)
+            </th>
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="2">
+                <button title="Raum hinzufügen" onclick="location.href='@(Url.Action("Create", "Room"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    </tfoot>
+    @foreach (var item in Model)
+    {
+        <tr onclick="location.href = '@(Url.Action("Details", "Room", new {id = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.RoomNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.RoomType.Name)
+            </td>
+        </tr>
+    }
+</table>
+
+@section Scripts{
+    <script> $(function () { $("#example").dataTable();})</script>
+}

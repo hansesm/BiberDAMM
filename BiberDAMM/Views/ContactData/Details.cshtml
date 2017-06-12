@@ -100,7 +100,12 @@
 <p>
     <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-    <button title="Zurück zur Kontakten" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zu Kontakten</button>
+
+    @if (Session["TempClient"] != null)
+    {
+        <button title="Zurück zur Kontakten" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück zu Kontakten</button>
+    }
+
     <button title="Zurück zu Patienten" onclick="location.href = '@Url.Action("GoBackToClient")';return false;" class="btn btn-outline-primary btn-sm">Zurück zu Patienten</button>
 </p>
 
@@ -145,8 +150,10 @@
                 </table>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("DeleteConfirmed", "ContactData", new { id = Model.Id
-                                        }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("DeleteConfirmed", "ContactData", new
+                {
+                    id = Model.Id
+                }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <input type="submit" name="Confirm" value="Löschen" class="btn btn-outline-primary btn-sm" />

@@ -9,10 +9,10 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Behandlungstyp")]
-        public string Name { get; set; }
+        public string Name { get; set; }     
 
 
-        [Display(Name = "Raumtyp-ID")]
+        [Display(Name = "Raumtyp")]
         public int? RoomTypeId { get; set; }
 
         public virtual RoomType RoomType { get; set; }

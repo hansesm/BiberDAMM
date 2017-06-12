@@ -479,14 +479,10 @@ namespace BiberDAMM.DAL
             //creating blocks
             var blocks = new List<Blocks>
             {
-                new Blocks {Date = DateTime.Parse("01.02.2016"), BedId = 4, StayId = 1},
-                new Blocks {Date = DateTime.Parse("02.02.2016"), BedId = 4, StayId = 1},
-                new Blocks {Date = DateTime.Parse("03.02.2016"), BedId = 4, StayId = 1},
-                new Blocks {Date = DateTime.Parse("04.02.2016"), BedId = 4, StayId = 1},
-                new Blocks {Date = DateTime.Today.Date, BedId = 4, StayId = 4},
-                new Blocks {Date = DateTime.Today.Date.AddDays(1), BedId = 4, StayId = 4},
-                new Blocks {Date = DateTime.Today.Date.AddDays(2), BedId = 4, StayId = 4},
-                new Blocks {Date = DateTime.Today.Date.AddDays(3), BedId = 4, StayId = 4}
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 1, StayId = 1, ClienRoomType = ClientRoomType.Einzelzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 2, StayId = 2, ClienRoomType = ClientRoomType.Doppelzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 3, StayId = 3, ClienRoomType = ClientRoomType.Mehrbettzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 4, StayId = 4, ClienRoomType = ClientRoomType.Einzelzimmer}
             };
             blocks.ForEach(b => _context.Blocks.Add(b));
             _context.SaveChanges();

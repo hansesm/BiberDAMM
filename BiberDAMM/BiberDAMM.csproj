@@ -230,14 +230,16 @@
     <Compile Include="ViewModels\CreationContactData.cs" />
     <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\CreationHealthInsurance.cs" />
-    <Compile Include="ViewModels\CreationRoom.cs" />
+    <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\CreationRoomType.cs" />
-    <Compile Include="ViewModels\CreationStay.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentSelectType.cs" />
     <Compile Include="ViewModels\CreationTreatmentType.cs" />
-    <Compile Include="ViewModels\DetailsStayViewModel.cs" />
+    <Compile Include="ViewModels\BlocksCreateViewModel.cs" />
+    <Compile Include="ViewModels\StayCreateViewModel.cs" />
+    <Compile Include="ViewModels\StayDetailsViewModel.cs" />
     <Compile Include="ViewModels\StayIndexViewModel.cs" />
+    <Compile Include="ViewModels\TreatmentTypeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -750,6 +752,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\Chart.js" />
@@ -853,12 +856,18 @@
     <Content Include="Views\Stay\Index.cshtml" />
     <Content Include="Views\RoomType\Index.cshtml" />
     <Content Include="Views\Stay\Details.cshtml" />
-    <Content Include="Views\Client\TempDetails.cshtml" />
+    <Content Include="Views\Client\LastNIndex.cshtml" />
     <Content Include="Views\RoomType\Details.cshtml" />
     <Content Include="Views\RoomType\Create.cshtml" />
     <Content Include="Views\RoomType\Edit.cshtml" />
     <Content Include="Views\Treatment\SelectTreatmentType.cshtml" />
     <Content Include="Views\Treatment\Create.cshtml" />
+    <Content Include="Views\TreatmentType\Index.cshtml" />
+    <Content Include="Views\TreatmentType\Edit.cshtml" />
+    <Content Include="Views\TreatmentType\Details.cshtml" />
+    <Content Include="Views\TreatmentType\Create.cshtml" />
+    <Content Include="Views\Stay\Create.cshtml" />
+    <Content Include="Views\Blocks\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
