@@ -32,7 +32,7 @@ namespace BiberDAMM.Models
         public string Result { get; set; }
 
         [Required]
-        [Display(Name = "Behandlungstyp")]
+        [Display(Name = "Aufenthaltsart")]
         public StayType StayType { get; set; }
 
         //Rowversion will be updated in the controller [HansesM]
