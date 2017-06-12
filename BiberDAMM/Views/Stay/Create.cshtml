@@ -1,0 +1,124 @@
+﻿@*
+    View for creating a new stay
+    Author: [HansesM]
+*@
+@using BiberDAMM.Helpers
+@model BiberDAMM.ViewModels.StayCreateViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>Aufenthaltanlegen</title>
+</head>
+
+
+@* Displays the main Stayinformation [HansesM]*@
+<h2>Neuer Aufenthalt</h2>
+<h4>für @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname)</h4>
+
+<hr />
+
+<!-- Main form to display stay information [HansesM]-->
+<div class="container-fluid">
+    @using (Html.BeginForm("Create", "Stay"))
+    {
+        @Html.HiddenFor(m => m.Stay.ClientId)
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="row">
+           
+            <div class="form-group col-md-12">
+                @Html.LabelFor(model => model.Stay.StayType, "Aufenthaltsart", new { @class = "col-form-label" })
+                @Html.EnumDropDownListFor(model => model.Stay.StayType, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Stay.StayType, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <!-- row-->
+        
+        <div class="row">
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Stay.BeginDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control", id = "begin" })
+                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
+                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "end" })
+                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <!--row-->
+        
+        <div class="row">
+            
+            <div class="form-group col-md-8">
+                @Html.LabelFor(model => model.Stay.ICD10, new {@class = "col-form-label"})
+                @Html.TextBoxFor(model => model.Stay.ICD10, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group col-md-4">
+                @Html.LabelFor(model => model.Stay.ApplicationUserId, "Behandelnder Arzt", new {@class = "col-form-label"})
+                @Html.DropDownListFor(model => model.Stay.ApplicationUserId, Model.ListDoctors, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new {@class = "text-danger"})
+            </div>
+
+        </div>
+        <!-- row-->
+
+        <div class="row">
+
+            <div class="form-group col-md-12">
+                @Html.LabelFor(model => model.Stay.Comment, null, new { @class = "col-form-label" })
+                @Html.TextAreaFor(model => model.Stay.Comment, new { @class = "form-control", rows = "6" })
+            </div>
+
+        </div>
+        <!--row-->
+
+        <div class="row">
+            <div class="form-group col-md-12">
+                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                <input title="Zur Übersicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
+            </div>
+
+        </div>
+        <!-- row-->
+    }
+    <hr />
+</div>
+
+@section Scripts{
+
+    <!-- List of treatments [HansesM]-->
+    <script>
+        $(function () { $("#treatmentsOfUser").dataTable(); })
+    </script>
+
+    <!-- Datetimepicker for begin [HansesM]-->
+    <script>
+        $("#begin").datetimepicker({
+            sliderAccessArgs: { touchonly: false },
+            timeFormat: "HH:mm:ss",
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+    <!-- Datetimepicker for end [HansesM]-->
+    <script>
+        $("#end").datetimepicker({
+            sliderAccessArgs: { touchonly: false },
+            timeFormat: "HH:mm:ss",
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+}

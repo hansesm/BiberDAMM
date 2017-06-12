@@ -8,10 +8,12 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class StayController : Controller
     {
         //The Database-Context [HansesM]
@@ -57,10 +59,82 @@ namespace BiberDAMM.Controllers
             }
         }
 
-        //CREATE: Stay [JEL] [ANNAS]
-        public ActionResult New()
+        //CREATE: Stay [HansesM]
+        public ActionResult Create(int id)
         {
-            return View();
+            //gets the client from the given id
+            var client = _db.Clients.SingleOrDefault(m => m.Id == id);
+
+            if (client == null)
+            {
+                return RedirectToAction("Index", "Stay");
+            }
+            
+            //Creates a new, empty stay [HansesM]
+            var newStay = new Stay();
+            //Sets some Values [HansesM]
+            newStay.Client = client;
+            newStay.ClientId = client.Id;
+            newStay.BeginDate = DateTime.Now;
+
+            //Gets a list of Doctors for the Dropdownlist [HansesM]
+            var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+            //Builds a selectesList out of the list of doctors [HansesM]
+            var selectetListDoctors = new List<SelectListItem>();
+            foreach (var m in listDoctors)
+            {
+                selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
+            }
+            
+            //Creates the view model [HansesM]
+            var viewModel = new StayCreateViewModel(id, newStay, selectetListDoctors); 
+
+            return View(viewModel);
+        }
+
+        //Post Method for creating new Stay [HansesM]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Stay stay, string command)
+        {
+            //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                //Returns the user and displays a alert [HansesM]
+                TempData["CreateStayAbort"] = "Anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
+                return RedirectToAction("Details", "Client", new { id = stay.ClientId });
+
+            }
+
+            //Checks if Modelstate is valid [HanseM]
+            if (!ModelState.IsValid)
+            {
+                //gets the client from the id [HansesM]
+                var client = _db.Clients.SingleOrDefault(m => m.Id == stay.ClientId);
+                //Sets the client to the invalid-stay [HansesM]
+                stay.Client = client;
+
+                //Gets a list of Doctors for the Dropdownlist [HansesM]
+                var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+                
+                //Builds a selectesList out of the list of doctors [HansesM]
+                var selectetListDoctors = new List<SelectListItem>();
+                foreach (var m in listDoctors)
+                {
+                    selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
+                }
+
+                //Creates the view model with the Id, the invalid-stay and the list of doctors [HansesM]
+                var viewModel = new StayCreateViewModel(stay.ClientId, stay, selectetListDoctors);
+                return View(viewModel);
+            }
+            else
+            {
+                stay.LastUpdated = DateTime.Now;
+                _db.Stays.Add(stay);
+                _db.SaveChanges();
+                return RedirectToAction("Details", "Stay", new { id = stay.Id});
+            }
         }
 
         //CHANGE: Stay [HansesM]
@@ -95,6 +169,7 @@ namespace BiberDAMM.Controllers
                 stayInDb.Comment = stay.Comment;
                 stayInDb.BeginDate = stay.BeginDate;
                 stayInDb.EndDate = stay.EndDate;
+                stayInDb.StayType = stay.StayType;
                 stayInDb.LastUpdated = DateTime.Now;
                 stayInDb.RowVersion++;
 
@@ -106,7 +181,7 @@ namespace BiberDAMM.Controllers
                 return RedirectToAction("Details", "Stay", new { id = stay.Id });
             }
             //TODO Model-State invalid
-            return RedirectToAction("Index", "Stay", new { id = stay.Id });
+            return RedirectToAction("Index", "Stay");
         }
 
         //GET SINGLE: Stay [HansesM]
@@ -116,8 +191,8 @@ namespace BiberDAMM.Controllers
             var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
 
             //Gets all doctors from the database [HansesM]
-            var listDoctors = _db.Users.AsQueryable();
-            listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
+            var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+            //listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
 
             //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
             var selectetListDoctors = new List<SelectListItem>();
@@ -148,16 +223,10 @@ namespace BiberDAMM.Controllers
             JsonResult resultJson = new JsonResult { Data = result };
             
             //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
-            var viewModel = new DetailsStayViewModel(stay, selectetListDoctors, resultJson);
+            var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
             //returns the viewmodel [HansesM]
             return View(viewModel);
-        }
-
-        //SAVE: Stay [JEL] [ANNAS]
-        public ActionResult Save()
-        {
-            return View();
         }
 
         //Override on Dispose for security reasons. [HansesM]

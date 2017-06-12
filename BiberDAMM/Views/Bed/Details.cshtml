@@ -11,7 +11,18 @@
 
 <h2>Details für Bett @Html.DisplayFor(model => model.Id)</h2>
 
-@*//-- Notification if details of selected bed are edited successfully --//*@
+<!-- Notification if deletion of bed fails -->
+@if (TempData["DeleteBedFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Bett konnte nicht gelöscht werden!</strong>@TempData["DeleteBedFailed"]
+    </div>
+}
+
+<!-- Notification if details of selected bed are edited successfully -->
 @if (TempData["EditBedSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -52,7 +63,7 @@
     <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
 </p>
 
-@*//-- Popup to confirm deletion of selected bed --//*@
+<!-- Popup to confirm deletion of selected bed -->
 <div id="deleteModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
