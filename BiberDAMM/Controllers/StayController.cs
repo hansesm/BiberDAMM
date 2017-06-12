@@ -116,8 +116,8 @@ namespace BiberDAMM.Controllers
             var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
 
             //Gets all doctors from the database [HansesM]
-            var listDoctors = _db.Users.AsQueryable();
-            listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
+            var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+            //listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
 
             //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
             var selectetListDoctors = new List<SelectListItem>();
