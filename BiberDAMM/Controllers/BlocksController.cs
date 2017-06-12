@@ -12,6 +12,13 @@ namespace BiberDAMM.Controllers
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
+        //Inline-Class for for displaying treatment-data in a calendar view, needed in the Details-Method [HansesM]
+        public class JsonEvent
+        {
+            public string value { get; set; }
+            public string text { get; set; }
+        }
+
         // GET all: Blocks [JEL] [ANNAS]
         public ActionResult Index()
         {
@@ -66,6 +73,34 @@ namespace BiberDAMM.Controllers
         {
             return View();
         }
+
+        public JsonResult getFreeBeds(string begin, string end)
+        {
+            //List<string> beds = new List<string>();
+            //beds.Add("eins");
+            //beds.Add("zwei");
+
+            var a = end.ToString();
+            var b = begin.ToString();
+
+            //Gets a treatments from the given stay [HansesM]
+            //TODO add where's
+            var events = _db.Beds.SqlQuery("select * from beds;");
+            
+            //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+            var result = events.Select(e => new JsonEvent()
+            {
+                value = e.Id.ToString(),
+                //TODO change to something with more sense
+                text = "Bettnummer: " + e.Id.ToString() + " in Raumnummer: " + e.RoomId.ToString()
+            }).ToList();
+
+            //Creates a JsonResult from the Json [HansesM]
+            JsonResult resultJson = new JsonResult { Data = result };
+            
+            return Json(result);
+        }
+
 
         //Override on Dispose for security reasons. [HansesM]
         protected override void Dispose(bool disposing)

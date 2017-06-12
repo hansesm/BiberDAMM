@@ -12,11 +12,11 @@ namespace BiberDAMM.ViewModels
         public List<SelectListItem> ListBedModels { get; set; }
 
 
-        public BlocksCreateViewModel(Blocks blocks, Stay stay, List<SelectListItem> ListBedModels)
+        public BlocksCreateViewModel(Blocks blocks, Stay stay, List<SelectListItem> listBedModels)
         {
             this.Stay = stay;
             this.Blocks = Blocks;
-            this.ListBedModels = ListBedModels;
+            this.ListBedModels = listBedModels;
         }
 
         public BlocksCreateViewModel()
