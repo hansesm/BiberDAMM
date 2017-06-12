@@ -14,7 +14,7 @@
 
 
 @* Displays the main Stayinformation [HansesM]*@
-<h2>Neuer Übernachtung</h2>
+<h2>Neue Übernachtung</h2>
 <h4>für @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname) erfassen</h4>
 
 <hr />
@@ -48,7 +48,7 @@
 
             <div class="form-group col-md-12">
                 @Html.LabelFor(model => model.Blocks.ClienRoomType, "Zimmerart", new { @class = "col-form-label" })
-                @Html.EnumDropDownListFor(model => model.Blocks.ClienRoomType, new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.Blocks.ClienRoomType, new { @class = "form-control", id="roomType" })
                 @Html.ValidationMessageFor(model => model.Blocks.ClienRoomType, "", new { @class = "text-danger" })
             </div>
 
@@ -59,7 +59,7 @@
 
             <div class="form-group col-md-12">
                 @Html.LabelFor(model => model.Blocks.Bed.Model, "Bettenmodell", new { @class = "col-form-label" })
-                @Html.DropDownListFor(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" , id = "model"})
                 @Html.ValidationMessageFor(model => model.Blocks.Bed.Model, "", new { @class = "text-danger" })
             </div>
 
@@ -118,26 +118,33 @@
             //Dropdownlist Selectedchange event
 
             $(function() {
-                $("#end").change(function() {
-                    var options = {};
-                    options.url = "/blocks/getFreeBeds";
-                    options.type = "POST";
-                    options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val() });
-                    console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val() }));
-                    options.dataType = "json";
-                    options.contentType = "application/json";
-                    options.success = function(freeBeds) {
-                        $("#freeBeds").empty();
-                        console.log(freeBeds);
-                        for (var i = 0; i < freeBeds.length; i++) {
-                            $("#freeBed").append("<option value="+ freeBeds[i].value+ ">" + freeBeds[i].text + "</option>");
-                        }
-                        $("#freeBed").prop("disabled", false);
-                    };
-                    options.error = function() {
-                        alert("Fehler beim Betten abrufen!");
-                    };
-                    $.ajax(options);
+                $("#end, #begin, #model, #roomType").change(function () {
+                    if (($("#begin").val().length != 0) && ($("#end").val().length != 0)) {
+                        //console.log($("#begin").val().length);
+                        //console.log($("#model option:selected").val());
+                        var options = {};
+                        options.url = "/blocks/getFreeBeds";
+                        options.type = "POST";
+                        options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() });
+                        console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                        options.dataType = "json";
+                        options.contentType = "application/json";
+                        options.success = function(freeBeds) {
+                            $("#freeBed").empty();
+                            //console.log(freeBeds);
+                            for (var i = 0; i < freeBeds.length; i++) {
+                                $("#freeBed").append("<option value="+ freeBeds[i].value+ ">" + freeBeds[i].text + "</option>");
+                            }
+                            $("#freeBed").prop("disabled", false);
+                        };
+                        options.error = function() {
+                            alert("Fehler beim Betten abrufen!");
+                        };
+                        $.ajax(options);
+                    }
+                    $("#freeBed").empty();
+                    $("#freeBed").prop("disabled", true);
+
                 });
             });
         });

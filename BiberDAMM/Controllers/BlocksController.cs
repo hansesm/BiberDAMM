@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 using BiberDAMM.ViewModels;
+using Microsoft.Ajax.Utilities;
 
 namespace BiberDAMM.Controllers
 {
@@ -74,25 +78,43 @@ namespace BiberDAMM.Controllers
             return View();
         }
 
-        public JsonResult getFreeBeds(string begin, string end)
+        public JsonResult getFreeBeds(string begin, string end, string roomType, string model)
         {
-            //List<string> beds = new List<string>();
-            //beds.Add("eins");
-            //beds.Add("zwei");
+            switch (roomType)
+            {
+                case "0":
+                    roomType = "=1";
+                    break;
+                case "1":
+                    roomType = "=2";
+                    break;
+                case "2":
+                    roomType = ">=3";
+                    break;
+                default:
+                    roomType= ">=3";
+                    break;
+            }
 
-            var a = end.ToString();
-            var b = begin.ToString();
+            begin = DateTime.ParseExact(begin);
+
 
             //Gets a treatments from the given stay [HansesM]
-            //TODO add where's
-            var events = _db.Beds.SqlQuery("select * from beds;");
+            //TODO TEST IT !!!!
+            var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +
+                                           "(select RoomId from beds group by RoomId having count(*) " + roomType + ")" +
+                                           "AND b.Model like '"+ model + "'" +
+                                           "AND b.Id not in" +
+                                           "(select BedId from blocks where " +
+                                           "BeginDate between convert(datetime, '"+ begin+ "', 104) and convert(datetime, '" + end + "', 104))" +
+                                           "and EndDate between convert(datetime, '" + begin + "', 104) and convert(datetime, '" + end + "', 104))");
             
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEvent()
             {
                 value = e.Id.ToString(),
                 //TODO change to something with more sense
-                text = "Bettnummer: " + e.Id.ToString() + " in Raumnummer: " + e.RoomId.ToString()
+                text = e.Model.ToString() + " " + e.Id.ToString() + " in Raum " + e.Room.RoomNumber.ToString()
             }).ToList();
 
             //Creates a JsonResult from the Json [HansesM]
