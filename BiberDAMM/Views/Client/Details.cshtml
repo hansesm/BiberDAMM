@@ -258,13 +258,15 @@
             <tfoot style="background-color: #263238; color: white; text-align: right;">
                 <tr>
                     <td colspan="6">
+                        Abgerufen am @DateTime.Now
                         
-                        <button title="Aufenthalt hinzufügen" onclick="location.href='@(Url.Action("Create", "Stay", new { id = Model.Id }))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                     </td>
                 </tr>
             </tfoot>
         </table>
 
+        <button title="Aufenthalt hinzufügen" onclick="location.href='@(Url.Action("Create", "Stay", new { id = Model.Id }))';return false;" class="btn btn-outline-primary btn-sm">Aufenthalt hinzufügen</button>
+        
 
         <br />
         <br />
