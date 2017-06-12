@@ -1573,6 +1573,28 @@ pre code {
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0;
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
+
+/*class for form controls that are used in the same line as a button [KrabsJ]*/
+.form-control-inline {
+    display: inline;
+    width: 80%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #607d8b;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    vertical-align: middle; }
+
+.form-control-inline[readonly] {
+    background-color: #cfd8dc;
+    opacity: 1;
+}
+
 .form-control::-ms-expand {
     background-color: transparent;
     border: 0; }

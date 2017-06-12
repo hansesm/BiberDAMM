@@ -1,13 +1,180 @@
 ﻿<!--This is the view for creating a new treatment [KrabsJ]-->
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Create</title>
-</head>
-<body>
-    <div> 
+@model BiberDAMM.ViewModels.CreationTreatment
+
+@{
+    ViewBag.Title = "Behandlung anlegen";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr />
+
+<div>
+    @using (Html.BeginForm("Create", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        //save all hidden fields
+        @Html.AntiForgeryToken();
+        @Html.HiddenFor(m => m.StayId);
+        @Html.HiddenFor(m => m.TreatmentTypeId);
+        for (int i = 0; i < Model.Rooms.Count; i++)
+        {
+            @Html.HiddenFor(m => Model.Rooms[i].Id)
+            @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
+            @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
+        }
+
+
+        <div class="form-group col-md-5">
+            @Html.LabelFor(model => model.TreatmentTypeName, new { @class = "col-form-label" })
+            <div>
+                @Html.TextBoxFor(model => model.TreatmentTypeName, new { @class = "form-control-inline", @readonly = "readonly" })
+                <button type="button" title="Behandlungstyp ändern" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#changeTypeModal">Ändern</button>
+            </div>
+            @Html.ValidationMessageFor(m => m.TreatmentTypeName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-5">
+            @Html.LabelFor(model => model.SelectedRoomNumber, new { @class = "col-form-label" })
+            <div>
+                @Html.TextBoxFor(model => model.SelectedRoomNumber, new { @class = "form-control-inline", @readonly = "readonly" })
+                <button id="selectRoomButton" type="button" title="Raum auswählen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#selectRoomModal">Auswählen</button>
+            </div>
+            @Html.ValidationMessageFor(m => m.SelectedRoomNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-5">
+            @Html.LabelFor(model => model.Description, new { @class = "col-form-label" })
+            <div>
+                @Html.TextBoxFor(model => model.Description, new { @class = "form-control-inline" })
+            </div>
+            <div>
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <input title="Behandlung speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm">
+    }
+</div>
+
+    <!-- changeTypeModal -->
+    <div id="changeTypeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title" style="display: inline-block;">Behandlungstyp ändern</h4>
+                    <i class="fa fa-exclamation-triangle fa-3x btn-outline-primary" aria-hidden="true" style="float: right;"></i>
+                </div>
+
+                <div class="modal-body">
+                    <p>Sind Sie sicher, dass Sie den Behandlungstyp wirklich ändern möchten?</p>
+                    <p>Alle bisherigen Eingaben gehen verloren!</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button title="Ja" class="btn btn-outline-primary btn-sm" onclick="location.href = '@Url.Action("SelectTreatmentType", "Treatment", new {id = Model.StayId})'">Ja</button>
+                    <button title="Nein" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Nein</button>
+                </div>
+
+            </div>
+
+        </div>
     </div>
-</body>
-</html>
+
+    <!-- selectRoomModal -->
+    <div id="selectRoomModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+@using (Html.BeginForm("UpdateCreatePageByRoomSelection", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <!--save all hidden fields-->
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.StayId)
+    @Html.HiddenFor(m => m.TreatmentTypeId)
+    @Html.HiddenFor(m => m.Begin)
+    @Html.HiddenFor(m => m.End)
+    @Html.HiddenFor(m => m.Description)
+    @Html.HiddenFor(m => m.SelectedRoomNumber)
+    @Html.HiddenFor(m => m.TreatmentTypeName)
+
+
+
+                <div class="modal-header">
+                    <h4 class="modal-title" style="display: inline-block;">Raumauswahl</h4>
+                    <i class="fa fa-hospital-o fa-3x btn-outline-primary" aria-hidden="true" style="float: right;"></i>
+                </div>
+
+                <div class="modal-body">
+                    <p>Bitte wählen Sie einen der aufgeführten Räume aus!</p>
+                    <table id="roomsTable" class="table table-striped table-bordered" style="width: 100%;" border="1" cellspacing="0">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.Rooms[1].RoomNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.Rooms[1].RoomTypeName)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <!-- head-->
+
+                        <tbody>
+                            @for (int i = 0; i < Model.Rooms.Count; i++)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
+                                    @Html.HiddenFor(m => Model.Rooms[i].Id)
+                                    @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
+                                    <td>
+                                        @Html.DisplayFor(model => model.Rooms[i].RoomNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Rooms[i].RoomTypeName)
+                                    </td>
+                                    <td>
+                                        @Html.RadioButtonFor(model => model.SelectedRoomId, Model.Rooms[i].Id, new { id = Model.Rooms[i].Id })
+                                    </td>
+                                </tr>
+                                
+                                
+                            }
+                        </tbody>
+                        <!-- body -->
+
+                        <tfoot style="background-color: #263238; color: white; text-align: right">
+                            <tr>
+                                <td colspan="3">
+                                </td>
+                            </tr>
+                        </tfoot>
+                        <!-- foot-->
+
+                    </table>
+    
+                </div>
+
+                <div class="modal-footer" style="margin-top:20px">
+                    <input title="Auswahl bestätigen" type="submit" value="Auswählen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                </div>
+
+}
+
+            </div>
+
+        </div>
+
+    </div>
+
+@section Scripts{
+    <script>
+            $(function () { $("#roomsTable").dataTable(); })
+    </script>
+}
