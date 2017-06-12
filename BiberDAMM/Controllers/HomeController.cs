@@ -1,12 +1,18 @@
 ﻿using System.Web.Mvc;
 using BiberDAMM.Helpers;
 using BiberDAMM.Security;
+using BiberDAMM.DAL;
+using BiberDAMM.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace BiberDAMM.Controllers
 {
     [CustomAuthorize]
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
         // load the different homepages based on the usertype of the logged in user [KrabsJ]
         public ActionResult Index()
         {
@@ -25,13 +31,52 @@ namespace BiberDAMM.Controllers
                 case ConstVariables.RoleNurse:
                     return View("IndexNursingStaff");
                 case ConstVariables.RoleCleaner:
-                    return View("IndexCleaner");
+
+                    //Author: ChristeR
+                    //First get relevant treatments
+                    var treatments = new List<Treatment>().AsQueryable();
+
+
+                    treatments = from m in db.Treatments
+                                 select m;
+                    //To get treatments, which are running and treatments, which are completed today
+                    treatments = treatments.Where(s => s.Begin.Year <= DateTime.Now.Year && s.Begin.Month <= DateTime.Now.Month && s.Begin.Day <= DateTime.Now.Day && s.End.Year >= DateTime.Now.Year
+                    && s.End.Month >= DateTime.Now.Month && s.End.Day >= DateTime.Now.Day);
+
+                    var rooms = new List<Room>();
+
+                    //Get rooms from found treatments
+                    foreach (Treatment actTreat in treatments)
+                    {
+                        //Get room from database and check, if already contained
+                        var room = db.Rooms.Find(actTreat.RoomId);
+                        Boolean roomContained = false;
+
+                        foreach (Room actRoom in rooms)
+                        {
+                            if (actRoom.Id == actTreat.RoomId)
+                            {
+                                roomContained = true;
+                            }
+                        }
+
+                        //if room not contained add to list
+                        if (!roomContained)
+                        {
+                            rooms.Add(room);
+                        }
+
+                    }
+                    return View("IndexCleaner", rooms);
+
                 case ConstVariables.RoleTherapist:
                     return View("IndexTherapist");
                 default:
                     return RedirectToAction("Login", "Account");
             }
         }
+
+
 
         public ActionResult About()
         {
