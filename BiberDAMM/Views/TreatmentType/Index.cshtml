@@ -1,0 +1,65 @@
+﻿@* AUTHOR     : [JEL] *@
+
+@* Index-View to view Treatmenttypes *@
+
+@model IEnumerable<BiberDAMM.Models.TreatmentType>
+@{ViewBag.Title = "Behandlungstypen";}
+<!--Alert-Section-->
+<!--If treatmenttype deleted successfully-->
+@if (TempData["DeleteTreatmentTypeSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Der Raumtyp wurde erfolgreich gelöscht!</strong>@TempData["DeleteTreatmentTypeSuccess"]
+    </div>
+}
+<!--If treatmenttype created successfully-->
+@if (TempData["CreateTreatmentTypeSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Behandlungstyp wurde erfolgreich hinzugefügt!</strong>@TempData["CreateTreatmentTypeSuccess"]
+    </div>
+}
+
+<h2>Behandlungstypen</h2>
+<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomType.Name)
+            </th>
+            <th>              
+                @Html.DisplayNameFor(model => model.Id)
+            </th>            
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="3">
+                <button title="Behandlungstyp hinzufügen" onclick="location.href='@(Url.Action("Create", "TreatmentType"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    </tfoot>
+    @foreach (var item in Model)
+    {
+        <tr onclick="location.href = '@(Url.Action("Details", "TreatmentType", new {id = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.RoomType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modeItem => item.Id)
+            </td>            
+        </tr>
+    }
+</table>

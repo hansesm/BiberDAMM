@@ -4,6 +4,9 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 using BiberDAMM.Helpers;
+using System.Collections.Generic;
+using BiberDAMM.ViewModels;
+
 namespace BiberDAMM.Controllers
 {
     public class RoomController : Controller
@@ -34,13 +37,31 @@ namespace BiberDAMM.Controllers
                 TempData["CreateRoomSuccess"] = " " + Room.RoomNumber.ToString() + " wurde hinzugefügt.";
                 return RedirectToAction("Index");
             }
-            return View(Room);
-        }
+            var listRoomTypes = db.RoomTypes;
+            var selectedListRoomTypes = new List<SelectListItem>();
+            foreach (var m in listRoomTypes)
+            {
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = (m.Id.ToString()) });
+            }
+
+           
+            var viewModel = new RoomViewModel(Room, selectedListRoomTypes);
+            return View(viewModel);
+            }
 
         public ActionResult Create()
         {
-            ViewBag.RoomTypeId = new SelectList(db.RoomTypes, "Id", "Name");
-            return View();
+            //Get all roomTypes from the database
+            var listRoomTypes = db.RoomTypes;            
+            var selectedListRoomTypes = new List<SelectListItem>();
+            foreach (var m in listRoomTypes)
+            {
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = (m.Id.ToString()) });
+            }
+                     
+            var room = new Room();
+            var viewModel = new RoomViewModel(room,selectedListRoomTypes);
+            return View(viewModel);
         }
         //DELETE: Room [JEL]
         public ActionResult Delete(int? id)
@@ -79,14 +100,23 @@ namespace BiberDAMM.Controllers
     
     //CHANGE: Room [JEL] 
     public ActionResult Edit(int? id)
-        {
-            ViewBag.RoomTypeId = new SelectList(db.RoomTypes, "Id", "Name");
+        {  
             if (id == null)
                 return RedirectToAction("Index");
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
-            return View(room);
+
+            //Get all roomTypes from the database
+            var listRoomTypes = db.RoomTypes;
+            var selectedListRoomTypes = new List<SelectListItem>();
+            //selectedListRoomTypes.Add(new SelectListItem{ Text = " ", Value = null });
+            foreach (var m in listRoomTypes)
+            {
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = (m.Id.ToString()) });
+            }            
+            var viewModel = new RoomViewModel(room, selectedListRoomTypes);
+            return View(viewModel);          
         }
 
         [HttpPost]
@@ -112,8 +142,16 @@ namespace BiberDAMM.Controllers
                 TempData["EditRoomSuccess"] = " Die Raumdetails wurden aktualisiert.";
                 return RedirectToAction("Details", "room", new { id = room.Id });
             }
-           
-            return View(room);
+            var listRoomTypes = db.RoomTypes;
+            var selectedListRoomTypes = new List<SelectListItem>();
+            foreach (var m in listRoomTypes)
+            {
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = (m.Id.ToString()) });
+            }
+
+
+            var viewModel = new RoomViewModel(room, selectedListRoomTypes);
+            return View(viewModel);
         }
 
         //GET SINGLE: Room [JEL]
@@ -125,12 +163,6 @@ namespace BiberDAMM.Controllers
             if (room == null)
                 return HttpNotFound();
             return View(room);
-        }
-        
-        //SAVE: Room [JEL] 
-            public ActionResult Save()
-        {
-            return View();
-        }
+        }       
     }
 }

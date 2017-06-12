@@ -1,32 +1,31 @@
 ﻿@* AUTHOR     : [JEL] *@
 
-@* Class to show roomType details *@
+@* Class to show TreatmentType details *@
 
-@model BiberDAMM.Models.RoomType
-
+@model BiberDAMM.Models.TreatmentType
 @{
-    ViewBag.Title = "Raumtypdetails";
+    ViewBag.Title = "Behandlungsypdetails";
 }
 
 <h2>@ViewBag.Title</h2>
-<!--If roomType deleted unsuccessfully-->
-@if (TempData["DeleteRoomTypeFailed"] != null)
+<!--If TreatmentType deleted unsuccessfully-->
+@if (TempData["DeleteTreatmentTypeFailed"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Raumtyp konnte nicht gelöscht werden!</strong>@TempData["DeleteRoomTypeFailed"]
+        <strong>Behandlungstyp konnte nicht gelöscht werden!</strong>@TempData["DeleteTreatmentTypeFailed"]
     </div>
 }
-<!--show alert "EditRoomTypeSuccess" if a roomtype was successfully updated-->
-@if (TempData["EditRoomTypeSuccess"] != null)
+<!--show alert "EditTreatmentTypeSuccess" if a treatmenttype was successfully updated-->
+@if (TempData["EditTreatmentTypeSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>Änderungen gespeichert!</strong>@TempData["EditRoomTypeSuccess"]
+        <strong>Änderungen gespeichert!</strong>@TempData["EditTreatmentTypeSuccess"]
     </div>
 }
 
@@ -35,10 +34,16 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)      
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomType.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RoomType.Name)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Id)
@@ -46,7 +51,6 @@
         <dd>
             @Html.DisplayFor(model => model.Id)
         </dd>
-
     </dl>
 </div>
 <p>
@@ -63,11 +67,11 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="display: inline-block;">Raumtyp löschen</h4>
+                <h4 class="modal-title" style="display: inline-block;">Behandlungstyp löschen</h4>
                 <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true" style="float: right;color:deepskyblue"></i>
             </div>
             <div class="modal-body">
-                <p>Möchten Sie den Raumtype "<b>@Html.DisplayFor(model => model.Name)</b>" wirklich löschen?</p>
+                <p>Möchten Sie den Behandlungstyp "<b>@Html.DisplayFor(model => model.Name)</b>" wirklich löschen?</p>
                 <table class="table" style="width:50%">
                     <tr>
                         <td>
@@ -75,18 +79,18 @@
                                 <dt>
                                     @Html.DisplayNameFor(model => model.Name)
                                 </dt>
-
                                 <dd>
                                     @Html.DisplayFor(model => model.Name)
                                 </dd>
-                            </dl>
-                        </td>
-                        <td>
-                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.RoomType.Name)
+                                </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.RoomType.Name)
+                                </dd>
                                 <dt>
                                     @Html.DisplayNameFor(model => model.Id)
                                 </dt>
-
                                 <dd>
                                     @Html.DisplayFor(model => model.Id)
                                 </dd>
@@ -96,7 +100,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("Delete", "RoomType", new { Id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Delete", "TreatmentType", new { Id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />

@@ -2,7 +2,7 @@
 
 @* Class to create rooms *@
 
-@model BiberDAMM.Models.Room
+@model BiberDAMM.ViewModels.RoomViewModel
 @{
     ViewBag.Title = "Raum hinzufügen";
 }
@@ -16,7 +16,7 @@
         <strong>Der Raum konnte nicht angelegt werden!</strong>@TempData["CreateRoomFailed"]
     </div>
 }
-<h2>Raum hinzufügen</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
 {
@@ -26,29 +26,24 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.RoomNumber, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.room.RoomNumber, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RoomNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RoomNumber, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.room.RoomNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.room.RoomNumber, "", new { @class = "text-danger" })
             </div>
         </div>      
         <div class="form-group">
-        @Html.LabelFor(model => model.RoomTypeId, new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("RoomTypeId", null, new {@class = "btn btn.btn-outline-secondary dropdown-toggle" })
-            @Html.ValidationMessageFor(model => model.RoomTypeId, "", new { @class = "text-danger" })
+        @Html.LabelFor(model => model.room.RoomTypeId, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">           
+            @Html.DropDownListFor(model => model.room.RoomTypeId,Model.listRoomTypes, null, new { @class = "btn btn.btn-outline-secondary dropdown-toggle" })
+            @Html.ValidationMessageFor(model => model.room.RoomTypeId, "", new { @class = "text-danger" })
         </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Hinzufügen" class="btn btn-outline-primary btn-sm"/>
                 <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Abbrechen</button>
-            </div>
-            
+            </div>            
         </div>
     </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }
