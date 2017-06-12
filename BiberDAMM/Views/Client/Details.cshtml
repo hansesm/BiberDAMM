@@ -45,7 +45,7 @@
 
 <div>
     <hr />
-    
+
     <div class="row">
         <div class="form-group col-md-3">
             <dl class="dl-horizontal">
@@ -259,14 +259,14 @@
                 <tr>
                     <td colspan="6">
                         Abgerufen am @DateTime.Now
-                        
+
                     </td>
                 </tr>
             </tfoot>
         </table>
 
         <button title="Aufenthalt hinzufügen" onclick="location.href='@(Url.Action("Create", "Stay", new { id = Model.Id }))';return false;" class="btn btn-outline-primary btn-sm">Aufenthalt hinzufügen</button>
-        
+
 
         <br />
         <br />
@@ -289,9 +289,20 @@
 
             @foreach (var item in Model.ContactData)
             {
-                <li class="nav-item">
-                    <a title='@Html.DisplayFor(modeItem => item.Description)' class="nav-link active" href='@Url.Action("Details", "ContactData", new {id = item.Id})'> @Html.DisplayFor(modeItem => item.ContactType.Name) - @Html.DisplayFor(modeItem => item.Description)</a>
-                </li>
+                
+                <div class="form-group col-md-3">
+                    <dl class="dl-horizontal">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingThree">
+                                <a href='@Url.Action("Details", "ContactData", new {id = item.Id})'> @Html.DisplayFor(modeItem => item.ContactType.Name)</a>
+                            </div>
+                            <div class="card-block">
+                                @Html.DisplayFor(modeItem => item.Description)
+                            </div>
+                        </div>
+                    </dl>
+                </div>
+
             }
 
         </ul>
