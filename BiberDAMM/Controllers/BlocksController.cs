@@ -12,6 +12,7 @@ using Microsoft.Ajax.Utilities;
 namespace BiberDAMM.Controllers
 {
     public class BlocksController : Controller
+        //TODO Comment the class ! [HansesM]
     {
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -96,14 +97,14 @@ namespace BiberDAMM.Controllers
                     break;
             }
 
-            //Gets a treatments from the given stay [HansesM]
+            //Gets a list of free beds, matching the given parameters! [HansesM]
             //TODO TEST IT !!!!
             var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +
                                            "(select RoomId from beds group by RoomId having count(*) " + roomType + ")" +
                                            "AND b.Model like '"+ model + "'" +
                                            "AND b.Id not in" +
                                            "(select BedId from blocks where " +
-                                           "BeginDate between convert(datetime, '"+ begin+ "', 104) and convert(datetime, '" + end + "', 104))" +
+                                           "BeginDate between convert(datetime, '"+ begin + "', 104) and convert(datetime, '" + end + "', 104)" +
                                            "and EndDate between convert(datetime, '" + begin + "', 104) and convert(datetime, '" + end + "', 104))");
             
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
