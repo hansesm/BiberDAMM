@@ -9,8 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 @if (TempData["ClientSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,10 +29,7 @@
     </div>
 }
 
-
 <h2>@ViewBag.Title</h2>
-
-
 
 @using (Html.BeginForm())
 {
@@ -43,7 +38,6 @@
         <input type="submit" value="Suchen" title="Falls kein Suchbegriff eingegeben wurde, werden keine Patienten angezeigt" class="btn btn-outline-primary btn-sm" />
     </div>
 }
-
 
 <hr />
 <table id="clientIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
