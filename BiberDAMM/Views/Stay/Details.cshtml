@@ -62,7 +62,7 @@
     </div>
 }
 
-<hr/>
+<hr />
 
 <!-- Main form to display stay information [HansesM]-->
 <div class="container-fluid">
@@ -91,13 +91,13 @@
         <!-- row-->
 
         <div class="row">
-           
+
             <div class="form-group col-md-8">
                 @Html.LabelFor(model => model.Stay.Result, new { @class = "col-form-label" })
                 @Html.TextBoxFor(model => model.Stay.Result, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Stay.Result, "", new { @class = "text-danger" })
             </div>
-            
+
             <div class="form-group col-md-4">
                 @Html.LabelFor(model => model.Stay.StayType, "Aufenthaltsart", new { @class = "col-form-label" })
                 @Html.EnumDropDownListFor(model => model.Stay.StayType, new { @class = "form-control" })
@@ -138,9 +138,8 @@
         <div class="row">
             <div class="form-group col-md-12">
                 <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
-                <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
+                <input title="Änderungen verwerfen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
             </div>
-
         </div>
         <!-- row-->
     }
@@ -152,6 +151,8 @@
     <h4> Behandlungsübersicht</h4>
     <div id="calendar"></div>
     <!-- Empty row-->
+    <br/>
+    <button title="Behandlung hinzufügen" onclick="location.href='@(Url.Action("SelectTreatmentType", "Treatment", new { id = Model.Stay.Id }))';return false;" class="btn btn-outline-primary btn-sm">Behandlung hinzufügen</button>
     <br />
     <!-- Horizontal line-->
     <hr />
@@ -210,7 +211,7 @@
                 <tfoot style="background-color: #263238; color: white; text-align: right;">
                     <tr>
                         <td colspan="3">
-                            <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                            <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                             </button>
                         </td>
