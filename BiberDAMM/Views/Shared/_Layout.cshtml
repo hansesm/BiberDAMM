@@ -49,6 +49,8 @@
 
     <!-- The App-Header, with Logo, sidebar Toggler and User-Information ! [HansesM] -->
     <header class="app-header navbar">
+
+        <!-- Sidebar-Toggler [HansesM]-->
         <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
 
         <ul class="nav navbar-nav d-md-down-none">
@@ -57,10 +59,14 @@
             </li>
         </ul>
 
+        <!-- Logo [HansesM]-->
         <a class="navbar-brand" href="#"></a>
 
         <!--Userinformation in Header [HansesM]-->
-        @Html.Partial("_LoginPartial")
+        <ul class="nav navbar-nav pull-right hidden-md-down">
+            @Html.Partial("_LoginPartial")
+        </ul>
+
     </header>
 
 

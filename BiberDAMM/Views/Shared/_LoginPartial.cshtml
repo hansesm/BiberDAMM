@@ -5,16 +5,10 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "navbar-right"}))
     {
         @Html.AntiForgeryToken()
+        <div>
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <!--TODO [HansesM] remove ugly link color.-->
-                @Html.ActionLink("Herzlich Willkommen  " + User.Identity.GetDisplayName() + " ", "UserDetails", "Account")
-            </li>
-            
-            <li>
-                <a href="javascript:document.getElementById('logoutForm').submit()"> Abmelden</a>
-            </li>
-        </ul>
+            @Html.ActionLink(User.Identity.GetDisplayName(), "UserDetails", "Account", null, new {@class= "btn btn-outline-primary btn-sm" })
+            <input title="Abmelden" type="submit" name="command" value="Abmelden" class="btn btn-outline-primary btn-sm" />
+        </div>
     }
 }

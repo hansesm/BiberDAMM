@@ -9,8 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 @if (TempData["ClientSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,70 +29,64 @@
     </div>
 }
 
-
 <h2>@ViewBag.Title</h2>
 
-<p>
-
-    @using (Html.BeginForm())
-    {
-    <p>
-        @Html.TextBox("SearchString", null, new {@placeholder="Suchbegriff eingeben"})
+@using (Html.BeginForm())
+{
+    <div class="row col-md-12">
+        @Html.TextBox("SearchString", null, new { @placeholder = "Suchbegriff eingeben"})
         <input type="submit" value="Suchen" title="Falls kein Suchbegriff eingegeben wurde, werden keine Patienten angezeigt" class="btn btn-outline-primary btn-sm" />
+    </div>
+}
 
-    </p>
+<hr />
+<table id="clientIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Birthdate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InsuranceNumber)
+            </th>
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="5">
+                <button title="Benutzer hinzufügen" onclick="location.href='@(Url.Action("Create", "Client"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    </tfoot>
+
+    @foreach (var item in Model)
+    {
+        <tr onclick="location.href = '@(Url.Action("Details", "Client", new {id = item.Id}))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Birthdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InsuranceNumber)
+            </td>
+        </tr>
     }
 
-    </p>
-
-    <hr />
-    <table id="clientIndexTable" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
-        <thead class="thead-inverse">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Surname)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Lastname)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Sex)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Birthdate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.InsuranceNumber)
-                </th>
-            </tr>
-        </thead>
-        <tfoot style="background-color: #263238; text-align: right;">
-            <tr>
-                <td colspan="5">
-                    <button title="Benutzer hinzufügen" onclick="location.href='@(Url.Action("Create", "Client"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-        </tfoot>
-
-        @foreach (var item in Model)
-        {
-            <tr onclick="location.href = '@(Url.Action("Details", "Client", new {id = item.Id}))'">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lastname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sex)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Birthdate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InsuranceNumber)
-                </td>
-            </tr>
-        }
-
-    </table>
+</table>
