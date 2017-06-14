@@ -96,9 +96,6 @@ namespace BiberDAMM.Controllers
                     break;
             }
 
-            begin = DateTime.ParseExact(begin);
-
-
             //Gets a treatments from the given stay [HansesM]
             //TODO TEST IT !!!!
             var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +

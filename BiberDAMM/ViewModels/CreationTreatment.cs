@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using BiberDAMM.Models;
+using System.Web.Mvc;
 
 namespace BiberDAMM.ViewModels
 {
-    // This is a ViewModel used to create a new treatment
+    // TODO [KrabsJ] cleanup this class
+    // This is a ViewModel used to create a new treatment [KrabsJ]
     public class CreationTreatment
     {
         //[Required]
@@ -18,6 +20,10 @@ namespace BiberDAMM.ViewModels
 
         [Required]
         public int StayId { get; set; }
+
+        public int ClientId { get; set; }
+
+        public string ClientName { get; set; }
 
         public IList<SelectionRoom> Rooms { get; set; }
 
@@ -38,9 +44,13 @@ namespace BiberDAMM.ViewModels
 
         [Required]
         public int TreatmentTypeId { get; set; }
+
+        public IList<AppointmentOfSelectedRessource> AppointmentsOfSelectedRessources { get; set; }
+
+        public JsonResult JsonAppointmentsOfSelectedRessources { get; set; }
     }
 
-    //this class only implements the attributes of the class "room" that are necessary for creating a new treatment
+    //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]
     public class SelectionRoom
     {
         public int Id { get; set; }
@@ -51,5 +61,19 @@ namespace BiberDAMM.ViewModels
 
         [Display(Name = "Raumtyp")]
         public string RoomTypeName { get; set; }
+    }
+
+    // [KrabsJ]
+    // this class implements an appointment (less attributes than an normal treatment)
+    // it is used for showing the appointments of the selected Room, client and Users when creating a new treatment
+    public class AppointmentOfSelectedRessource
+    {
+        public int Id { get; set; }
+
+        public string Ressource { get; set; }
+
+        public DateTime Begin { get; set; }
+
+        public DateTime End { get; set; }
     }
 }

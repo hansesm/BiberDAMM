@@ -4,7 +4,7 @@
 @model BiberDAMM.ViewModels.CreationTreatmentSelectType
 
 @{
-    ViewBag.Title = "Behandlung anlegen";
+    ViewBag.Title = "Neue Behandlung für " + Model.ClientName;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -16,6 +16,8 @@
 {
     @Html.AntiForgeryToken();
     @Html.HiddenFor(m => m.StayId);
+    @Html.HiddenFor(m => m.ClientId);
+    @Html.HiddenFor(m => m.ClientName);
 
     <div style="text-align:center">
         <h4 class="bottom-one">Bitte wählen Sie zunächst einen Behandlungstyp aus:</h4>
