@@ -88,7 +88,7 @@
 
 <!-- Main form to display stay information [HansesM]-->
 <div class="container-fluid">
-    @using (Html.BeginForm("Edit", "Stay"))
+    @using (Html.BeginForm("Details", "Stay"))
     {
         @Html.HiddenFor(m => m.Stay.Id)
         @Html.HiddenFor(m => m.Stay.RowVersion)

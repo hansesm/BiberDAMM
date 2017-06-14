@@ -17,11 +17,9 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Aufnahmezeitpunkt")]
-        [DataType(DataType.Date)]
         public DateTime BeginDate { get; set; }
 
         [Display(Name = "Entlassungszeitpunkt")]
-        [GreaterThan("BeginDate")]
         public DateTime? EndDate { get; set; }
 
         [Display(Name = "Diagnosekennzahl(ICD10)")]

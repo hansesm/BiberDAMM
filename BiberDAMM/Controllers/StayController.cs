@@ -60,7 +60,7 @@ namespace BiberDAMM.Controllers
             {
                 return RedirectToAction("Index", "Stay");
             }
-            
+
             //Creates a new, empty stay [HansesM]
             var newStay = new Stay();
             //Sets some Values [HansesM]
@@ -76,9 +76,9 @@ namespace BiberDAMM.Controllers
             {
                 selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
             }
-            
+
             //Creates the view model [HansesM]
-            var viewModel = new StayCreateViewModel(id, newStay, selectetListDoctors); 
+            var viewModel = new StayCreateViewModel(id, newStay, selectetListDoctors);
 
             return View(viewModel);
         }
@@ -98,40 +98,84 @@ namespace BiberDAMM.Controllers
             }
 
             //Checks if Modelstate is valid [HanseM]
-            if (!ModelState.IsValid)
-            {
-                //gets the client from the id [HansesM]
-                var client = _db.Clients.SingleOrDefault(m => m.Id == stay.ClientId);
-                //Sets the client to the invalid-stay [HansesM]
-                stay.Client = client;
-
-                //Gets a list of Doctors for the Dropdownlist [HansesM]
-                var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
-                
-                //Builds a selectesList out of the list of doctors [HansesM]
-                var selectetListDoctors = new List<SelectListItem>();
-                foreach (var m in listDoctors)
-                {
-                    selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
-                }
-
-                //Creates the view model with the Id, the invalid-stay and the list of doctors [HansesM]
-                var viewModel = new StayCreateViewModel(stay.ClientId, stay, selectetListDoctors);
-                return View(viewModel);
-            }
-            else
+            if (ModelState.IsValid)
             {
                 stay.LastUpdated = DateTime.Now;
                 _db.Stays.Add(stay);
                 _db.SaveChanges();
-                return RedirectToAction("Details", "Stay", new { id = stay.Id});
+                return RedirectToAction("Details", "Stay", new { id = stay.Id });
             }
+
+            //gets the client from the id [HansesM]
+            var client = _db.Clients.SingleOrDefault(m => m.Id == stay.ClientId);
+            //Sets the client to the invalid-stay [HansesM]
+            stay.Client = client;
+
+            //Gets a list of Doctors for the Dropdownlist [HansesM]
+            var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+
+            //Builds a selectesList out of the list of doctors [HansesM]
+            var selectetListDoctors = new List<SelectListItem>();
+            foreach (var m in listDoctors)
+            {
+                selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
+            }
+
+            //Creates the view model with the Id, the invalid-stay and the list of doctors [HansesM]
+            var viewModel = new StayCreateViewModel(stay.ClientId, stay, selectetListDoctors);
+            return View(viewModel);
         }
+        
+        //GET SINGLE: Stay [HansesM]
+        public ActionResult Details(int id)
+        {
+            //Gets the stay from the database [HansesM]
+            var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
+
+            //Gets all doctors from the database [HansesM]
+            var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
+            //listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
+
+            //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
+            var selectetListDoctors = new List<SelectListItem>();
+            foreach (var m in listDoctors)
+            {
+                selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
+            }
+
+            //_db.ApplicationUser.SqlQuery("select Id, Title, Surname, Lastname from AspNetUsers where UserType = 3;");
+
+            //var listTreatments = _db.Treatments.AsQueryable();
+            //listTreatments = listTreatments.Where(t => t.Stay.ClientId == id);
+
+            //Gets a treatments from the given stay [HansesM]
+            var events = stay.Treatments.ToList();
+
+            //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+            var result = events.Select(e => new JsonEventTreatment()
+            {
+                start = e.Begin.ToString("s"),
+                end = e.End.ToString("s"),
+                title = e.TreatmentType.Name.ToString(),
+                id = e.Id.ToString()
+
+            }).ToList();
+
+            //Creates a JsonResult from the Json [HansesM]
+            JsonResult resultJson = new JsonResult { Data = result };
+
+            //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
+            var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
+
+            //returns the viewmodel [HansesM]
+            return View(viewModel);
+        }
+
 
         //CHANGE: Stay [HansesM]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Stay stay, string command)
+        public ActionResult Details(Stay stay, string command)
         {
             //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
@@ -171,34 +215,29 @@ namespace BiberDAMM.Controllers
                 TempData["EditStaySuccess"] = " Die Eigenschaften wurden erfolgreich geändert.";
                 return RedirectToAction("Details", "Stay", new { id = stay.Id });
             }
-            //TODO Model-State invalid
-            return RedirectToAction("Index", "Stay");
-        }
 
-        //GET SINGLE: Stay [HansesM]
-        public ActionResult Details(int id)
-        {
-            //Gets the stay from the database [HansesM]
-            var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
+            //gets the client from the id [HansesM]
+            var client = _db.Clients.SingleOrDefault(m => m.Id == stay.ClientId);
+            //Sets the client to the invalid-stay [HansesM]
+            stay.Client = client;
 
-            //Gets all doctors from the database [HansesM]
+            //Gets a list of Doctors for the Dropdownlist [HansesM]
             var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
-            //listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
 
-            //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
+            //Builds a selectesList out of the list of doctors [HansesM]
             var selectetListDoctors = new List<SelectListItem>();
             foreach (var m in listDoctors)
             {
                 selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
             }
 
-            //_db.ApplicationUser.SqlQuery("select Id, Title, Surname, Lastname from AspNetUsers where UserType = 3;");
-
-            //var listTreatments = _db.Treatments.AsQueryable();
-            //listTreatments = listTreatments.Where(t => t.Stay.ClientId == id);
-
             //Gets a treatments from the given stay [HansesM]
-            var events = stay.Treatments.ToList();
+            var stayFromDb = _db.Stays.Single(s => s.Id == stay.Id);
+            var events = stayFromDb.Treatments.ToList();
+            //Gets the related Data again from the Database
+            stay.Client = stayFromDb.Client;
+            stay.Treatments = stayFromDb.Treatments;
+            stay.Blocks = stayFromDb.Blocks;
 
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEventTreatment()
@@ -212,11 +251,10 @@ namespace BiberDAMM.Controllers
 
             //Creates a JsonResult from the Json [HansesM]
             JsonResult resultJson = new JsonResult { Data = result };
-            
-            //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
+
+            //Creates the view model with the Id, the invalid-stay and the list of doctors [HansesM]
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
-            //returns the viewmodel [HansesM]
             return View(viewModel);
         }
 
