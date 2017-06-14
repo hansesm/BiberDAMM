@@ -119,7 +119,7 @@
         });
         //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
         if ($("#end").val() == "01.01.0001 00:00:00") {
-            $("#end").datepicker("setDate", new Date());
+            $("#end").datepicker("setDate", "");
         }
         
     </script>
@@ -128,7 +128,8 @@
         $(document).ready(function() {
             //Dropdownlist Selectedchange event
 
-            $(function() {
+            $(function () {
+                $("#freeBed").prop("disabled", true)
                 $("#end, #begin, #model, #roomType").change(function () {
                     if (($("#begin").val().length != 0) && ($("#end").val().length != 0)) {
                         //console.log($("#begin").val().length);
