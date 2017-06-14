@@ -208,6 +208,7 @@
     </Compile>
     <Compile Include="Helpers\ConstVariables.cs" />
     <Compile Include="Helpers\IdentityExtensions.cs" />
+    <Compile Include="Helpers\JsonEventTreatment.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
@@ -871,8 +872,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Blocks\" />
-    <Folder Include="Views\TreatmentType\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

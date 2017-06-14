@@ -16,16 +16,6 @@ namespace BiberDAMM.Controllers
         //The Database-Context [KrabsJ]
         private ApplicationDbContext _db = new ApplicationDbContext();
 
-        //TODO: [KrabsJ] place class JsonEvent to Helpers folder
-        //Inline-Class for for displaying treatment-data in a calendar view, needed in the Details-Method [HansesM]
-        public class JsonEvent
-        {
-            public string id { get; set; }
-            public string title { get; set; }
-            public string start { get; set; }
-            public string end { get; set; }
-        }
-
         // GET Treatment/SelectTreatmentType/id [KrabsJ]
         // first step of creating a new treatment is to select a treatment type
         // this method returns the view for this step
@@ -249,7 +239,7 @@ namespace BiberDAMM.Controllers
         private JsonResult CreateJsonResult(IList<AppointmentOfSelectedRessource> appointmentList)
         {
             //Builds a JSon from the appointmentList
-            var result = appointmentList.Select(a => new JsonEvent()
+            var result = appointmentList.Select(a => new JsonEventTreatment()
             {
                 start = a.Begin.ToString("s"),
                 end = a.End.ToString("s"),
