@@ -217,20 +217,24 @@
     <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
 
 
+        @* Helper variable to access the names of the attributes. Helper makes it possible to display the names when the stay-list is empty. [HansesM] *@
+        @{ var staysHeaderHelper = Model.Stay.FirstOrDefault();}
+
         <table id="staysAtDay" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
             <thead class="thead-inverse">
                 <tr>
+                    
                     <th>
-                        Aufnahmedatum
+                        @Html.DisplayNameFor(model => staysHeaderHelper.BeginDate)
                     </th>
                     <th>
-                        Entlassungsdatum
+                        @Html.DisplayNameFor(model => staysHeaderHelper.EndDate)
                     </th>
                     <th>
-                        Behandlungstyp
+                        @Html.DisplayNameFor(model => staysHeaderHelper.StayType)
                     </th>
                     <th>
-                        Diagnosekennzahl(ICD10)
+                        @Html.DisplayNameFor(model => staysHeaderHelper.ICD10)
                     </th>
 
                 </tr>
@@ -239,7 +243,8 @@
             @foreach (var item in Model.Stay)
             {
 
-                <tr onclick="location.href = '@(Url.Action("Details", "Stay", new {id = item.Id}))'">
+                <tr onclick="location.href = '@(Url.Action("Details","Stay", new {id = item.Id}))'">
+                    
                     <td>
                         @Html.DisplayFor(modeItem => item.BeginDate)
                     </td>
@@ -255,18 +260,20 @@
                 </tr>
             }
 
-            <tfoot style="background-color: #263238; color: white; text-align: right;">
+            <tfoot style="background-color: #263238; color: white; text-align: left;">
                 <tr>
-                    <td colspan="6">
+                    <td colspan="4">
                         Abgerufen am @DateTime.Now
-
                     </td>
                 </tr>
             </tfoot>
+
         </table>
 
+        <br/>
+
         <button title="Aufenthalt hinzufügen" onclick="location.href='@(Url.Action("Create", "Stay", new { id = Model.Id }))';return false;" class="btn btn-outline-primary btn-sm">Aufenthalt hinzufügen</button>
-        
+
         <br />
         <br />
 
@@ -288,7 +295,7 @@
 
             @foreach (var item in Model.ContactData)
             {
-                
+
                 <div class="form-group col-md-3">
                     <dl class="dl-horizontal">
                         <div class="card">
@@ -319,6 +326,6 @@
 
 
 @section Scripts{
-    <script> $(function () { $("#contactIndexTable").dataTable(); })</script>
+
     <script> $(function () { $("#staysAtDay").dataTable(); })</script>
 }
