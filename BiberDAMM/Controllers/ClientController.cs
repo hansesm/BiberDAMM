@@ -24,18 +24,47 @@ namespace BiberDAMM.Controllers
             Session["ClientIndexPage"] = "Index";
 
             var clients = new List<Client>().AsQueryable();
+            var clientsOut = new List<Client>();
 
             if (!string.IsNullOrEmpty(searchString))
             {
+                string [] searchStringSplit = searchString.Split(' ');
+                
                 clients = from m in db.Clients
                           select m;
-                clients = clients.Where(s => s.Lastname.Contains(searchString) || s.Surname.Contains(searchString)
-                                             || s.Sex.ToString().Contains(searchString) || s.InsuranceNumber.ToString()
-                                                 .Contains(searchString));
+
+                
+                //Split Searchstring to search for multiple substrings
+                foreach (string currentSearchString in searchStringSplit)
+                {
+                    var clientsTemp = clients.Where(s => s.Lastname.Contains(currentSearchString) || s.Surname.Contains(currentSearchString)
+                                             || s.Sex.ToString().Contains(currentSearchString) || s.InsuranceNumber.ToString()
+                                                 .Contains(currentSearchString));
+
+                    //Check if Client already contained in out-List
+                    foreach (Client actTempClient in clientsTemp)
+                    {
+                        Boolean clientConained = false;
+
+                        foreach (Client actOutClient in clientsOut)
+                        {
+                            if(actOutClient.Id == actTempClient.Id)
+                            {
+                                clientConained = true;
+                            }
+                        }
+                        //add Client if not contained
+                        if(!clientConained)
+                        {
+                            clientsOut.Add(actTempClient);
+                        }
+                    }
+                }
+                
             }
 
 
-            return View(clients.OrderBy(o => o.Lastname));
+            return View(clientsOut.OrderBy(o => o.Lastname));
         }
 
 
