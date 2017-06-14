@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Foolproof;
 
 namespace BiberDAMM.Models
 {
@@ -20,6 +21,7 @@ namespace BiberDAMM.Models
         public DateTime BeginDate { get; set; }
 
         [Display(Name = "Entlassungszeitpunkt")]
+        [GreaterThan("BeginDate")]
         public DateTime? EndDate { get; set; }
 
         [Display(Name = "Diagnosekennzahl(ICD10)")]

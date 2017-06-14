@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Foolproof;
 
 namespace BiberDAMM.Models
 {
@@ -43,10 +44,15 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Begindatum")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
         public DateTime BeginDate { get; set; }
 
         [Required]
         [Display(Name = "Enddatum")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
+        [GreaterThan("BeginDate")]
         public DateTime EndDate { get; set; }
 
         [Required]
