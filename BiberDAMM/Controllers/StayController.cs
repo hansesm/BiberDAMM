@@ -19,15 +19,6 @@ namespace BiberDAMM.Controllers
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
-        //Inline-Class for for displaying treatment-data in a calendar view, needed in the Details-Method [HansesM]
-        public class JsonEvent
-        {
-            public string id { get; set; }
-            public string title { get; set; }
-            public string start { get; set; }
-            public string end { get; set; }
-        }
-
         // Method to get all stays of a given day [HansesM]
         public ActionResult Index(string date)
         {
@@ -210,7 +201,7 @@ namespace BiberDAMM.Controllers
             var events = stay.Treatments.ToList();
 
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
-            var result = events.Select(e => new JsonEvent()
+            var result = events.Select(e => new JsonEventTreatment()
             {
                 start = e.Begin.ToString("s"),
                 end = e.End.ToString("s"),

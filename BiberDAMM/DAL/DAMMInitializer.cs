@@ -603,8 +603,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddHours(8),
-                    End = DateTime.Today.Date.AddHours(9),
+                    Begin = DateTime.Today.Date.AddDays(1).AddHours(8),
+                    End = DateTime.Today.Date.AddDays(1).AddHours(9),
                     StayId = 5,
                     RoomId = 7,
                     Description = "Aufnahmeuntersuchung",

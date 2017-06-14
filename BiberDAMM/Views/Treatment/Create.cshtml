@@ -3,7 +3,7 @@
 @model BiberDAMM.ViewModels.CreationTreatment
 
 @{
-    ViewBag.Title = "Behandlung anlegen";
+    ViewBag.Title = "Neue Behandlung für " + Model.ClientName;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,16 +13,34 @@
 <div>
     @using (Html.BeginForm("Create", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
-        //save all hidden fields
         @Html.AntiForgeryToken();
+
+        //save all hidden fields
         @Html.HiddenFor(m => m.StayId);
         @Html.HiddenFor(m => m.TreatmentTypeId);
-        for (int i = 0; i < Model.Rooms.Count; i++)
+        @Html.HiddenFor(m => m.ClientId);
+        @Html.HiddenFor(m => m.ClientName);
+        @Html.HiddenFor(m => m.SelectedRoomId);
+        if (Model.Rooms != null)
         {
-            @Html.HiddenFor(m => Model.Rooms[i].Id)
-            @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
-            @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
+            for (int i = 0; i < Model.Rooms.Count; i++)
+            {
+                @Html.HiddenFor(m => Model.Rooms[i].Id)
+                @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
+                @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
+            }
         }
+        if (Model.AppointmentsOfSelectedRessources != null)
+        {
+            for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
+            {
+                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
+                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Begin)
+                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].End)
+                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
+            }
+        }
+
 
 
         <div class="form-group col-md-5">
@@ -55,6 +73,20 @@
 
         <input title="Behandlung speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm">
     }
+
+    <hr />
+
+    <!-- Container for displaying the calendar-->
+    <div class="container-fluid">
+        <h4 style="display: inline-block;"> Kalenderübersicht</h4>
+        <button style="background-color:transparent; border:hidden;" class="btn-outline-primary" data-toggle="modal" data-target="#calendarHelp"><i class="fa fa-question-circle fa-2x icon-outline-primary" aria-hidden="true"></i></button>
+        <div id="calendar"></div>
+        <!-- Empty row-->
+        <br />
+        <!-- Horizontal line-->
+        <hr />
+    </div>
+
 </div>
 
     <!-- changeTypeModal -->
@@ -66,7 +98,7 @@
 
                 <div class="modal-header">
                     <h4 class="modal-title" style="display: inline-block;">Behandlungstyp ändern</h4>
-                    <i class="fa fa-exclamation-triangle fa-3x btn-outline-primary" aria-hidden="true" style="float: right;"></i>
+                    <i class="fa fa-exclamation-triangle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
                 </div>
 
                 <div class="modal-body">
@@ -92,8 +124,9 @@
             <div class="modal-content">
 @using (Html.BeginForm("UpdateCreatePageByRoomSelection", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-    <!--save all hidden fields-->
     @Html.AntiForgeryToken()
+
+    <!--save all hidden fields-->
     @Html.HiddenFor(m => m.StayId)
     @Html.HiddenFor(m => m.TreatmentTypeId)
     @Html.HiddenFor(m => m.Begin)
@@ -101,12 +134,22 @@
     @Html.HiddenFor(m => m.Description)
     @Html.HiddenFor(m => m.SelectedRoomNumber)
     @Html.HiddenFor(m => m.TreatmentTypeName)
-
-
+    @Html.HiddenFor(m => m.ClientId);
+    @Html.HiddenFor(m => m.ClientName);
+    if (Model.AppointmentsOfSelectedRessources != null)
+    {
+        for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
+        {
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Begin)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].End)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
+        }
+    }
 
                 <div class="modal-header">
                     <h4 class="modal-title" style="display: inline-block;">Raumauswahl</h4>
-                    <i class="fa fa-hospital-o fa-3x btn-outline-primary" aria-hidden="true" style="float: right;"></i>
+                    <i class="fa fa-hospital-o fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
                 </div>
 
                 <div class="modal-body">
@@ -126,25 +169,26 @@
                         <!-- head-->
 
                         <tbody>
-                            @for (int i = 0; i < Model.Rooms.Count; i++)
-                            {
-                                <tr>
-                                    @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
-                                    @Html.HiddenFor(m => Model.Rooms[i].Id)
-                                    @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
-                                    <td>
-                                        @Html.DisplayFor(model => model.Rooms[i].RoomNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(model => model.Rooms[i].RoomTypeName)
-                                    </td>
-                                    <td>
-                                        @Html.RadioButtonFor(model => model.SelectedRoomId, Model.Rooms[i].Id, new { id = Model.Rooms[i].Id })
-                                    </td>
-                                </tr>
-                                
-                                
-                            }
+                            @if (Model.Rooms != null)
+	                        {
+		                         for (int i = 0; i < Model.Rooms.Count; i++)
+                                 {
+                                    <tr>
+                                        @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
+                                        @Html.HiddenFor(m => Model.Rooms[i].Id)
+                                        @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
+                                        <td>
+                                            @Html.DisplayFor(model => model.Rooms[i].RoomNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => model.Rooms[i].RoomTypeName)
+                                        </td>
+                                        <td>
+                                            @Html.RadioButtonFor(model => model.SelectedRoomId, Model.Rooms[i].Id, new { id = Model.Rooms[i].Id })
+                                        </td>
+                                    </tr>
+                                 }
+                            } 
                         </tbody>
                         <!-- body -->
 
@@ -173,8 +217,75 @@
 
     </div>
 
+<!-- calenderHelp modal -->
+<div id="calendarHelp" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Kalenderübersicht</h4>
+                <i class="fa fa-question-circle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+
+            <div class="modal-body">
+                <p><b>Die Kalenderübersicht hilft Ihnen Termine ohne Überschneidungen zu planen.</b></p>
+                In dem Kalender werden alle Termine des Raums und der Personen angezeigt, die bisher für diese Behandlung ausgewählt wurden.
+                Auch die Termine des Patienten sind enthalten.
+                Nutzen Sie diese Übersicht, um einen Zeitraum für die Behandlung zu finden, in der es zu keiner Terminüberschneidung kommt.                
+            </div>
+
+            <div class="modal-footer">
+                <button title="Ok" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 @section Scripts{
     <script>
             $(function () { $("#roomsTable").dataTable(); })
     </script>
+
+    <!-- Fullcalendar with settings-->
+<script>
+        console.log(@Html.Raw(Json.Encode(Model.JsonAppointmentsOfSelectedRessources.Data)));
+
+        $(document).ready(function() {
+            $("#calendar").fullCalendar({
+                theme: true,
+                defaultView: 'agendaWeek',
+                height: 550,
+                editable: false,
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'today prev,next'
+                },
+                events: @Html.Raw(Json.Encode(Model.JsonAppointmentsOfSelectedRessources.Data)),
+                allDaySlot: false,
+                slotDuration: "00:15:00",
+                scrollTime: "08:00:00",
+                minTime: "7:00:00",
+                maxTime: "21:00:00",
+                businessHours: [ // specify an array instead
+                    {
+                        dow: [1, 2, 3, 4], // Monday, Tuesday, Wednesday, Thursday
+                        start: '08:00', // 8am
+                        end: '18:00' // 6pm
+                    },
+                    {
+                        dow: [ 5 ], // Friday
+                        start: '10:00', // 10am
+                        end: '16:00' // 4pm
+                    }
+                ],
+
+            });
+        });
+
+</script>
 }
