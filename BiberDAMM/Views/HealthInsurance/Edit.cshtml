@@ -37,37 +37,37 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <hr/>
-        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, new {@class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Number, new {@class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.Number, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Number, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Number, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Number, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Type, new {@class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.Type, new { @class = "btn btn.btn-outline-secondary dropdown-toggle"})
-                @Html.ValidationMessageFor(model => model.Type, "", new {@class = "text-danger"})
+                @Html.EnumDropDownListFor(model => model.Type, new { @class = "btn btn.btn-outline-secondary dropdown-toggle" })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input title="Speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm"/>
-                <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+                <input title="Speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Details", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
             </div>
         </div>
     </div>
