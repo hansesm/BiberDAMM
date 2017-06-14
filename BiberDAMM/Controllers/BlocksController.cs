@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
+using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using BiberDAMM.ViewModels;
 
@@ -13,7 +15,7 @@ using BiberDAMM.ViewModels;
 namespace BiberDAMM.Controllers
 {
     public class BlocksController : Controller
-        //TODO Comment the class ! [HansesM]
+    //TODO Comment the class ! [HansesM]
     {
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -30,12 +32,14 @@ namespace BiberDAMM.Controllers
         {
             //Gets the Stay from the given stay-id [HansesM]
             var stay = _db.Stays.SingleOrDefault(m => m.Id == id);
+            //Eager-Loading not needed [HansesM]
+            //_db.Entry(stay).Reference(m => m.Client).Load();
 
             if (stay != null)
             {
-                var newBlocks = new Blocks();
-                newBlocks.Stay = stay;
-                newBlocks.StayId = stay.Id;
+                var blocks = new Blocks();
+                blocks.Stay = stay;
+                blocks.StayId = stay.Id;
 
                 //Gets a list of beds for the dropdownlist [HansesM]
                 var listBedModels = _db.Beds.ToList();
@@ -44,16 +48,60 @@ namespace BiberDAMM.Controllers
                 //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
                 var selectetlistBedModels = new List<SelectListItem>();
                 foreach (var m in listBedModels)
-                    selectetlistBedModels.Add(new SelectListItem {Text = m.Model, Value = m.Id.ToString()});
+                    selectetlistBedModels.Add(new SelectListItem { Text = m.Model, Value = m.Model });
 
                 //Creates a View-Model and returns the view with the view-model inside [HansesM]
-                var viewModel = new BlocksCreateViewModel(newBlocks, stay, selectetlistBedModels);
+                var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
                 return View(viewModel);
             }
             //TODO [Hansesm] No stay found
             return RedirectToAction("Index", "Stay");
         }
-        
+
+        //Post Method for creating new Stay [HansesM]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Blocks blocks, string command)
+        {
+
+            //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                //Returns the user and displays a alert [HansesM]
+                TempData["CreateBlocksAbort"] = " erfolgreich abgebrochen.";
+                return RedirectToAction("Details", "Stay", new { id = blocks.StayId });
+            }
+
+            //Checks if Modelstate is valid [HanseM]
+            if (ModelState.IsValid)
+            {
+                _db.Blocks.Add(blocks);
+                _db.SaveChanges();
+
+                TempData["CreateBlocksSuccsess"] = "Neue Übernachtung erfasst.";
+                return RedirectToAction("Details", "Stay", new { id = blocks.StayId });
+            }
+
+            //Gets the Stay from the stayid in blocks [HansesM]
+            var stay = _db.Stays.SingleOrDefault(m => m.Id == blocks.StayId);
+            blocks.Stay = stay;
+
+            //Gets a list of beds for the dropdownlist [HansesM]
+            var listBedModels = _db.Beds.ToList();
+
+            //Builds a selectesList out of the list of beds, only id and text are required [HansesM]
+            //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
+            var selectetlistBedModels = new List<SelectListItem>();
+            foreach (var m in listBedModels)
+                selectetlistBedModels.Add(new SelectListItem { Text = m.Model, Value = m.Model });
+
+            //Creates a View-Model and returns the view with the view-model inside [HansesM]
+            var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
+
+            return View(viewModel);
+        }
+
+
         //GET SINGLE: Blocks [HansesM]
         public ActionResult Detail()
         {
@@ -106,7 +154,7 @@ namespace BiberDAMM.Controllers
             }).ToList();
 
             //Creates a JsonResult from the Json [HansesM]
-            var resultJson = new JsonResult {Data = result};
+            var resultJson = new JsonResult { Data = result };
 
             //returns the Json to the calling-function [HansesM]
             return Json(result);

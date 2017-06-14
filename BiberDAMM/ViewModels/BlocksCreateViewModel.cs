@@ -7,21 +7,16 @@ namespace BiberDAMM.ViewModels
 {
     public class BlocksCreateViewModel
     {
-        public Stay Stay { get; set; }
+        //public Stay Stay { get; set; }
         public Blocks Blocks { get; set; }
         public List<SelectListItem> ListBedModels { get; set; }
 
 
-        public BlocksCreateViewModel(Blocks blocks, Stay stay, List<SelectListItem> listBedModels)
+        public BlocksCreateViewModel(Blocks blocks, List<SelectListItem> listBedModels)
         {
-            this.Stay = stay;
-            this.Blocks = Blocks;
+            this.Blocks = blocks;
+            //this.Stay = stay;
             this.ListBedModels = listBedModels;
-        }
-
-        public BlocksCreateViewModel()
-        {
-
         }
     }
 }

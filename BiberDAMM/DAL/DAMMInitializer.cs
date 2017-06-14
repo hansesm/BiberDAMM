@@ -479,10 +479,10 @@ namespace BiberDAMM.DAL
             //creating blocks
             var blocks = new List<Blocks>
             {
-                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 1, StayId = 1, ClienRoomType = ClientRoomType.Einzelzimmer},
-                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 2, StayId = 2, ClienRoomType = ClientRoomType.Doppelzimmer},
-                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 3, StayId = 3, ClienRoomType = ClientRoomType.Mehrbettzimmer},
-                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 4, StayId = 4, ClienRoomType = ClientRoomType.Einzelzimmer}
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 1, StayId = 1, ClientRoomType = ClientRoomType.Einzelzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 2, StayId = 2, ClientRoomType = ClientRoomType.Doppelzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 3, StayId = 3, ClientRoomType = ClientRoomType.Mehrbettzimmer},
+                new Blocks {BeginDate = DateTime.Now, EndDate = DateTime.Now.AddDays(3) ,BedId = 4, StayId = 4, ClientRoomType = ClientRoomType.Einzelzimmer}
             };
             blocks.ForEach(b => _context.Blocks.Add(b));
             _context.SaveChanges();

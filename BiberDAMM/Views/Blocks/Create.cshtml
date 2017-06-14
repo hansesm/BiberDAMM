@@ -3,7 +3,6 @@
     Author: [HansesM]
 *@
 @using BiberDAMM.Helpers
-@using BiberDAMM.Models
 @model BiberDAMM.ViewModels.BlocksCreateViewModel
 
 
@@ -15,7 +14,7 @@
 
 @* Displays the main Stayinformation [HansesM]*@
 <h2>Neue Übernachtung</h2>
-<h4>für @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname) erfassen</h4>
+<h4>für @Html.Raw(Model.Blocks.Stay.Client.Surname) @Html.Raw(Model.Blocks.Stay.Client.Lastname) erfassen</h4>
 
 <hr />
 
@@ -23,7 +22,8 @@
 <div class="container-fluid">
     @using (Html.BeginForm("Create", "Blocks"))
     {
-        @Html.HiddenFor(m => m.Stay.ClientId)
+        @Html.HiddenFor(model => model.Blocks.StayId)
+        @Html.HiddenFor(model => model.Blocks.Id)
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -47,9 +47,9 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-                @Html.LabelFor(model => model.Blocks.ClienRoomType, "Zimmerart", new { @class = "col-form-label" })
-                @Html.EnumDropDownListFor(model => model.Blocks.ClienRoomType, new { @class = "form-control", id="roomType" })
-                @Html.ValidationMessageFor(model => model.Blocks.ClienRoomType, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Blocks.ClientRoomType, "Zimmerart", new { @class = "col-form-label" })
+                @Html.EnumDropDownListFor(model => model.Blocks.ClientRoomType, new { @class = "form-control", id="roomType" })
+                @Html.ValidationMessageFor(model => model.Blocks.ClientRoomType, "", new { @class = "text-danger" })
             </div>
 
         </div>
@@ -58,9 +58,9 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-                @Html.LabelFor(model => model.Blocks.Bed.Model, "Bettenmodell", new { @class = "col-form-label" })
-                @Html.DropDownListFor(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" , id = "model"})
-                @Html.ValidationMessageFor(model => model.Blocks.Bed.Model, "", new { @class = "text-danger" })
+                @Html.Label("Bettenmodell", new { @class = "col-form-label" })
+                @Html.DropDownList("Bed", Model.ListBedModels, new { @class = "form-control", id="model" })
+                @*@Html.DropDownList(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" , id = "model"})*@
             </div>
 
         </div>
@@ -69,9 +69,9 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-
                 @Html.Label("Freie Betten")
-                @Html.DropDownList("Bed", new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control", disabled = "disabled" , id="freeBed" })
+                @Html.DropDownListFor(model => model.Blocks.BedId, new SelectList(string.Empty, "Value", "Text"), null , new { @class = "form-control", id="freeBed" } )
+                @Html.ValidationMessageFor(model => model.Blocks.BedId, "", new { @class = "text-danger" })
                 @*<select id="freeBed" class="form-control"></select>*@
             </div>
 
@@ -96,6 +96,7 @@
     <script>
         $(function() { $("#treatmentsOfUser").dataTable(); })
     </script>
+    
 
     <!-- Datetimepicker for begin [HansesM]-->
     <script>
@@ -103,14 +104,24 @@
             sliderAccessArgs: { touchonly: false },
             dateFormat: "dd.mm.yy"
         });
+
+        //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
+        if ($("#begin").val() == "01.01.0001 00:00:00") {
+            $("#begin").datepicker("setDate", new Date());
+        }
     </script>
 
     <!-- Datetimepicker for end [HansesM]-->
     <script>
         $("#end").datepicker({
             sliderAccessArgs: { touchonly: false },
-            dateFormat: "dd.mm.yy"
+            dateFormat: "dd.mm.yy",
         });
+        //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
+        if ($("#end").val() == "01.01.0001 00:00:00") {
+            $("#end").datepicker("setDate", new Date());
+        }
+        
     </script>
 
     <script>
@@ -126,7 +137,7 @@
                         options.url = "/blocks/getFreeBeds";
                         options.type = "POST";
                         options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() });
-                        console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                        //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
                         options.dataType = "json";
                         options.contentType = "application/json";
                         options.success = function(freeBeds) {

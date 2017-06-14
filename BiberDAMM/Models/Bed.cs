@@ -20,6 +20,7 @@ namespace BiberDAMM.Models
 
         public virtual ICollection<Blocks> Blocks { get; set; }
 
+        //TODO Sinn-klären [HansesM]
         internal static ApplicationUser FindById(int? id)
         {
             throw new NotImplementedException();

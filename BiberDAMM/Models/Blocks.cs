@@ -44,20 +44,24 @@ namespace BiberDAMM.Models
         [Required]
         [Display(Name = "Begindatum")]
         public DateTime BeginDate { get; set; }
+
         [Required]
         [Display(Name = "Enddatum")]
         public DateTime EndDate { get; set; }
 
         [Required]
-        public int StayId { get; set; }
+        public int? StayId { get; set; }
+
         public virtual Stay Stay { get; set; }
 
         [Required]
-        public int BedId { get; set; }
+        public int? BedId { get; set; }
+
         public virtual Bed Bed { get; set; }
 
         [Required]
-        public ClientRoomType ClienRoomType { get; set; }
-        
+        public ClientRoomType ClientRoomType { get; set; }
+
+
     }
 }

@@ -24,7 +24,7 @@
 <div class="container-fluid">
     @using (Html.BeginForm("Create", "Stay"))
     {
-        @Html.HiddenFor(m => m.Stay.ClientId)
+        @Html.HiddenFor(model => model.Stay.ClientId)
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
