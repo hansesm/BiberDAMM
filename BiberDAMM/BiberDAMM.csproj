@@ -878,6 +878,7 @@
     <Content Include="Views\TreatmentType\Create.cshtml" />
     <Content Include="Views\Stay\Create.cshtml" />
     <Content Include="Views\Blocks\Create.cshtml" />
+    <Content Include="Views\Blocks\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

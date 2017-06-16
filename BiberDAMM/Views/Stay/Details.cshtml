@@ -29,7 +29,7 @@
     }
 
 }
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert edit is succsessfull [HansesM]-->
 @if (TempData["CreateBlocksSuccsess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -40,7 +40,18 @@
     </div>
 }
 
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert if deleting a blocks was succsessfull [HansesM]-->
+@if (TempData["DeleteBlocksSuccsess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Erfolgreich: </strong>@TempData["DeleteBlocksSuccsess"]
+    </div>
+}
+
+<!-- Alert if a create blocks is aborted [HansesM]-->
 @if (TempData["CreateBlocksAbort"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -51,7 +62,7 @@
     </div>
 }
 
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert if a edit is aborted [HansesM]-->
 @if (TempData["EditStayAbort"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -62,7 +73,7 @@
     </div>
 }
 
-<!-- Alert if Edit was successfull [HansesM]-->
+<!-- Alert if edit was successfull [HansesM]-->
 @if (TempData["EditStaySuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -73,7 +84,7 @@
     </div>
 }
 
-<!-- Alert if Edit can't be processed because of concurrency [HansesM]-->
+<!-- Alert if edit can't be processed because of concurrency [HansesM]-->
 @if (TempData["EditStayConcurrency"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -346,8 +357,9 @@
 
     <!-- Fullcalendar with settings [HanseM]-->
     <script>
-        console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));
+        @*console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));*@
 
+        //When the document is ready we initalize the calendar-view [HansesM]
         $(document).ready(function() {
             $("#calendar").fullCalendar({
                 theme: true,
@@ -365,6 +377,7 @@
                 scrollTime: "08:00:00",
                 minTime: "7:00:00",
                 maxTime: "21:00:00",
+                //sets some business-hours for our calendar (all other hours are gray) [HansesM]
                 businessHours: [ // specify an array instead
                     {
                         dow: [1, 2, 3, 4], // Monday, Tuesday, Wednesday, Thursday
@@ -378,11 +391,12 @@
                     }
                 ],
 
+                //On click on Calendar-Event we redirect the user to the relating treatment-details page [HansesM]
                 eventClick: function(calEvent, jsEvent, view) {
-
-                    alert("Event mit der ID geklickt: " + calEvent.id);
-
-                    $(this).css('border-color', 'red');
+                   
+                    window.location.href = "/Treatment/Details/" + calEvent.id;
+                    //alert("Event mit der ID geklickt: " + calEvent.id);
+                    //$(this).css('border-color', 'red');
                 }
             });
         });
