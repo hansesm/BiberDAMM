@@ -64,7 +64,7 @@ namespace BiberDAMM.Controllers
         public ActionResult Create(Blocks blocks, string command)
         {
 
-            //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
+            //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
             {
                 //Returns the user and displays a alert [HansesM]
@@ -103,10 +103,34 @@ namespace BiberDAMM.Controllers
 
 
         //GET SINGLE: Blocks [HansesM]
-        public ActionResult Detail()
+        public ActionResult Details(int id)
         {
-            //TODO Display Blocks-Details with Option to delete the blocks - no edit possible
-            return View();
+            var room = _db.Blocks.SingleOrDefault(m => m.Id == id);
+
+            if (room == null)
+                return HttpNotFound();
+
+            return View(room);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Blocks blocks, string command)
+        {
+            //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                //Returns the user and displays a alert [HansesM]
+                TempData["DeleteBlocksAbort"] = " erfolgreich abgebrochen.";
+                return RedirectToAction("Details", "Blocks", new { id = blocks.Id });
+            }
+
+            var  blocksInDb = _db.Blocks.SingleOrDefault(m => m.Id == blocks.Id);
+            _db.Blocks.Remove(blocksInDb);
+            _db.SaveChanges();
+
+            TempData["DeleteBlocksSuccsess"] = " Übernachtung erfolgreich gelöscht.";
+            return RedirectToAction("Details", "Stay", new { id = blocks.StayId });
         }
 
         //Post-method witch will be called by create-blocks-view 

@@ -45,13 +45,13 @@ namespace BiberDAMM.Models
         [Required]
         [Display(Name = "Begindatum")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
         public DateTime BeginDate { get; set; }
 
         [Required]
         [Display(Name = "Enddatum")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
+        //[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{dd.MM.yyyy}")]
         [GreaterThan("BeginDate")]
         public DateTime EndDate { get; set; }
 
@@ -66,6 +66,7 @@ namespace BiberDAMM.Models
         public virtual Bed Bed { get; set; }
 
         [Required]
+        [Display(Name="Zimmerart")]
         public ClientRoomType ClientRoomType { get; set; }
 
 

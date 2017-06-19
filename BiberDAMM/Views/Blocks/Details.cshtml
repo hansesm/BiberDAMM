@@ -1,0 +1,180 @@
+﻿@*
+    View for creating a new blocks
+    Author: [HansesM]
+*@
+@using BiberDAMM.Helpers
+@using BiberDAMM.Models
+@model BiberDAMM.Models.Blocks
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@* Displays the main Stayinformation [HansesM]*@
+<h2>Übernachtung</h2>
+<h4>von @Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname)</h4>
+<hr />
+
+<!-- Alert if a Edit is aborted [HansesM]-->
+@if (TempData["DeleteBlocksAbort"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Löschen: </strong>@TempData["DeleteBlocksAbort"]
+    </div>
+}
+
+
+<!-- Main container to display blocks information [HansesM]-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.LabelFor(model => model.BeginDate, new { @class = "col-form-label" })
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.BeginDate, new { @class = "form-control" })
+                </dd>
+            </dl>
+        </div>
+
+        <div class="form-group col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.LabelFor(model => model.EndDate, new { @class = "col-form-label" })
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EndDate, new { @class = "form-control" })
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <!--row-->
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.LabelFor(model => model.ClientRoomType, new { @class = "col-form-label" })
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ClientRoomType, new { @class = "form-control" })
+                </dd>
+            </dl>
+        </div>
+        <div class="form-group col-md-6">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.LabelFor(model => model.Bed.Model, new { @class = "col-form-label" })
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Bed.Model, new { @class = "form-control", id = "freeBed" })
+                </dd>
+            </dl>
+        </div>
+
+    </div>
+    <!-- row-->
+
+    <div class="row">
+
+        <div class="form-group col-md-12">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.LabelFor(model => model.Bed.Room.RoomNumber, new { @class = "col-form-label" })
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Bed.Room.RoomNumber, new { @class = "form-control", id = "freeBed" })
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <!-- row-->
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            <button title="Zur Aufenthaltsübersicht" onclick="location.href='@Url.Action("Details", "Stay" , new { id=Model.StayId })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+        </div>
+
+    </div>
+    <!-- row-->
+
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Raum löschen</h4>
+                <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true" style="float: right;color:deepskyblue"></i>
+            </div>
+            <div class="modal-body">
+                <p>Möchten Sie die Übernachtung wirklich löschen?</p>
+                <table class="table" style="width:50%">
+                    <tr>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.BeginDate)
+                                </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.BeginDate)
+                                </dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.EndDate)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.EndDate)
+                                </dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Bed.Model)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Bed.Model)
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Delete", "Blocks", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.HiddenFor(model => model.StayId)
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.AntiForgeryToken()
+
+                    <input title="Löschen" type="submit" name="command" value="Löschen" class="btn btn-outline-primary btn-sm" />
+                    <input title="Zur Übersicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts{
+
+}

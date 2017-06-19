@@ -27,9 +27,8 @@
     {
         <h4>am @Html.Raw(Model.Stay.BeginDate.ToString("dd.MM.yyyy"))</h4>
     }
-
 }
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert edit is succsessfull [HansesM]-->
 @if (TempData["CreateBlocksSuccsess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -40,7 +39,18 @@
     </div>
 }
 
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert if deleting a blocks was succsessfull [HansesM]-->
+@if (TempData["DeleteBlocksSuccsess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Erfolgreich: </strong>@TempData["DeleteBlocksSuccsess"]
+    </div>
+}
+
+<!-- Alert if a create blocks is aborted [HansesM]-->
 @if (TempData["CreateBlocksAbort"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -51,7 +61,7 @@
     </div>
 }
 
-<!-- Alert if a Edit is aborted [HansesM]-->
+<!-- Alert if a edit is aborted [HansesM]-->
 @if (TempData["EditStayAbort"] != null)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -62,7 +72,7 @@
     </div>
 }
 
-<!-- Alert if Edit was successfull [HansesM]-->
+<!-- Alert if edit was successfull [HansesM]-->
 @if (TempData["EditStaySuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -73,7 +83,7 @@
     </div>
 }
 
-<!-- Alert if Edit can't be processed because of concurrency [HansesM]-->
+<!-- Alert if edit can't be processed because of concurrency [HansesM]-->
 @if (TempData["EditStayConcurrency"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -84,7 +94,7 @@
     </div>
 }
 
-<hr />
+<hr/>
 
 <!-- Main form to display stay information [HansesM]-->
 <div class="container-fluid">
@@ -93,20 +103,20 @@
         @Html.HiddenFor(m => m.Stay.Id)
         @Html.HiddenFor(m => m.Stay.RowVersion)
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
         <div class="row">
 
             <div class="form-group col-md-8">
-                @Html.LabelFor(model => model.Stay.ICD10, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.ICD10, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.ICD10, new {@class = "col-form-label"})
+                @Html.TextBoxFor(model => model.Stay.ICD10, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.ICD10, "", new {@class = "text-danger"})
             </div>
 
             <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.ApplicationUserId, "Behandelnder Arzt", new { @class = "col-form-label" })
-                @Html.DropDownListFor(model => model.Stay.ApplicationUserId, Model.ListDoctors, null, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.ApplicationUserId, "Behandelnder Arzt", new {@class = "col-form-label"})
+                @Html.DropDownListFor(model => model.Stay.ApplicationUserId, Model.ListDoctors, null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.ApplicationUser.Lastname, "", new {@class = "text-danger"})
             </div>
 
         </div>
@@ -115,15 +125,15 @@
         <div class="row">
 
             <div class="form-group col-md-8">
-                @Html.LabelFor(model => model.Stay.Result, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.Result, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Stay.Result, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.Result, new {@class = "col-form-label"})
+                @Html.TextBoxFor(model => model.Stay.Result, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.Result, "", new {@class = "text-danger"})
             </div>
 
             <div class="form-group col-md-4">
-                @Html.LabelFor(model => model.Stay.StayType, "Aufenthaltsart", new { @class = "col-form-label" })
-                @Html.EnumDropDownListFor(model => model.Stay.StayType, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Stay.StayType, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.StayType, "Aufenthaltsart", new {@class = "col-form-label"})
+                @Html.EnumDropDownListFor(model => model.Stay.StayType, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Stay.StayType, "", new {@class = "text-danger"})
             </div>
 
 
@@ -133,15 +143,15 @@
         <div class="row">
 
             <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.Stay.BeginDate, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control", id = "begin" })
-                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.BeginDate, new {@class = "col-form-label"})
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new {@class = "form-control", id = "begin"})
+                @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new {@class = "text-danger"})
             </div>
 
             <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "end" })
-                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.Stay.EndDate, new {@class = "col-form-label"})
+                @Html.TextBoxFor(model => model.Stay.EndDate, new {@class = "form-control", id = "end"})
+                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new {@class = "text-danger"})
             </div>
 
         </div>
@@ -150,8 +160,8 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-                @Html.LabelFor(model => model.Stay.Comment, null, new { @class = "col-form-label" })
-                @Html.TextAreaFor(model => model.Stay.Comment, new { @class = "form-control", rows = "6" })
+                @Html.LabelFor(model => model.Stay.Comment, null, new {@class = "col-form-label"})
+                @Html.TextAreaFor(model => model.Stay.Comment, new {@class = "form-control", rows = "6"})
             </div>
 
         </div>
@@ -159,13 +169,13 @@
 
         <div class="row">
             <div class="form-group col-md-12">
-                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
-                <input title="Änderungen verwerfen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" />
+                <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm"/>
+                <input title="Änderungen verwerfen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm"/>
             </div>
         </div>
         <!-- row-->
     }
-    <hr />
+    <hr/>
 </div>
 
 <!-- Container for displaying the calendar [HansesM]-->
@@ -174,10 +184,10 @@
     <div id="calendar"></div>
     <!-- Empty row-->
     <br/>
-    <button title="Behandlung hinzufügen" onclick="location.href='@(Url.Action("SelectTreatmentType", "Treatment", new { id = Model.Stay.Id }))';return false;" class="btn btn-outline-primary btn-sm">Behandlung hinzufügen</button>
-    <br />
+    <button title="Behandlung hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {id = Model.Stay.Id}))';return false;" class="btn btn-outline-primary btn-sm">Behandlung hinzufügen</button>
+    <br/>
     <!-- Horizontal line-->
-    <hr />
+    <hr/>
 </div>
 
 
@@ -198,53 +208,53 @@
 
             <table id="treatmentsOfUser" class="table table-striped table-hover table-bordered" style="width: 100%;" border="1" cellspacing="0">
                 <thead class="thead-inverse">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
-                        </th>
-                    </tr>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
+                    </th>
+                </tr>
                 </thead>
                 <!-- head-->
 
                 <tbody>
-                    @foreach (var item in Model.Stay.Treatments)
-                    {
-                        <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.Id}))'">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TreatmentType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modeItem => item.Begin)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modeItem => item.End)
-                            </td>
-                        </tr>
-                    }
+                @foreach (var item in Model.Stay.Treatments)
+                {
+                    <tr onclick="location.href = '@(Url.Action("Details", "Treatment", new {item.Id}))'">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TreatmentType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeItem => item.Begin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modeItem => item.End)
+                        </td>
+                    </tr>
+                }
                 </tbody>
                 <!-- body -->
 
                 <tfoot style="background-color: #263238; color: white; text-align: right;">
-                    <tr>
-                        <td colspan="3">
-                            <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
-                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="3">
+                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
                 </tfoot>
                 <!-- foot-->
 
             </table>
         </div>
     </div>
-    <hr />
+    <hr/>
 </div>
 
 <!-- Container for displaying Blocks-Bed information, this will only be shown if the staytype is stationär [HansesM] -->
@@ -259,69 +269,69 @@
 
         <table id="blocksOfStay" class="table table-striped table-hover table-bordered" style="width: 100%;" border="1" cellspacing="0">
             <thead class="thead-inverse">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.BeginDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.EndDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Id)
-                    </th>
-                </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.BeginDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Id)
+                </th>
+            </tr>
             </thead>
             <!-- head-->
             <tbody>
-                @foreach (var item in Model.Stay.Blocks)
-                {
-                    <tr onclick="location.href = '@(Url.Action("Details", "Blocks", new {item.Id}))'">
-                        <td>
-                            @item.BeginDate.ToString("d")
-                        </td>
-                        <td>
-                            @item.EndDate.ToString("d")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeItem => item.Bed.Model)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modeItem => item.Bed.Id)
-                        </td>
-                    </tr>
-                }
+            @foreach (var item in Model.Stay.Blocks)
+            {
+                <tr onclick="location.href = '@(Url.Action("Details", "Blocks", new {item.Id}))'">
+                    <td>
+                        @item.BeginDate.ToString("d")
+                    </td>
+                    <td>
+                        @item.EndDate.ToString("d")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modeItem => item.Bed.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modeItem => item.Bed.Id)
+                    </td>
+                </tr>
+            }
             </tbody>
             <!-- body -->
 
             <tfoot style="background-color: #263238; color: white; text-align: right;">
-                <tr>
-                    <td colspan="5">
-                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Blocks", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
-                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="5">
+                    <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Blocks", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
             </tfoot>
             <!-- foot-->
         </table>
     </div>
-            }
+}
 
 
 @section Scripts{
 
     <!-- List of treatments [HansesM]-->
     <script>
-        $(function () { $("#treatmentsOfUser").dataTable(); })
+        $(function() { $("#treatmentsOfUser").dataTable(); })
     </script>
 
     <!-- Datetimepicker for begin [HansesM]-->
@@ -343,11 +353,11 @@
     </script>
 
 
-
     <!-- Fullcalendar with settings [HanseM]-->
     <script>
-        console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));
+        @*console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));*@
 
+        //When the document is ready we initalize the calendar-view [HansesM]
         $(document).ready(function() {
             $("#calendar").fullCalendar({
                 theme: true,
@@ -365,24 +375,26 @@
                 scrollTime: "08:00:00",
                 minTime: "7:00:00",
                 maxTime: "21:00:00",
-                businessHours: [ // specify an array instead
+                //sets some business-hours for our calendar (all other hours are gray) [HansesM]
+                businessHours: [// specify an array instead
                     {
                         dow: [1, 2, 3, 4], // Monday, Tuesday, Wednesday, Thursday
                         start: '08:00', // 8am
                         end: '18:00' // 6pm
                     },
                     {
-                        dow: [ 5 ], // Friday
+                        dow: [5], // Friday
                         start: '10:00', // 10am
                         end: '16:00' // 4pm
                     }
                 ],
 
+                //On click on Calendar-Event we redirect the user to the relating treatment-details page [HansesM]
                 eventClick: function(calEvent, jsEvent, view) {
 
-                    alert("Event mit der ID geklickt: " + calEvent.id);
-
-                    $(this).css('border-color', 'red');
+                    window.location.href = "/Treatment/Details/" + calEvent.id;
+                    //alert("Event mit der ID geklickt: " + calEvent.id);
+                    //$(this).css('border-color', 'red');
                 }
             });
         });

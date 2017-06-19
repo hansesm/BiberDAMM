@@ -234,6 +234,7 @@
     <Compile Include="ViewModels\CreationContactData.cs" />
     <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\CreationHealthInsurance.cs" />
+    <Compile Include="ViewModels\RoomSchedulerViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\CreationRoomType.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
@@ -259,6 +260,7 @@
     <Content Include="Content\css\fullcalendar.css" />
     <Content Include="Content\css\jquery-ui-timepicker-addon.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\timetablejs.css" />
     <Content Include="Content\fonts\font-awesome\css\font-awesome.css" />
     <Content Include="Content\fonts\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\fonts\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -762,6 +764,8 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\BiberDAMM20170616011935 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\BiberDAMM20170616124547 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
@@ -785,6 +789,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\timetable.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -878,6 +883,8 @@
     <Content Include="Views\TreatmentType\Create.cshtml" />
     <Content Include="Views\Stay\Create.cshtml" />
     <Content Include="Views\Blocks\Create.cshtml" />
+    <Content Include="Views\Blocks\Details.cshtml" />
+    <Content Include="Views\Room\RoomScheduler.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
