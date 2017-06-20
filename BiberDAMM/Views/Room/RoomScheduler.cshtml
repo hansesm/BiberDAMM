@@ -2,8 +2,6 @@
     View for displaying stay information
     Author: [HansesM]
 *@
-@using System.Collections.Specialized
-@using BiberDAMM.Helpers
 @model BiberDAMM.ViewModels.RoomSchedulerViewModel
 
 
@@ -22,7 +20,7 @@
 
     <div class="form-group col-md-12">
         @Html.Label("Raumtyp", new { @class = "col-form-label" })
-        @Html.DropDownList("Bed", Model.ListRooms, new { @class = "form-control", id="model" })
+        @Html.DropDownList("Bed", Model.ListRooms, new { @class = "form-control", id = "roomTypeDropDown" })
         @*@Html.DropDownList(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" , id = "model"})*@
     </div>
 </div>
@@ -32,23 +30,59 @@
 <div class="timetable"></div>
 
 @section Scripts{
+    <script>
+        var timetable = new Timetable();
 
+        timetable.setScope(6, 22);
+        timetable.addLocations(['Rotterdam', 'Madrid', 'Los Angeles', 'London', 'New York', 'Jakarta', 'Tokyo']);
+
+        timetable.addEvent('Sightseeing', 'Rotterdam', new Date(2015, 7, 17, 10, 45), new Date(2015, 7, 17, 12, 30), '#');
+        timetable.addEvent('Zumba', 'Madrid', new Date(2015, 7, 17, 12), new Date(2015, 7, 17, 13), '#');
+        timetable.addEvent('Zumbu', 'Madrid', new Date(2015, 7, 17, 13, 30), new Date(2015, 7, 17, 15), '#');
+        timetable.addEvent('Lasergaming', 'London', new Date(2015, 7, 17, 17, 45), new Date(2015, 7, 17, 19, 30), '#');
+        timetable.addEvent('All-you-can-eat grill', 'New York', new Date(2015, 7, 17, 21), new Date(2015, 7, 18, 1, 30), '#');
+        timetable.addEvent('Hackathon', 'Tokyo', new Date(2015, 7, 17, 11, 30), new Date(2015, 7, 17, 20));
+        timetable.addEvent('Tokyo Hackathon Livestream', 'Los Angeles', new Date(2015, 7, 17, 12, 30), new Date(2015, 7, 17, 16, 15));
+        timetable.addEvent('Lunch', 'Jakarta', new Date(2015, 7, 17, 9, 30), new Date(2015, 7, 17, 11, 45), '#');
+        
+        var renderer = new Timetable.Renderer(timetable);
+        renderer.draw('.timetable');
+    </script>
+    
 <script>
-    var timetable = new Timetable();
-    timetable.setScope(6, 22);
-     timetable.addLocations(['Rotterdam', 'Madrid', 'Los Angeles', 'London', 'New York', 'Jakarta', 'Tokyo']);
+        $(document).ready(function () {
+            //Dropdownlist Selectedchange event
+            $(function () {
+                $("#roomTypeDropDown").change(function () {
+                    
+                        //console.log($("#begin").val().length);
+                        //console.log($("#model option:selected").val());
 
-      timetable.addEvent('Sightseeing', 'Rotterdam', new Date(2015,7,17,10,45), new Date(2015,7,17,12,30), '#');
-      timetable.addEvent('Zumba', 'Madrid', new Date(2015,7,17,12), new Date(2015,7,17,13), '#');
-      timetable.addEvent('Zumbu', 'Madrid', new Date(2015,7,17,13,30), new Date(2015,7,17,15), '#');
-      timetable.addEvent('Lasergaming', 'London', new Date(2015,7,17,17,45), new Date(2015,7,17,19,30), '#');
-      timetable.addEvent('All-you-can-eat grill', 'New York', new Date(2015,7,17,21), new Date(2015,7,18,1,30), '#');
-      timetable.addEvent('Hackathon', 'Tokyo', new Date(2015,7,17,11,30), new Date(2015,7,17,20)); 
-      timetable.addEvent('Tokyo Hackathon Livestream', 'Los Angeles', new Date(2015,7,17,12,30), new Date(2015,7,17,16,15));
-      timetable.addEvent('Lunch', 'Jakarta', new Date(2015,7,17,9,30), new Date(2015,7,17,11,45), '#');
+                        var options = {};
+                        options.url = "/rooms/getDailySchedule";
+                        options.type = "POST";
+                        options.data = JSON.stringify({ roomType: $("#roomType option:selected").val() });
 
-      var renderer = new Timetable.Renderer(timetable);
-      renderer.draw('.timetable');
+                        //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                        options.dataType = "json";
+                        options.contentType = "application/json";
+                        options.success = function (roomTimeTable) {
+
+                            //TODO insert Elements to scheduler
+
+                            for (var i = 0; i < freeBeds.length; i++) {
+                                $("#freeBed").append("<option value=" + freeBeds[i].value + ">" + freeBeds[i].text + "</option>");
+
+                            }
+                            
+
+                        };
+                        options.error = function () {
+                            alert("Fehler beim Betten abrufen!");
+                        };
+                        $.ajax(options);
+                });
+            });
+        });
 </script>
-
 }
