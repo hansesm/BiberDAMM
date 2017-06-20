@@ -18,7 +18,8 @@ namespace BiberDAMM
                 "~/Scripts/fullcalendar.js",
                 "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery-ui-timepicker-addon.js",
-                "~/Scripts/timetable.js"
+                "~/Scripts/timetable.js",
+                "~/Content/pace/pace.js"
                 ));
 
             //JQuery UI Bundle [HansesM]
@@ -52,7 +53,8 @@ namespace BiberDAMM
                 "~/Content/themes/base/jquery.ui.theme.css",
                 "~/Content/themes/base/jquery-ui.css",
                 "~/Content/css/jquery-ui-timepicker-addon.css",
-                "~/Content/css/timetablejs.css"
+                "~/Content/css/timetablejs.css",
+                "~/Content/pace/templates/pace-theme-minimal.tmpl.css"
                 ));
 
             //Sets bundle-opzimizations to false (minimalization etc.) [HansesM]
