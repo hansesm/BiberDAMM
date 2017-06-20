@@ -55,7 +55,7 @@ namespace BiberDAMM.Controllers
 
                 if (healthInsurances.Count() != 0)
                 {
-                    TempData["HealthInsuranceError"] = "Versicherungsidentifikationsnummer bereits vergeben";
+                    TempData["HealthInsuranceError"] = "Versicherungskennung bereits vergeben";
                     return View(healthInsurance);
                 }
                 db.HealthInsurances.Add(healthInsurance);
@@ -95,7 +95,7 @@ namespace BiberDAMM.Controllers
 
                 if (healthInsurances.Count() != 0)
                 {
-                    TempData["HealthInsuranceError"] = "Versicherungsidentifikationsnummer bereits vergeben";
+                    TempData["HealthInsuranceError"] = "Versicherungskennung bereits vergeben";
                     return View(healthInsurance);
                 }
                 db.Entry(healthInsurance).State = EntityState.Modified;
