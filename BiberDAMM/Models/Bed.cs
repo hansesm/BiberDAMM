@@ -4,13 +4,26 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BiberDAMM.Models
 {
+    /* Jean-PierreK
+    * Added an enum list of all available bed models
+    */
+
+    public enum Models
+    {
+        Inkubator,
+        Intensivbett,
+        Klinikbett,
+        Rotationsbett,
+        Säuglingsbett,
+        Schwerlastbett
+    }
     public class Bed
     {
         public int Id { get; set; }
 
         [Required]
         [Display(Name = "Modell")]
-        public string Model { get; set; }
+        public Models Model { get; set; }
 
         [Required]
         [Display(Name = "Raum")]
@@ -20,15 +33,6 @@ namespace BiberDAMM.Models
 
         public virtual ICollection<Blocks> Blocks { get; set; }
 
-        //TODO Sinn-klären [HansesM]
-        internal static ApplicationUser FindById(int? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static object Delete(ApplicationUser deleteBed)
-        {
-            throw new NotImplementedException();
-        }
+    
     }
 }

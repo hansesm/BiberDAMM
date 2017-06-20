@@ -27,7 +27,7 @@ namespace BiberDAMM.Controllers
         //-- GET page /Bed/Create to add a bed --//
         public ActionResult Create()
         {
-            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
+            ViewBag.RoomList = new SelectList(db.Rooms, "Id", "RoomNumber");
             return View();
         }
 
@@ -36,7 +36,7 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Bed bed, string command)
         {
-            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
+            ViewBag.RoomList = new SelectList(db.Rooms, "Id", "RoomNumber");
 
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index");
@@ -60,7 +60,7 @@ namespace BiberDAMM.Controllers
             var bed = db.Beds.Find(id);
             if (bed == null)
                 return HttpNotFound();
-            ViewBag.RoomId = new SelectList(db.Rooms, "Id", "RoomNumber");
+            ViewBag.RoomList = new SelectList(db.Rooms, "Id", "RoomNumber");
             return View(bed);
         }
 
@@ -69,6 +69,9 @@ namespace BiberDAMM.Controllers
        [ValidateAntiForgeryToken]
           public ActionResult Edit(Bed bed, string command)
           {
+
+            ViewBag.RoomList = new SelectList(db.Rooms, "Id", "RoomNumber");
+
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
 

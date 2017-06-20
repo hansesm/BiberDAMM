@@ -15,6 +15,10 @@ namespace BiberDAMM.Models
         [Display(Name = "Raumtyp")]
         public int RoomTypeId { get; set; }
 
+        [Required]
+        [Display(Name = "Max. Betten")]
+        public int RoomMaxSize { get; set; }
+
         public virtual RoomType RoomType { get; set; }
 
         public virtual ICollection<Bed> Bed { get; set; }

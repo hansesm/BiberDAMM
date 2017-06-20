@@ -44,6 +44,11 @@ namespace BiberDAMM.ViewModels
         [Display(Name = "Raum")]
         public string SelectedRoomNumber { get; set; }
 
+        // attributes for staff selection
+        public IList<Staff> Staff { get; set; }
+
+        public IList<Staff> SelectedStaff { get; set; }
+
         // attributes for calendar part
         public IList<AppointmentOfSelectedRessource> AppointmentsOfSelectedRessources { get; set; }
 
@@ -55,7 +60,6 @@ namespace BiberDAMM.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
         [Display(Name = "Raumnummer")]
         public string RoomNumber { get; set; }
 
@@ -64,7 +68,7 @@ namespace BiberDAMM.ViewModels
     }
 
     // [KrabsJ]
-    // this class implements an appointment (less attributes than an normal treatment)
+    // this class implements an appointment (less attributes than a normal treatment)
     // it is used for showing the appointments of the selected Room, client and Users when creating a new treatment
     public class AppointmentOfSelectedRessource
     {
@@ -75,5 +79,22 @@ namespace BiberDAMM.ViewModels
         public DateTime Begin { get; set; }
 
         public DateTime End { get; set; }
+    }
+
+    // [KrabsJ]
+    // this class implements staffmembers (less attributes than a normal ApplicationUser)
+    // it is used for selecting users during the process of creating a new treatment
+    public class Staff
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "Name")]
+        public string DisplayName { get; set; }
+
+        [Display(Name = "Typ")]
+        public UserType StaffType { get; set; }
+
+        [Display(Name = "Auswahl")]
+        public bool Selected { get; set; }
     }
 }

@@ -82,6 +82,7 @@ namespace BiberDAMM.Controllers
             // check if there are dependencies
             Bed dependentBed = db.Beds.Where(b => b.RoomId == id).FirstOrDefault();
             Treatment dependentTreatment = db.Rooms.Where(t => t.Id == id).SelectMany(u => u.Treatment).FirstOrDefault();
+            //Treatment dependentTreatment = db.Treatments.Where(t => t.RoomId == id).FirstOrDefault();
 
             // if there is a treatment or bed that is linked to the room, the room can't be deleted
             if (dependentBed != null || dependentTreatment != null)

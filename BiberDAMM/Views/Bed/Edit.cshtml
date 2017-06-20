@@ -24,14 +24,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RoomId, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                    @Html.DropDownList("RoomId", (SelectList)ViewBag.SelectList, Model.Room.RoomNumber, new { @class = "form-control" })
+                    @Html.DropDownList("RoomId", ViewBag.RoomList as SelectList, Model.Room.RoomNumber, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Room.RoomNumber, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Model, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Model, new { @class = "form-control", type = "text" })
+                @Html.EnumDropDownListFor(model => model.Model, new { @class = "form-control"})
                 @Html.ValidationMessageFor(model => model.Model, "", new { @class = "text-danger" })
             </div>
         </div>
