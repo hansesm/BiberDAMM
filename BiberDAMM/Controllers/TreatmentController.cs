@@ -102,7 +102,7 @@ namespace BiberDAMM.Controllers
             {
                 rooms = _db.Rooms.Where(r => r.RoomTypeId == selectedTreatmentType.RoomTypeId).ToList();
             }
-            
+
             //convert the list of rooms to a list of SelectionRooms (this class only contains the attributes that are necessary for creating a new treatment)
             treatmentCreationModel.Rooms = new List<SelectionRoom>();
             foreach (var item in rooms)
@@ -114,14 +114,37 @@ namespace BiberDAMM.Controllers
                 treatmentCreationModel.Rooms.Add(selectionRoom);
             }
 
+            // get all users (besides cleaners & adminstrators) from the db
+            ICollection<ApplicationUser> userList = new Collection<ApplicationUser>();
+            userList = _db.Users.Where(u => u.UserType.ToString() != ConstVariables.RoleCleaner && u.UserType.ToString() != ConstVariables.RoleAdministrator).ToList();
+
+            // convert the list of users into a list of staffmembers
+            treatmentCreationModel.Staff = new List<Staff>();
+            foreach (var item in userList)
+            {
+                Staff staffMember = new Staff();
+                staffMember.Id = item.Id;
+                if (item.Title == null)
+                {
+                    staffMember.DisplayName = item.Surname + " " + item.Lastname;
+                }
+                else
+                {
+                    staffMember.DisplayName = item.Title + " "  + item.Surname + " " + item.Lastname;
+                }
+                staffMember.Selected = false;
+                staffMember.StaffType = item.UserType;
+                treatmentCreationModel.Staff.Add(staffMember);
+            }
+
             // get all stays of the client that are not finished
             var CurrentClientStays = _db.Stays.Where(s => s.ClientId == treatmentCreationModel.ClientId && (s.EndDate == null || s.EndDate > DateTime.Now)).ToList();
 
             //extract the treatments of theese stays that are in the future 
-            ICollection <Treatment> ClientTreatments = new Collection<Treatment>();
+            ICollection<Treatment> ClientTreatments = new Collection<Treatment>();
             foreach (var stay in CurrentClientStays)
             {
-                foreach(var treatment in stay.Treatments)
+                foreach (var treatment in stay.Treatments)
                 {
                     if (treatment.End > DateTime.Now)
                     {
@@ -138,7 +161,7 @@ namespace BiberDAMM.Controllers
                 appointmentOfClient.Id = treatment.Id;
                 appointmentOfClient.Begin = treatment.Begin;
                 appointmentOfClient.End = treatment.End;
-                appointmentOfClient.Ressource = "Patientenbehandlung";
+                appointmentOfClient.Ressource = ConstVariables.AppointmentOfClient;
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfClient);
             }
 
@@ -194,7 +217,7 @@ namespace BiberDAMM.Controllers
                 {
                     foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
                     {
-                        if (appointment.Ressource == "Raum belegt")
+                        if (appointment.Ressource == ConstVariables.AppointmentOfRoom)
                         {
                             treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
                         }
@@ -207,16 +230,16 @@ namespace BiberDAMM.Controllers
                 }
 
                 // load the appointments of the selected room from db
-                var newRoomAppointments = _db.Treatments.Where(t => t.RoomId == treatmentCreationModel.SelectedRoomId && t.End > DateTime.Now).ToList();
+                var newRoomAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
-                foreach (var appointmnet in newRoomAppointments)
+                foreach (var appointment in newRoomAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedRoom = new AppointmentOfSelectedRessource();
-                    appointmentOfSelectedRoom.Id = appointmnet.Id;
-                    appointmentOfSelectedRoom.Begin = appointmnet.Begin;
-                    appointmentOfSelectedRoom.End = appointmnet.End;
-                    appointmentOfSelectedRoom.Ressource = "Raum belegt";
+                    appointmentOfSelectedRoom.Id = appointment.Id;
+                    appointmentOfSelectedRoom.Begin = appointment.Begin;
+                    appointmentOfSelectedRoom.End = appointment.End;
+                    appointmentOfSelectedRoom.Ressource = ConstVariables.AppointmentOfRoom;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
                 }
             }
@@ -232,6 +255,75 @@ namespace BiberDAMM.Controllers
             ModelState.Clear();
 
             // return view
+            return View("Create", treatmentCreationModel);
+        }
+
+        //POST: Treatment/UpdateCreatePageByStaffSelection [KrabsJ]
+        //this method returns the view "create" with an updated viewModel
+        //it updates the viewModel data depending on the selected staffMembers
+        //expected parameter: CreationTreatment viewModel
+        //return: view("create", CreationTreatment viewModel)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
+        {
+            //initialize list of selectedStaff (delete old selection)
+            treatmentCreationModel.SelectedStaff = new List<Staff>();
+
+            // write selected staffmembers into the list of viewmodel
+            if (treatmentCreationModel.Staff != null)
+            {
+                foreach (var item in treatmentCreationModel.Staff)
+                {
+                    if (item.Selected == true)
+                    {
+                        treatmentCreationModel.SelectedStaff.Add(item);
+                    }
+                }
+            }     
+
+            // remove the appointments of the staffmembers that were selected before
+            if (treatmentCreationModel.AppointmentsOfSelectedRessources != null)
+            {
+                foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
+                {
+                    if (appointment.Ressource != ConstVariables.AppointmentOfRoom && appointment.Ressource != ConstVariables.AppointmentOfClient)
+                    {
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
+                    }
+                }
+            }
+            else
+            {
+                // for adding new appointments (see the steps below) it is necessary that the list is not null
+                treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+            }
+
+            // get the appointments of each selected staffmember
+            foreach (var staffMember in treatmentCreationModel.SelectedStaff)
+            {
+                // load the appointments of the selected staffmember from db
+                var newStaffAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
+
+                // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
+                foreach (var appointment in newStaffAppointments)
+                {
+                    AppointmentOfSelectedRessource appointmentOfSelectedStaffMember = new AppointmentOfSelectedRessource();
+                    appointmentOfSelectedStaffMember.Id = appointment.Id;
+                    appointmentOfSelectedStaffMember.Begin = appointment.Begin;
+                    appointmentOfSelectedStaffMember.End = appointment.End;
+                    appointmentOfSelectedStaffMember.Ressource = staffMember.DisplayName;
+                    treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedStaffMember);
+                }
+            }
+
+            // create JsonResult for calendar in view
+            treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
+
+            //clear ModeState, so that values are loaded from the updated model
+            ModelState.Clear();
+
+            //return view
             return View("Create", treatmentCreationModel);
         }
 
