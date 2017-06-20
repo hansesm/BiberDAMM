@@ -48,6 +48,16 @@ namespace BiberDAMM.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Check if HealthInsurance with number already exists
+                var healthInsurances = from m in db.HealthInsurances
+                                       select m;
+                healthInsurances = healthInsurances.Where(h => h.Number.Equals(healthInsurance.Number));
+
+                if (healthInsurances.Count() != 0)
+                {
+                    TempData["HealthInsuranceError"] = "Versicherungsidentifikationsnummer bereits vergeben";
+                    return View(healthInsurance);
+                }
                 db.HealthInsurances.Add(healthInsurance);
                 db.SaveChanges();
                 TempData["HealthInsuranceSuccess"] = "Daten erfolgreich gespeichert";
@@ -77,6 +87,17 @@ namespace BiberDAMM.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                //Check if HealthInsurance with number already exists
+                var healthInsurances = from m in db.HealthInsurances
+                                       select m;
+                healthInsurances = healthInsurances.Where(h => h.Number.Equals(healthInsurance.Number)&& !h.Name.Equals(healthInsurance.Name));
+
+                if (healthInsurances.Count() != 0)
+                {
+                    TempData["HealthInsuranceError"] = "Versicherungsidentifikationsnummer bereits vergeben";
+                    return View(healthInsurance);
+                }
                 db.Entry(healthInsurance).State = EntityState.Modified;
                 db.SaveChanges();
 
