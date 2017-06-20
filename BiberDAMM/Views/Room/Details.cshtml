@@ -50,6 +50,13 @@
             @Html.DisplayFor(model => model.RoomType.Name)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.RoomMaxSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RoomMaxSize)
+        </dd>
        
     </dl>
 </div>
@@ -72,7 +79,7 @@
             </div>
             <div class="modal-body">
                 <p>Möchten Sie den Raum "<b>@Html.DisplayFor(model => model.RoomNumber)</b>" wirklich löschen?</p>
-                <table class="table" style="width:50%">
+                <table class="table" style="width:70%">
                     <tr>
                         <td>
                             <dl class="dl-horizontal">
@@ -95,7 +102,7 @@
                                     @Html.DisplayFor(model => model.RoomType.Name)
                                 </dd>
                             </dl>
-                        </td>                       
+                        </td>                            
                     </tr>
                 </table>
             </div>

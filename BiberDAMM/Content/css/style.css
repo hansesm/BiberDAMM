@@ -7683,7 +7683,9 @@ base-chart.chart {
     padding: 0;
     overflow: hidden;
     color: #fff;
-    background: #263238; }
+    /*JEL*/
+    /*background: #263238;*/
+    background: #1E282D;}
 .sidebar .sidebar-close {
     position: absolute;
     right: 0;
@@ -7749,15 +7751,30 @@ base-chart.chart {
     padding: 0.75rem 1rem;
     color: #fff;
     text-decoration: none;
-    background: transparent; }
+    /*JEL*/
+    background: #1E282D;
+    /*background: transparent;*/
+
+}
 .sidebar .nav .nav-item .nav-link:hover, .sidebar .nav .nav-item .navbar .dropdown-toggle:hover, .navbar .sidebar .nav .nav-item .dropdown-toggle:hover {
-    color: #fff !important;
+    color: #fff !important;    
     background: #20a8d8 !important; }
-.sidebar .nav .nav-item .nav-link:hover i, .sidebar .nav .nav-item .navbar .dropdown-toggle:hover i, .navbar .sidebar .nav .nav-item .dropdown-toggle:hover i {
-    color: #fff !important; }
-.sidebar .nav .nav-item .nav-link.active, .sidebar .nav .nav-item .navbar .active.dropdown-toggle, .navbar .sidebar .nav .nav-item .active.dropdown-toggle {
-    color: #fff;
-    background: #304047; }
+    .sidebar .nav .nav-item .nav-link:hover i, .sidebar .nav .nav-item .navbar .dropdown-toggle:hover i, .navbar .sidebar .nav .nav-item .dropdown-toggle:hover i {
+            color: #fff !important;
+     }
+    /*JEL added*/
+    .sidebar .nav .nav-item .nav-link.active:hover, .sidebar .nav .nav-item .navbar .active.dropdown-toggle:hover, .navbar .sidebar .nav .nav-item .active.dropdown-toggle:hover {
+        color: #fff !important;
+    } 
+    .sidebar .nav .nav-item .nav-link.active, .sidebar .nav .nav-item .navbar .active.dropdown-toggle, .navbar .sidebar .nav .nav-item .active.dropdown-toggle {
+        /*JEL*/
+        background: #3e5059;
+        font-style: italic;
+        color: #20a8d8 !important;
+        /*background: #304047;
+          color: #fff;
+        */
+    }
 .sidebar .nav .nav-item .nav-link.active i, .sidebar .nav .nav-item .navbar .active.dropdown-toggle i, .navbar .sidebar .nav .nav-item .active.dropdown-toggle i {
     color: #20a8d8; }
 .sidebar .nav .nav-item .nav-link [class^="icon-"], .sidebar .nav .nav-item .navbar .dropdown-toggle [class^="icon-"], .navbar .sidebar .nav .nav-item .dropdown-toggle [class^="icon-"], .sidebar .nav .nav-item .nav-link [class*=" icon-"], .sidebar .nav .nav-item .navbar .dropdown-toggle [class*=" icon-"], .navbar .sidebar .nav .nav-item .dropdown-toggle [class*=" icon-"] {
@@ -9125,3 +9142,9 @@ hr.transparent {
     background-image: none;
     border-color: #20a8d8;
 }
+/*JEL*/
+.nav-italic {   
+    font-style: italic;    
+    background-color: #3e5059 !important;  
+}
+

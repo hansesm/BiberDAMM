@@ -42,6 +42,13 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.LabelFor(model => model.room.RoomMaxSize, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.room.RoomMaxSize, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.room.RoomMaxSize, "", new { @class = "text-danger" })
+            </div>
+        </div>       
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input title="Änderungen speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
                 <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
