@@ -6,25 +6,35 @@ using System.Web.Mvc;
 
 namespace BiberDAMM.ViewModels
 {
-    // TODO [KrabsJ] cleanup this class
     // This is a ViewModel used to create a new treatment [KrabsJ]
     public class CreationTreatment
     {
-        //[Required]
-        [Display(Name = "Behandlungsbeginn")]
-        public DateTime Begin { get; set; }
-
-        //[Required]
-        [Display(Name = "Behandlungsende")]
-        public DateTime End { get; set; }
-
-        [Required]
+        // general attributes
         public int StayId { get; set; }
 
         public int ClientId { get; set; }
 
         public string ClientName { get; set; }
 
+        public int TreatmentTypeId { get; set; }
+
+        [Display(Name = "Behandlungstyp")]
+        public string TreatmentTypeName { get; set; }
+
+        // treatment details
+        [Required]
+        [Display(Name = "Behandlungsbeginn")]
+        public DateTime? Begin { get; set; }
+
+        [Required]
+        [Display(Name = "Behandlungsende")]
+        public DateTime? End { get; set; }
+
+        [Required]
+        [Display(Name = "Beschreibung")]
+        public string Description { get; set; }
+
+        // attributes for room selection
         public IList<SelectionRoom> Rooms { get; set; }
 
         [Required]
@@ -34,17 +44,7 @@ namespace BiberDAMM.ViewModels
         [Display(Name = "Raum")]
         public string SelectedRoomNumber { get; set; }
 
-        [Required]
-        [Display(Name = "Beschreibung")]
-        public string Description { get; set; }
-
-        [Required]
-        [Display(Name = "Behandlungstyp")]
-        public string TreatmentTypeName { get; set; }
-
-        [Required]
-        public int TreatmentTypeId { get; set; }
-
+        // attributes for calendar part
         public IList<AppointmentOfSelectedRessource> AppointmentsOfSelectedRessources { get; set; }
 
         public JsonResult JsonAppointmentsOfSelectedRessources { get; set; }

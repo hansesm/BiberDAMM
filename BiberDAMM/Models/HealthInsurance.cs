@@ -18,7 +18,7 @@ namespace BiberDAMM.Models
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Versicherungsnummer")]
+        [Display(Name = "Versicherungskennung")]
         public string Number { get; set; }
 
         [Display(Name = "Vericherungstyp")]

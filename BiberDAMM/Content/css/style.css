@@ -1574,10 +1574,10 @@ pre code {
     border-radius: 0;
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
 
-/*class for form controls that are used in the same line as a button [KrabsJ]*/
+/*class for form controls that are used in the same line as a button with this css style: class="btn btn-outline-primary btn-sm" [KrabsJ]*/
 .form-control-inline {
-    display: inline;
-    width: 80%;
+    display: block;
+    width: 100%;
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
     line-height: 1.5;
