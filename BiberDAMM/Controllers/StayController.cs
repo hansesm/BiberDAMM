@@ -164,7 +164,7 @@ namespace BiberDAMM.Controllers
             //Creates a JsonResult from the Json [HansesM]
             JsonResult resultJson = new JsonResult { Data = result };
 
-            //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
+            //Creats a new View-BedModels with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
             //returns the viewmodel [HansesM]

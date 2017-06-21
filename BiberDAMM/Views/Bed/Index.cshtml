@@ -39,7 +39,7 @@
         <tr>
             <th>@Html.DisplayNameFor(model => model.Id)</th>
             <th>@Html.DisplayNameFor(model => model.Room.RoomNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Model)</th>
+            <th>@Html.DisplayNameFor(model => model.BedModels)</th>
         </tr>
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
@@ -59,7 +59,7 @@
                 @Html.DisplayFor(modeItem => item.Room.RoomNumber)
             </td>
             <td>
-                @Html.DisplayFor(modeItem => item.Model)
+                @Html.DisplayFor(modeItem => item.BedModels)
             </td>
         </tr>
     }
