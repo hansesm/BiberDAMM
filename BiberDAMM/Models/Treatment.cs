@@ -10,11 +10,11 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Behandlungsbeginn")]
-        public DateTime Begin { get; set; }
+        public DateTime BeginDate { get; set; }
 
         [Required]
         [Display(Name = "Behandlungsende")]
-        public DateTime End { get; set; }
+        public DateTime EndDate { get; set; }
 
 
         public int StayId { get; set; }

@@ -154,8 +154,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEventTreatment()
             {
-                start = e.Begin.ToString("s"),
-                end = e.End.ToString("s"),
+                start = e.BeginDate.ToString("s"),
+                end = e.EndDate.ToString("s"),
                 title = e.TreatmentType.Name.ToString(),
                 id = e.Id.ToString()
 
@@ -164,7 +164,7 @@ namespace BiberDAMM.Controllers
             //Creates a JsonResult from the Json [HansesM]
             JsonResult resultJson = new JsonResult { Data = result };
 
-            //Creats a new View-Model with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
+            //Creats a new View-BedModels with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
             //returns the viewmodel [HansesM]
@@ -242,8 +242,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEventTreatment()
             {
-                start = e.Begin.ToString("s"),
-                end = e.End.ToString("s"),
+                start = e.BeginDate.ToString("s"),
+                end = e.EndDate.ToString("s"),
                 title = e.TreatmentType.Name.ToString(),
                 id = e.Id.ToString()
 

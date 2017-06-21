@@ -58,9 +58,11 @@
         <div class="row">
 
             <div class="form-group col-md-12">
-                @Html.Label("Bettenmodell", new { @class = "col-form-label" })
+                @*@Html.LabelFor(model => model.Blocks.Bed.BedModels, new { @class = "col-form-label" })*@
+                @*@Html.EnumDropDownList(model => model.Blocks.Bed.BedModels, new {@class = "form-control", id = "model"})*@
+                @Html.Label("Bettenmodell", new {@class = "col-form-label"})
                 @Html.DropDownList("Bed", Model.ListBedModels, new { @class = "form-control", id="model" })
-                @*@Html.DropDownList(model => model.Blocks.Bed.Model, Model.ListBedModels, null, new { @class = "form-control" , id = "model"})*@
+
             </div>
 
         </div>
@@ -106,7 +108,7 @@
         });
 
         //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
-        if ($("#begin").val() == "01.01.0001 00:00:00") {
+        if ($("#begin").val() === "01.01.0001 00:00:00") {
             $("#begin").datepicker("setDate", new Date());
         }
     </script>
@@ -115,10 +117,10 @@
     <script>
         $("#end").datepicker({
             sliderAccessArgs: { touchonly: false },
-            dateFormat: "dd.mm.yy",
+            dateFormat: "dd.mm.yy"
         });
         //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
-        if ($("#end").val() == "01.01.0001 00:00:00") {
+        if ($("#end").val() === "01.01.0001 00:00:00") {
             $("#end").datepicker("setDate", "");
         }
         
@@ -129,16 +131,16 @@
             //Dropdownlist Selectedchange event
 
             $(function () {
-                $("#freeBed").prop("disabled", true)
+                $("#freeBed").prop("disabled", true);
                 $("#end, #begin, #model, #roomType").change(function () {
-                    if (($("#begin").val().length != 0) && ($("#end").val().length != 0)) {
+                    if (($("#begin").val().length !== 0) && ($("#end").val().length !== 0)) {
                         //console.log($("#begin").val().length);
                         //console.log($("#model option:selected").val());
                         var options = {};
-                        options.url = "/blocks/getFreeBeds";
+                        options.url = "/blocks/GetFreeBeds";
                         options.type = "POST";
-                        options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() });
-                        //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                        options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").val(), roomType: $("#roomType option:selected").val() });
+                        console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").val(), roomType: $("#roomType option:selected").val() }));
                         options.dataType = "json";
                         options.contentType = "application/json";
                         options.success = function(freeBeds) {

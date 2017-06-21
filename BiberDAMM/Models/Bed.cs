@@ -18,6 +18,7 @@ namespace BiberDAMM.Models
         Säuglingsbett,
         Schwerlastbett
     }
+
     public class Bed
     {
         public int Id { get; set; }

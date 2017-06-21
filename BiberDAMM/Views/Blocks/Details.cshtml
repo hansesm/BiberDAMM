@@ -1,9 +1,8 @@
 ﻿@*
-    View for creating a new blocks
+    View for displaying blocks
     Author: [HansesM]
 *@
 @using BiberDAMM.Helpers
-@using BiberDAMM.Models
 @model BiberDAMM.Models.Blocks
 
 
@@ -72,10 +71,10 @@
 
             <dl class="dl-horizontal">
                 <dt>
-                    @Html.LabelFor(model => model.Bed.Model, new { @class = "col-form-label" })
+                    @Html.LabelFor(model => model.Bed.BedModels, new { @class = "col-form-label" })
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.Bed.Model, new { @class = "form-control", id = "freeBed" })
+                    @Html.DisplayFor(model => model.Bed.BedModels, new { @class = "form-control", id = "freeBed" })
                 </dd>
             </dl>
         </div>
@@ -147,11 +146,11 @@
                         <td>
                             <dl class="dl-horizontal">
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.Bed.Model)
+                                    @Html.DisplayNameFor(model => model.Bed.BedModels)
                                 </dt>
 
                                 <dd>
-                                    @Html.DisplayFor(model => model.Bed.Model)
+                                    @Html.DisplayFor(model => model.Bed.BedModels)
                                 </dd>
                             </dl>
                         </td>

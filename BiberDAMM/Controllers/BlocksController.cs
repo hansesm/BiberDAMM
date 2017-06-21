@@ -41,17 +41,18 @@ namespace BiberDAMM.Controllers
                 blocks.Stay = stay;
                 blocks.StayId = stay.Id;
 
-                //Gets a list of beds for the dropdownlist [HansesM]
-                var listBedModels = _db.Beds.ToList();
-
                 //Builds a selectesList out of the list of beds, only id and text are required [HansesM]
                 //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
                 var selectetlistBedModels = new List<SelectListItem>();
-                foreach (var m in listBedModels)
-                    // usage of type conversion to get enum for bed types to work and be able to test it [Jean-Pierre]
-                    selectetlistBedModels.Add(new SelectListItem { Value = (m.Model.ToString()) });
-
-                //Creates a View-Model and returns the view with the view-model inside [HansesM]
+                foreach (BedModels m in Enum.GetValues(typeof(BedModels)))
+                {
+                    //Gets the value from the enum [HansesM]
+                    var a = (int) m;
+                    //Puts text and value into the enum [HansesM]
+                    selectetlistBedModels.Add(new SelectListItem { Text = (m.ToString()), Value = a.ToString() });
+                };
+               
+                //Creates a View-BedModels and returns the view with the view-model inside [HansesM]
                 var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
                 return View(viewModel);
             }
@@ -64,7 +65,6 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Blocks blocks, string command)
         {
-
             //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
             {
@@ -95,9 +95,9 @@ namespace BiberDAMM.Controllers
             var selectetlistBedModels = new List<SelectListItem>();
             foreach (var m in listBedModels)
                 // usage of type conversion to get enum for bed types to work and be able to test it [Jean-Pierre]
-                selectetlistBedModels.Add(new SelectListItem { Value = (m.Model.ToString()) });
+                selectetlistBedModels.Add(new SelectListItem { Value = (m.BedModels.ToString()) });
 
-            //Creates a View-Model and returns the view with the view-model inside [HansesM]
+            //Creates a View-BedModels and returns the view with the view-model inside [HansesM]
             var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
 
             return View(viewModel);
@@ -139,7 +139,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of "free" beds at the given date, roomtype and model combination
         //[HansesM]
         [HttpPost]
-        public JsonResult getFreeBeds(string begin, string end, string roomType, string model)
+        public JsonResult GetFreeBeds(string begin, string end, string roomType, string model)
         {
             //First the given roomtype will be transformed into an expression for the sql-search [HansesM]
             switch (roomType)
@@ -163,7 +163,7 @@ namespace BiberDAMM.Controllers
             var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +
                                            "(select RoomId from beds group by RoomId having count(*) " + roomType +
                                            ")" +
-                                           "AND b.Model like '" + model + "'" +
+                                           "AND b.BedModels like '" + model + "'" +
                                            "AND b.Id not in" +
                                            "(select BedId from blocks where " +
                                            "BeginDate between convert(datetime, '" + begin +
@@ -176,7 +176,7 @@ namespace BiberDAMM.Controllers
             {
                 value = e.Id.ToString(),
                 //TODO change to something with more sense
-                text = e.Model.ToString() + " " + e.Id.ToString() + " in Raum " + e.Room.RoomNumber.ToString()
+                text = e.BedModels.ToString() + " " + e.Id.ToString() + " in Raum " + e.Room.RoomNumber.ToString()
             }).ToList();
 
             //Creates a JsonResult from the Json [HansesM]

@@ -24,11 +24,11 @@ namespace BiberDAMM.ViewModels
         // treatment details
         [Required]
         [Display(Name = "Behandlungsbeginn")]
-        public DateTime? Begin { get; set; }
+        public DateTime? BeginDate { get; set; }
 
         [Required]
         [Display(Name = "Behandlungsende")]
-        public DateTime? End { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [Required]
         [Display(Name = "Beschreibung")]
@@ -76,9 +76,9 @@ namespace BiberDAMM.ViewModels
 
         public string Ressource { get; set; }
 
-        public DateTime Begin { get; set; }
+        public DateTime BeginDate { get; set; }
 
-        public DateTime End { get; set; }
+        public DateTime EndDate { get; set; }
     }
 
     // [KrabsJ]

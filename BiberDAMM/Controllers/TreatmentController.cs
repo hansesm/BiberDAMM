@@ -146,7 +146,7 @@ namespace BiberDAMM.Controllers
             {
                 foreach (var treatment in stay.Treatments)
                 {
-                    if (treatment.End > DateTime.Now)
+                    if (treatment.EndDate > DateTime.Now)
                     {
                         ClientTreatments.Add(treatment);
                     }
@@ -159,8 +159,8 @@ namespace BiberDAMM.Controllers
             {
                 AppointmentOfSelectedRessource appointmentOfClient = new AppointmentOfSelectedRessource();
                 appointmentOfClient.Id = treatment.Id;
-                appointmentOfClient.Begin = treatment.Begin;
-                appointmentOfClient.End = treatment.End;
+                appointmentOfClient.BeginDate = treatment.BeginDate;
+                appointmentOfClient.EndDate = treatment.EndDate;
                 appointmentOfClient.Ressource = ConstVariables.AppointmentOfClient;
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfClient);
             }
@@ -172,12 +172,34 @@ namespace BiberDAMM.Controllers
             return View(treatmentCreationModel);
         }
 
-        // GET: Treatment/Create [KrabsJ]
+        // POST: Treatment/Create [KrabsJ]
         // TODO: this is just a dummy method to check if validation already works
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreationTreatment treatmentCreationModel)
+        public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
         {
+            //if a new room was selected, update the viewModel and return the View again
+            if (command.Equals("Raum verwenden"))
+            {
+                CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
+
+                //clear ModeState, so that values are loaded from the updated model
+                ModelState.Clear();
+
+                return View(updatedTreatmentCreationModel);
+            }
+
+            //if new staff was selected, update the viewModel and return the View again
+            if (command.Equals("Mitarbeiter einplanen"))
+            {
+                CreationTreatment updatedTreatmentCreationModel = UpdateCreatePageByStaffSelection(treatmentCreationModel);
+
+                //clear ModeState, so that values are loaded from the updated model
+                ModelState.Clear();
+
+                return View(updatedTreatmentCreationModel);
+            }
+
             // check if model is valid
             if (ModelState.IsValid)
             {
@@ -195,14 +217,11 @@ namespace BiberDAMM.Controllers
             return View(treatmentCreationModel);
         }
 
-        //POST: Treatment/UpdateCreatePageByRoomSelection [KrabsJ]
-        //this method returns the view "create" with an updated viewModel
-        //it updates the viewModel data depending on the selected room
+        //[KrabsJ]
+        //this method updates the viewModel data depending on the selected room
         //expected parameter: CreationTreatment viewModel
-        //return: view("create", CreationTreatment viewModel)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateCreatePageByRoomSelection(CreationTreatment treatmentCreationModel)
+        //return: CreationTreatment viewModel
+        public CreationTreatment UpdateViewModelByRoomSelection(CreationTreatment treatmentCreationModel)
         {
             // if there was no room selected the selectedRoomId is 0 [db-IDs start with 1]
             // in this case no data has to be updated
@@ -230,15 +249,15 @@ namespace BiberDAMM.Controllers
                 }
 
                 // load the appointments of the selected room from db
-                var newRoomAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
+                var newRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newRoomAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedRoom = new AppointmentOfSelectedRessource();
                     appointmentOfSelectedRoom.Id = appointment.Id;
-                    appointmentOfSelectedRoom.Begin = appointment.Begin;
-                    appointmentOfSelectedRoom.End = appointment.End;
+                    appointmentOfSelectedRoom.BeginDate = appointment.BeginDate;
+                    appointmentOfSelectedRoom.EndDate = appointment.EndDate;
                     appointmentOfSelectedRoom.Ressource = ConstVariables.AppointmentOfRoom;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
                 }
@@ -251,21 +270,15 @@ namespace BiberDAMM.Controllers
             }
             treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
-            //clear ModeState, so that values are loaded from the updated model
-            ModelState.Clear();
-
-            // return view
-            return View("Create", treatmentCreationModel);
+            // return ViewModel
+            return treatmentCreationModel;
         }
 
-        //POST: Treatment/UpdateCreatePageByStaffSelection [KrabsJ]
-        //this method returns the view "create" with an updated viewModel
-        //it updates the viewModel data depending on the selected staffMembers
+        //[KrabsJ]
+        //this method updates the viewModel data depending on the selected staffMembers
         //expected parameter: CreationTreatment viewModel
-        //return: view("create", CreationTreatment viewModel)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
+        //return: CreationTreatment viewModel
+        public CreationTreatment UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
         {
             //initialize list of selectedStaff (delete old selection)
             treatmentCreationModel.SelectedStaff = new List<Staff>();
@@ -303,15 +316,15 @@ namespace BiberDAMM.Controllers
             foreach (var staffMember in treatmentCreationModel.SelectedStaff)
             {
                 // load the appointments of the selected staffmember from db
-                var newStaffAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
+                var newStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newStaffAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedStaffMember = new AppointmentOfSelectedRessource();
                     appointmentOfSelectedStaffMember.Id = appointment.Id;
-                    appointmentOfSelectedStaffMember.Begin = appointment.Begin;
-                    appointmentOfSelectedStaffMember.End = appointment.End;
+                    appointmentOfSelectedStaffMember.BeginDate = appointment.BeginDate;
+                    appointmentOfSelectedStaffMember.EndDate = appointment.EndDate;
                     appointmentOfSelectedStaffMember.Ressource = staffMember.DisplayName;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedStaffMember);
                 }
@@ -320,11 +333,8 @@ namespace BiberDAMM.Controllers
             // create JsonResult for calendar in view
             treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
-            //clear ModeState, so that values are loaded from the updated model
-            ModelState.Clear();
-
-            //return view
-            return View("Create", treatmentCreationModel);
+            //return ViewModel
+            return treatmentCreationModel;
         }
 
         //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
@@ -333,8 +343,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the appointmentList
             var result = appointmentList.Select(a => new JsonEventTreatment()
             {
-                start = a.Begin.ToString("s"),
-                end = a.End.ToString("s"),
+                start = a.BeginDate.ToString("s"),
+                end = a.EndDate.ToString("s"),
                 title = a.Ressource,
                 id = a.Id.ToString()
 

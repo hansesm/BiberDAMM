@@ -44,13 +44,13 @@
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Stay.BeginDate, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control", id = "begin" })
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new { @class = "form-control", id = "beginDate" })
                 @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
-                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "end" })
+                @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "endDate" })
                 @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
             </div>
 
@@ -105,7 +105,7 @@
 
     <!-- Datetimepicker for begin [HansesM]-->
     <script>
-        $("#begin").datetimepicker({
+        $("#beginDate").datetimepicker({
             sliderAccessArgs: { touchonly: false },
             timeFormat: "HH:mm:ss",
             dateFormat: "dd.mm.yy"
@@ -114,7 +114,7 @@
 
     <!-- Datetimepicker for end [HansesM]-->
     <script>
-        $("#end").datetimepicker({
+        $("#endDate").datetimepicker({
             sliderAccessArgs: { touchonly: false },
             timeFormat: "HH:mm:ss",
             dateFormat: "dd.mm.yy"

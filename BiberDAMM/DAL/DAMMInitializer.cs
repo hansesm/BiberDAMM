@@ -503,8 +503,8 @@ namespace BiberDAMM.DAL
             {
                 new Treatment
                 {
-                    Begin = DateTime.Parse("01.02.2016 10:00"),
-                    End = DateTime.Parse("01.02.2016 11:00"),
+                    BeginDate = DateTime.Parse("01.02.2016 10:00"),
+                    EndDate = DateTime.Parse("01.02.2016 11:00"),
                     StayId = 1,
                     RoomId = 6,
                     Description = "Vorsorgeuntersuchung",
@@ -513,8 +513,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Parse("02.02.2016 08:00"),
-                    End = DateTime.Parse("02.02.2016 10:00"),
+                    BeginDate = DateTime.Parse("02.02.2016 08:00"),
+                    EndDate = DateTime.Parse("02.02.2016 10:00"),
                     StayId = 1,
                     RoomId = 2,
                     Description = "Nasenbeinoperation",
@@ -523,8 +523,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Parse("01.07.2016 15:00"),
-                    End = DateTime.Parse("01.07.2016 16:00"),
+                    BeginDate = DateTime.Parse("01.07.2016 15:00"),
+                    EndDate = DateTime.Parse("01.07.2016 16:00"),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Untersuchung der Beschwerden",
@@ -533,8 +533,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Parse("03.07.2016 15:00"),
-                    End = DateTime.Parse("03.07.2016 16:00"),
+                    BeginDate = DateTime.Parse("03.07.2016 15:00"),
+                    EndDate = DateTime.Parse("03.07.2016 16:00"),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
@@ -543,8 +543,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Parse("08.07.2016 11:00"),
-                    End = DateTime.Parse("08.07.2016 12:00"),
+                    BeginDate = DateTime.Parse("08.07.2016 11:00"),
+                    EndDate = DateTime.Parse("08.07.2016 12:00"),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
@@ -553,8 +553,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddHours(13),
-                    End = DateTime.Today.Date.AddHours(14),
+                    BeginDate = DateTime.Today.Date.AddHours(13),
+                    EndDate = DateTime.Today.Date.AddHours(14),
                     StayId = 3,
                     RoomId = 6,
                     Description = "Aufnahmeuntersuchung",
@@ -563,8 +563,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddHours(10),
-                    End = DateTime.Today.Date.AddHours(11),
+                    BeginDate = DateTime.Today.Date.AddHours(10),
+                    EndDate = DateTime.Today.Date.AddHours(11),
                     StayId = 4,
                     RoomId = 7,
                     Description = "Aufnahmeuntersuchung",
@@ -573,8 +573,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddDays(1).AddHours(8),
-                    End = DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(5),
+                    BeginDate = DateTime.Today.Date.AddDays(1).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(5),
                     StayId = 4,
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
@@ -583,8 +583,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddDays(2).AddHours(8),
-                    End = DateTime.Today.Date.AddDays(2).AddHours(8).AddMinutes(5),
+                    BeginDate = DateTime.Today.Date.AddDays(2).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(2).AddHours(8).AddMinutes(5),
                     StayId = 4,
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
@@ -593,8 +593,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddDays(3).AddHours(8),
-                    End = DateTime.Today.Date.AddDays(3).AddHours(8).AddMinutes(5),
+                    BeginDate = DateTime.Today.Date.AddDays(3).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(3).AddHours(8).AddMinutes(5),
                     StayId = 4,
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
@@ -603,8 +603,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    Begin = DateTime.Today.Date.AddDays(1).AddHours(8),
-                    End = DateTime.Today.Date.AddDays(1).AddHours(9),
+                    BeginDate = DateTime.Today.Date.AddDays(1).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(1).AddHours(9),
                     StayId = 5,
                     RoomId = 7,
                     Description = "Aufnahmeuntersuchung",
