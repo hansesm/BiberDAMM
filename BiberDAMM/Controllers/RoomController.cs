@@ -168,9 +168,10 @@ namespace BiberDAMM.Controllers
 
         public ActionResult RoomScheduler()
         {
-            //Gets a list of Doctors for the Dropdownlist [HansesM]
+            //Gets a list of RoomTypes for the Dropdownlist [HansesM]
             var listRoomTypes = db.RoomTypes;
-            //Builds a selectesList out of the list of doctors [HansesM]
+
+            //Builds a selectesList out of the list of RoomTypes [HansesM]
             var selectetListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
             {
@@ -180,6 +181,72 @@ namespace BiberDAMM.Controllers
             var viewModel = new RoomSchedulerViewModel(selectetListRoomTypes);
 
             return View(viewModel);
+        }
+
+        //TODO outsource to helpers [HansesM]
+        //Inline-Class for for displaying treatment-data in a calendar view, needed in the Details-Method [HansesM]
+        public class JsonSchedulerEvents
+        {
+            public string roomName { get; set; }
+            public string treatmentType { get; set; }
+            public string beginDate { get; set; }
+            public string endDate { get; set; }
+        }
+
+        //TODO outsource to helpers [HansesM]
+        //Inline-Class for for displaying treatment-data in a calendar view, needed in the Details-Method [HansesM]
+        public class JsonSchedulerRooms
+        {
+            public string roomName { get; set; }
+        }
+
+        //Todo comment [HansesM]
+        //Post-method witch will be called by create-blocks-view 
+        //Jquery-Ajax and returns a list of "free" beds at the given date, roomtype and model combination
+        //[HansesM]
+        [HttpPost]
+        public JsonResult getSchedulerRooms(string roomTypeName)
+        {
+            //Gets a list of free beds, matching the given parameters! [HansesM]
+            var rooms = db.Rooms.Where(m => m.RoomType.Name.Equals(roomTypeName)).ToList();
+            
+            //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+            string[] result = (from a in rooms
+                select a.RoomNumber.ToString()).ToArray();
+
+            //Creates a JsonResult from the Json [HansesM]
+            var resultJson = new JsonResult { Data = result };
+
+            //returns the Json to the calling-function [HansesM]
+            return Json(result);
+        }
+
+        //Todo comment [HansesM]
+        //Post-method witch will be called by create-blocks-view 
+        //Jquery-Ajax and returns a list of "free" beds at the given date, roomtype and model combination
+        //[HansesM]
+        [HttpPost]
+        public JsonResult getSchedulerEvents(string roomType)
+        {
+            //Gets a list of free beds, matching the given parameters! [HansesM]
+
+            var events = db.Treatments.SqlQuery("select * from treatments");
+
+            //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+            var result = events.Select(e => new JsonSchedulerEvents
+            {
+                roomName = e.Id.ToString(),
+                treatmentType = e.Id.ToString(),
+                beginDate = e.Id.ToString(),
+                endDate = e.Id.ToString(),
+
+            }).ToList();
+
+            //Creates a JsonResult from the Json [HansesM]
+            var resultJson = new JsonResult { Data = result };
+
+            //returns the Json to the calling-function [HansesM]
+            return Json(result);
         }
     }
 }

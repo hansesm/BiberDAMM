@@ -48,7 +48,8 @@ namespace BiberDAMM.Controllers
                 //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
                 var selectetlistBedModels = new List<SelectListItem>();
                 foreach (var m in listBedModels)
-                    selectetlistBedModels.Add(new SelectListItem { Text = m.Model, Value = m.Model });
+                    // usage of type conversion to get enum for bed types to work and be able to test it [Jean-Pierre]
+                    selectetlistBedModels.Add(new SelectListItem { Value = (m.Model.ToString()) });
 
                 //Creates a View-Model and returns the view with the view-model inside [HansesM]
                 var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
@@ -93,7 +94,8 @@ namespace BiberDAMM.Controllers
             //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
             var selectetlistBedModels = new List<SelectListItem>();
             foreach (var m in listBedModels)
-                selectetlistBedModels.Add(new SelectListItem { Text = m.Model, Value = m.Model });
+                // usage of type conversion to get enum for bed types to work and be able to test it [Jean-Pierre]
+                selectetlistBedModels.Add(new SelectListItem { Value = (m.Model.ToString()) });
 
             //Creates a View-Model and returns the view with the view-model inside [HansesM]
             var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);

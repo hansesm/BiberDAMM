@@ -106,7 +106,7 @@
         });
 
         //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
-        if ($("#begin").val() == "01.01.0001 00:00:00") {
+        if ($("#begin").val() === "01.01.0001 00:00:00") {
             $("#begin").datepicker("setDate", new Date());
         }
     </script>
@@ -115,10 +115,10 @@
     <script>
         $("#end").datepicker({
             sliderAccessArgs: { touchonly: false },
-            dateFormat: "dd.mm.yy",
+            dateFormat: "dd.mm.yy"
         });
         //Initalizes the Datepicker to today, if the value is the inital one. [HansesM]
-        if ($("#end").val() == "01.01.0001 00:00:00") {
+        if ($("#end").val() === "01.01.0001 00:00:00") {
             $("#end").datepicker("setDate", "");
         }
         
@@ -129,9 +129,9 @@
             //Dropdownlist Selectedchange event
 
             $(function () {
-                $("#freeBed").prop("disabled", true)
+                $("#freeBed").prop("disabled", true);
                 $("#end, #begin, #model, #roomType").change(function () {
-                    if (($("#begin").val().length != 0) && ($("#end").val().length != 0)) {
+                    if (($("#begin").val().length !== 0) && ($("#end").val().length !== 0)) {
                         //console.log($("#begin").val().length);
                         //console.log($("#model option:selected").val());
                         var options = {};
