@@ -15,13 +15,13 @@
 <div class="row">
 
     <div class="form-group col-md-12">
-        @Html.Label("Raumtyp", new {@class = "col-form-label"})
-        @Html.DropDownList("Bed", Model.ListRooms, new {@class = "form-control", id = "roomTypeDropDown"})
+        @Html.Label("Raumtyp", new { @class = "col-form-label" })
+        @Html.DropDownList("Bed", Model.ListRooms, new { @class = "form-control", id = "roomTypeDropDown" })
         @*@Html.DropDownList(model => model.Blocks.Bed.BedModels, BedModels.ListBedBedModelss, null, new { @class = "form-control" , id = "model"})*@
     </div>
 </div>
 <!-- row-->
-<hr/>
+<hr />
 
 <!-- Placeholder for the timetable [HansesM]-->
 <div class="timetable"></div>
@@ -38,69 +38,71 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //Dropdownlist select change event [HansesM]
-            $("#roomTypeDropDown").change(function() {
+            $("#roomTypeDropDown").change(function () {
+                //Checks if dropdownelement is not empty [HansesM]
+                if ($("#roomTypeDropDown").val().length !== 0) {
+                    //create a new timetable [HansesM]
+                    var timetable = new Timetable();
+                    timetable.setScope(7, 20);
 
-                //create a new timetable [HansesM]
-                var timetable = new Timetable();
-                timetable.setScope(7, 20);
-
-                //options for ajax-call for events [HansesM]
-                var events = {};
-                events.url = "/room/GetSchedulerEvents";
-                events.type = "POST";
-                events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
-                //Log only for deployment [HansesM]
-                //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
-                events.dataType = "json";
-                events.contentType = "application/json";
-                //Funtion that will be called when the ajax-request was succsessfull [HansesM]
-                events.success = function(roomTimeTableEvents) {
+                    //options for ajax-call for events [HansesM]
+                    var events = {};
+                    events.url = "/room/GetSchedulerEvents";
+                    events.type = "POST";
+                    events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
                     //Log only for deployment [HansesM]
-                    //console.log(roomTimeTableEvents);
+                    //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                    events.dataType = "json";
+                    events.contentType = "application/json";
+                    //Funtion that will be called when the ajax-request was succsessfull [HansesM]
+                    events.success = function(roomTimeTableEvents) {
+                        //Log only for deployment [HansesM]
+                        //console.log(roomTimeTableEvents);
 
-                    for (var i = 0; i < roomTimeTableEvents.length; i++) {
-                        timetable.addEvent(roomTimeTableEvents[i].treatmentType,
-                            roomTimeTableEvents[i].roomName,
-                            new Date(roomTimeTableEvents[i].beginDate),
-                            new Date(roomTimeTableEvents[i].endDate));
-                    }
+                        for (var i = 0; i < roomTimeTableEvents.length; i++) {
+                            timetable.addEvent(roomTimeTableEvents[i].treatmentType,
+                                roomTimeTableEvents[i].roomName,
+                                new Date(roomTimeTableEvents[i].beginDate),
+                                new Date(roomTimeTableEvents[i].endDate));
+                        }
 
-                    var renderer = new Timetable.Renderer(timetable);
-                    renderer.draw('.timetable');
+                        var renderer = new Timetable.Renderer(timetable);
+                        renderer.draw('.timetable');
 
-                };
-                events.error = function() {
-                    alert("Fehler beim Events abrufen!");
-                };
+                    };
+                    events.error = function() {
+                        alert("Fehler beim Events abrufen!");
+                    };
 
-                //options for ajax-call for rooms [HansesM]
-                var rooms = {};
-                rooms.url = "/room/GetSchedulerRooms";
-                rooms.type = "POST";
-                rooms.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
-                //Log only for deployment [HansesM]
-                //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
-                rooms.dataType = "json";
-                rooms.contentType = "application/json";
-                //Funtion that will be called when the ajax-request was succsessfull [HansesM]
-                rooms.success = function(roomTimeTableRooms) {
-
-                    timetable.addLocations(roomTimeTableRooms);
+                    //options for ajax-call for rooms [HansesM]
+                    var rooms = {};
+                    rooms.url = "/room/GetSchedulerRooms";
+                    rooms.type = "POST";
+                    rooms.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
                     //Log only for deployment [HansesM]
-                    //console.log(roomTimeTableRooms);
+                    //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                    rooms.dataType = "json";
+                    rooms.contentType = "application/json";
+                    //Funtion that will be called when the ajax-request was succsessfull [HansesM]
+                    rooms.success = function(roomTimeTableRooms) {
 
-                    //Ajax-Call events started ! [HansesM]
-                    $.ajax(events);
+                        timetable.addLocations(roomTimeTableRooms);
+                        //Log only for deployment [HansesM]
+                        //console.log(roomTimeTableRooms);
 
-                };
-                rooms.error = function() {
-                    alert("Fehler beim Räume abrufen!");
-                };
+                        //Ajax-Call events started ! [HansesM]
+                        $.ajax(events);
 
-                //Ajax-Call room started ! [HansesM]
-                $.ajax(rooms);
+                    };
+                    rooms.error = function() {
+                        alert("Fehler beim Räume abrufen!");
+                    };
+
+                    //Ajax-Call room started ! [HansesM]
+                    $.ajax(rooms);
+                }
 
             });
         });

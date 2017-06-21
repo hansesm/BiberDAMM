@@ -22,31 +22,31 @@ namespace BiberDAMM.DAL
             // create all roles for application and seed them into the database if they not exist [KrabsJ]
 
             // role Administrator
-            var roleAdmin = new CustomRole {Name = ConstVariables.RoleAdministrator};
+            var roleAdmin = new CustomRole { Name = ConstVariables.RoleAdministrator };
             var dbrole = roleManager.FindByName(roleAdmin.Name);
             if (dbrole == null)
                 roleManager.Create(roleAdmin);
 
             // role Pflegekraft
-            var roleNurse = new CustomRole {Name = ConstVariables.RoleNurse};
+            var roleNurse = new CustomRole { Name = ConstVariables.RoleNurse };
             dbrole = roleManager.FindByName(roleNurse.Name);
             if (dbrole == null)
                 roleManager.Create(roleNurse);
 
             // role Arzt
-            var roleDoctor = new CustomRole {Name = ConstVariables.RoleDoctor};
+            var roleDoctor = new CustomRole { Name = ConstVariables.RoleDoctor };
             dbrole = roleManager.FindByName(roleDoctor.Name);
             if (dbrole == null)
                 roleManager.Create(roleDoctor);
 
             // role Reinigungskraft
-            var roleCleaner = new CustomRole {Name = ConstVariables.RoleCleaner};
+            var roleCleaner = new CustomRole { Name = ConstVariables.RoleCleaner };
             dbrole = roleManager.FindByName(roleCleaner.Name);
             if (dbrole == null)
                 roleManager.Create(roleCleaner);
 
             // role Therapeut
-            var roleTherapist = new CustomRole {Name = ConstVariables.RoleTherapist};
+            var roleTherapist = new CustomRole { Name = ConstVariables.RoleTherapist };
             dbrole = roleManager.FindByName(roleTherapist.Name);
             if (dbrole == null)
                 roleManager.Create(roleTherapist);
@@ -397,8 +397,8 @@ namespace BiberDAMM.DAL
             {
                 new Stay
                 {
-                    BeginDate = DateTime.Parse("01.02.2016"),
-                    EndDate = DateTime.Parse("04.02.2016"),
+                    BeginDate = DateTime.Today.Date,
+                    EndDate = DateTime.Today.AddDays(2).Date,
                     ICD10 = "AB-100",
                     Comment = "Keine Komplikationen",
                     Result = "entlassen nach erfolgreicher Operation",
@@ -410,8 +410,8 @@ namespace BiberDAMM.DAL
                 },
                 new Stay
                 {
-                    BeginDate = DateTime.Parse("01.07.2016"),
-                    EndDate = DateTime.Parse("8.07.2016"),
+                    BeginDate = DateTime.Today.Date,
+                    EndDate = DateTime.Today.AddDays(4).Date,
                     ICD10 = "CD-99",
                     Comment = "Physiotherapie erforderlich, 2 Sitzungen",
                     Result = "Zur weiteren Behandlung überwiesen an Physiotherapeuten Dr. Brand",
@@ -503,8 +503,8 @@ namespace BiberDAMM.DAL
             {
                 new Treatment
                 {
-                    BeginDate = DateTime.Parse("01.02.2016 10:00"),
-                    EndDate = DateTime.Parse("01.02.2016 11:00"),
+                    BeginDate = DateTime.Today.AddHours(10),
+                    EndDate = DateTime.Today.AddHours(13),
                     StayId = 1,
                     RoomId = 6,
                     Description = "Vorsorgeuntersuchung",
@@ -513,8 +513,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Parse("02.02.2016 08:00"),
-                    EndDate = DateTime.Parse("02.02.2016 10:00"),
+                    BeginDate = DateTime.Today.AddDays(-1).AddHours(9),
+                    EndDate = DateTime.Today.AddDays(-1).AddHours(11),
                     StayId = 1,
                     RoomId = 2,
                     Description = "Nasenbeinoperation",
@@ -523,8 +523,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Parse("01.07.2016 15:00"),
-                    EndDate = DateTime.Parse("01.07.2016 16:00"),
+                    BeginDate = DateTime.Today.Date.AddDays(3).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(3).AddHours(10),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Untersuchung der Beschwerden",
@@ -533,8 +533,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Parse("03.07.2016 15:00"),
-                    EndDate = DateTime.Parse("03.07.2016 16:00"),
+                    BeginDate = DateTime.Today.Date.AddHours(8),
+                    EndDate = DateTime.Today.Date.AddHours(10),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
@@ -543,8 +543,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Parse("08.07.2016 11:00"),
-                    EndDate = DateTime.Parse("08.07.2016 12:00"),
+                    BeginDate = DateTime.Today.Date.AddHours(8),
+                    EndDate = DateTime.Today.Date.AddHours(10),
                     StayId = 2,
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
@@ -553,7 +553,7 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Today.Date.AddHours(13),
+                    BeginDate = DateTime.Today.Date.AddHours(12),
                     EndDate = DateTime.Today.Date.AddHours(14),
                     StayId = 3,
                     RoomId = 6,
@@ -573,8 +573,18 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
+                    BeginDate = DateTime.Today.Date.AddHours(8),
+                    EndDate = DateTime.Today.Date.AddHours(8).AddMinutes(15),
+                    StayId = 4,
+                    RoomId = 8,
+                    Description = "Calciumkanalblocker verabreichen",
+                    TreatmentTypeId = 4,
+                    ApplicationUsers = new List<ApplicationUser> {user7}
+                },
+                new Treatment
+                {
                     BeginDate = DateTime.Today.Date.AddDays(1).AddHours(8),
-                    EndDate = DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(5),
+                    EndDate = DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(15),
                     StayId = 4,
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
@@ -583,18 +593,8 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
-                    BeginDate = DateTime.Today.Date.AddDays(2).AddHours(8),
-                    EndDate = DateTime.Today.Date.AddDays(2).AddHours(8).AddMinutes(5),
-                    StayId = 4,
-                    RoomId = 8,
-                    Description = "Calciumkanalblocker verabreichen",
-                    TreatmentTypeId = 4,
-                    ApplicationUsers = new List<ApplicationUser> {user7}
-                },
-                new Treatment
-                {
-                    BeginDate = DateTime.Today.Date.AddDays(3).AddHours(8),
-                    EndDate = DateTime.Today.Date.AddDays(3).AddHours(8).AddMinutes(5),
+                    BeginDate = DateTime.Today.Date.AddDays(1).AddHours(8),
+                    EndDate = DateTime.Today.Date.AddDays(1).AddHours(8).AddMinutes(15),
                     StayId = 4,
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",

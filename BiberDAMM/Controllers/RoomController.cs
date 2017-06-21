@@ -166,6 +166,7 @@ namespace BiberDAMM.Controllers
 
             //Builds a selectesList out of the list of RoomTypes [HansesM]
             var selectetListRoomTypes = new List<SelectListItem>();
+            selectetListRoomTypes.Add(new SelectListItem());
             foreach (var m in listRoomTypes)
                 selectetListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
 
