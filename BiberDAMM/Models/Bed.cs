@@ -25,7 +25,7 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Modell")]
-        public BedModels Model { get; set; }
+        public BedModels BedModels { get; set; }
 
         [Required]
         [Display(Name = "Raum")]

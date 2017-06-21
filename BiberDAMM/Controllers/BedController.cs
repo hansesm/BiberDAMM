@@ -108,7 +108,7 @@ namespace BiberDAMM.Controllers
        [ValidateAntiForgeryToken]
           public ActionResult Edit(int id, Bed bed, string command)
           {
-            System.Diagnostics.Debug.WriteLine(bed.Model + " " + bed.RoomId);
+            System.Diagnostics.Debug.WriteLine(bed.BedModels + " " + bed.RoomId);
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
 

@@ -234,10 +234,10 @@ namespace BiberDAMM.DAL
             //creating beds
             var beds = new List<Bed>
             {
-                new Bed {Model = BedModels.Klinikbett, RoomId = 3},
-                new Bed {Model = BedModels.Klinikbett, RoomId = 3},
-                new Bed {Model = BedModels.Intensivbett, RoomId = 4},
-                new Bed {Model = BedModels.Klinikbett, RoomId = 8}
+                new Bed {BedModels = BedModels.Klinikbett, RoomId = 3},
+                new Bed {BedModels = BedModels.Klinikbett, RoomId = 3},
+                new Bed {BedModels = BedModels.Intensivbett, RoomId = 4},
+                new Bed {BedModels = BedModels.Klinikbett, RoomId = 8}
             };
             beds.ForEach(b => _context.Beds.Add(b));
             _context.SaveChanges();
