@@ -6,9 +6,10 @@ namespace BiberDAMM.Models
 {
     /* Jean-PierreK
     * Added an enum list of all available bed models
+    * Changed enum name to something more error prone
     */
 
-    public enum Models
+    public enum BedModels
     {
         Inkubator,
         Intensivbett,
@@ -23,7 +24,7 @@ namespace BiberDAMM.Models
 
         [Required]
         [Display(Name = "Modell")]
-        public Models Model { get; set; }
+        public BedModels Model { get; set; }
 
         [Required]
         [Display(Name = "Raum")]

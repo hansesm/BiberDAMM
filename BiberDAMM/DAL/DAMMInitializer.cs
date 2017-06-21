@@ -232,13 +232,12 @@ namespace BiberDAMM.DAL
             _context.SaveChanges();
 
             //creating beds
-            // for simplicity reason, all beds will currently be initialized as the first model type
             var beds = new List<Bed>
             {
-                new Bed {Model = 0, RoomId = 3},
-                new Bed {Model = 0, RoomId = 3},
-                new Bed {Model = 0, RoomId = 4},
-                new Bed {Model = 0, RoomId = 8}
+                new Bed {Model = BedModels.Klinikbett, RoomId = 3},
+                new Bed {Model = BedModels.Klinikbett, RoomId = 3},
+                new Bed {Model = BedModels.Intensivbett, RoomId = 4},
+                new Bed {Model = BedModels.Klinikbett, RoomId = 8}
             };
             beds.ForEach(b => _context.Beds.Add(b));
             _context.SaveChanges();
