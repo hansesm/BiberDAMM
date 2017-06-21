@@ -52,42 +52,60 @@
     <script>
         $(document).ready(function () {
             //Dropdownlist Selectedchange event
-            $(function () {
-                $("#roomTypeDropDown").change(function () {
+            $("#roomTypeDropDown").change(function () {
+
                     var timetable = new Timetable();
-                    timetable.setScope(6, 22);
-                    var renderer = new Timetable.Renderer(timetable);
-
-                    //console.log($("#begin").val().length);
-                    //console.log($("#model option:selected").val());
-
-                    var options = {};
-                    options.url = "/room/getSchedulerRooms";
-                    options.type = "POST";
-                    options.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
-
+                    timetable.setScope(7, 20);
+                    
+                    var events = {};
+                    events.url = "/room/GetSchedulerEvents";
+                    events.type = "POST";
+                    events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
                     //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
-                    options.dataType = "json";
-                    options.contentType = "application/json";
-                    options.success = function (roomTimeTable) {
+                    events.dataType = "json";
+                    events.contentType = "application/json";
+                    events.success = function (roomTimeTableEvents) {
 
-                        //TODO insert Elements to scheduler
-                        timetable.addLocations(roomTimeTable);
+                        console.log(roomTimeTableEvents);
+
+                        for (var i = 0; i < roomTimeTableEvents.length; i++) {
+                            timetable.addEvent(roomTimeTableEvents[i].treatmentType,
+                                roomTimeTableEvents[i].roomName,
+                                new Date(roomTimeTableEvents[i].beginDate),
+                                new Date(roomTimeTableEvents[i].endDate));
+                        }
+
+                        var renderer = new Timetable.Renderer(timetable);
                         renderer.draw('.timetable');
-                        console.log(roomTimeTable);
-
-                        //for (var i = 0; i < freeBeds.length; i++) {
-                        //    $("#freeBed").append("<option value=" + freeBeds[i].value + ">" + freeBeds[i].text + "</option>");
-
-                        //}
 
                     };
-                    options.error = function () {
-                        alert("Fehler beim Betten abrufen!");
+                    events.error = function () {
+                        alert("Fehler beim Events abrufen!");
                     };
-                    $.ajax(options);
+
+
+                    var rooms = {};
+                    rooms.url = "/room/GetSchedulerRooms";
+                    rooms.type = "POST";
+                    rooms.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
+                    //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                    rooms.dataType = "json";
+                    rooms.contentType = "application/json";
+                    rooms.success = function (roomTimeTableRooms) {
+
+                        timetable.addLocations(roomTimeTableRooms);
+                        console.log(roomTimeTableRooms);
+
+                        $.ajax(events);
+
+                        };
+                    rooms.error = function () {
+                        alert("Fehler beim Räume abrufen!");
+                    };
+                    
+                    $.ajax(rooms);
+                    
                 });
             });
-        });
     </script>
 }

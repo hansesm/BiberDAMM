@@ -205,7 +205,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of "free" beds at the given date, roomtype and model combination
         //[HansesM]
         [HttpPost]
-        public JsonResult getSchedulerRooms(string roomTypeName)
+        public JsonResult GetSchedulerRooms(string roomTypeName)
         {
             //Gets a list of free beds, matching the given parameters! [HansesM]
             var rooms = db.Rooms.Where(m => m.RoomType.Name.Equals(roomTypeName)).ToList();
@@ -226,27 +226,24 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of "free" beds at the given date, roomtype and model combination
         //[HansesM]
         [HttpPost]
-        public JsonResult getSchedulerEvents(string roomType)
+        public JsonResult GetSchedulerEvents(string roomTypeName)
         {
             //Gets a list of free beds, matching the given parameters! [HansesM]
-
-            var events = db.Treatments.SqlQuery("select * from treatments");
+            
+            var events = db.Treatments.SqlQuery("select * from treatments t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '"+roomTypeName +"')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104))");
 
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
-            var result = events.Select(e => new JsonSchedulerEvents
+            var resultEvent = events.Select(a => new JsonSchedulerEvents
             {
-                roomName = e.Id.ToString(),
-                treatmentType = e.Id.ToString(),
-                beginDate = e.Id.ToString(),
-                endDate = e.Id.ToString(),
+                roomName = a.Room.RoomNumber.ToString(),
+                treatmentType = a.Description.ToString(),
+                beginDate = a.BeginDate.ToString("s"),
+                endDate = a.EndDate.ToString("s"),
 
             }).ToList();
 
-            //Creates a JsonResult from the Json [HansesM]
-            var resultJson = new JsonResult { Data = result };
-
             //returns the Json to the calling-function [HansesM]
-            return Json(result);
+            return Json(resultEvent);
         }
     }
 }
