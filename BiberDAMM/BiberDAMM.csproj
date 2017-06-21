@@ -212,6 +212,7 @@
     <Compile Include="Helpers\ConstVariables.cs" />
     <Compile Include="Helpers\IdentityExtensions.cs" />
     <Compile Include="Helpers\JsonEventTreatment.cs" />
+    <Compile Include="Helpers\JsonRoomSchedulerEvents.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
