@@ -154,8 +154,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEventTreatment()
             {
-                start = e.Begin.ToString("s"),
-                end = e.End.ToString("s"),
+                start = e.BeginDate.ToString("s"),
+                end = e.EndDate.ToString("s"),
                 title = e.TreatmentType.Name.ToString(),
                 id = e.Id.ToString()
 
@@ -242,8 +242,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
             var result = events.Select(e => new JsonEventTreatment()
             {
-                start = e.Begin.ToString("s"),
-                end = e.End.ToString("s"),
+                start = e.BeginDate.ToString("s"),
+                end = e.EndDate.ToString("s"),
                 title = e.TreatmentType.Name.ToString(),
                 id = e.Id.ToString()
 

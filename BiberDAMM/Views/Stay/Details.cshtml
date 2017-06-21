@@ -144,13 +144,13 @@
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Stay.BeginDate, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.BeginDate, new {@class = "form-control", id = "begin"})
+                @Html.TextBoxFor(model => model.Stay.BeginDate, new {@class = "form-control", id = "beginDate"})
                 @Html.ValidationMessageFor(model => model.Stay.BeginDate, "", new {@class = "text-danger"})
             </div>
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Stay.EndDate, new {@class = "col-form-label"})
-                @Html.TextBoxFor(model => model.Stay.EndDate, new {@class = "form-control", id = "end"})
+                @Html.TextBoxFor(model => model.Stay.EndDate, new {@class = "form-control", id = "endDate"})
                 @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new {@class = "text-danger"})
             </div>
 
@@ -213,10 +213,10 @@
                         @Html.DisplayNameFor(model => treatmentHeaderHelper.TreatmentType.Name)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => treatmentHeaderHelper.Begin)
+                        @Html.DisplayNameFor(model => treatmentHeaderHelper.BeginDate)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => treatmentHeaderHelper.End)
+                        @Html.DisplayNameFor(model => treatmentHeaderHelper.EndDate)
                     </th>
                 </tr>
                 </thead>
@@ -230,10 +230,10 @@
                             @Html.DisplayFor(modelItem => item.TreatmentType.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modeItem => item.Begin)
+                            @Html.DisplayFor(modeItem => item.BeginDate)
                         </td>
                         <td>
-                            @Html.DisplayFor(modeItem => item.End)
+                            @Html.DisplayFor(modeItem => item.EndDate)
                         </td>
                     </tr>
                 }
@@ -336,7 +336,7 @@
 
     <!-- Datetimepicker for begin [HansesM]-->
     <script>
-        $("#begin").datetimepicker({
+        $("#beginDate").datetimepicker({
             sliderAccessArgs: { touchonly: false },
             timeFormat: "HH:mm:ss",
             dateFormat: "dd.mm.yy"
@@ -345,7 +345,7 @@
 
     <!-- Datetimepicker for end [HansesM]-->
     <script>
-        $("#end").datetimepicker({
+        $("#endDate").datetimepicker({
             sliderAccessArgs: { touchonly: false },
             timeFormat: "HH:mm:ss",
             dateFormat: "dd.mm.yy"

@@ -146,7 +146,7 @@ namespace BiberDAMM.Controllers
             {
                 foreach (var treatment in stay.Treatments)
                 {
-                    if (treatment.End > DateTime.Now)
+                    if (treatment.EndDate > DateTime.Now)
                     {
                         ClientTreatments.Add(treatment);
                     }
@@ -159,8 +159,8 @@ namespace BiberDAMM.Controllers
             {
                 AppointmentOfSelectedRessource appointmentOfClient = new AppointmentOfSelectedRessource();
                 appointmentOfClient.Id = treatment.Id;
-                appointmentOfClient.Begin = treatment.Begin;
-                appointmentOfClient.End = treatment.End;
+                appointmentOfClient.BeginDate = treatment.BeginDate;
+                appointmentOfClient.EndDate = treatment.EndDate;
                 appointmentOfClient.Ressource = ConstVariables.AppointmentOfClient;
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfClient);
             }
@@ -230,15 +230,15 @@ namespace BiberDAMM.Controllers
                 }
 
                 // load the appointments of the selected room from db
-                var newRoomAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
+                var newRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newRoomAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedRoom = new AppointmentOfSelectedRessource();
                     appointmentOfSelectedRoom.Id = appointment.Id;
-                    appointmentOfSelectedRoom.Begin = appointment.Begin;
-                    appointmentOfSelectedRoom.End = appointment.End;
+                    appointmentOfSelectedRoom.BeginDate = appointment.BeginDate;
+                    appointmentOfSelectedRoom.EndDate = appointment.EndDate;
                     appointmentOfSelectedRoom.Ressource = ConstVariables.AppointmentOfRoom;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
                 }
@@ -303,15 +303,15 @@ namespace BiberDAMM.Controllers
             foreach (var staffMember in treatmentCreationModel.SelectedStaff)
             {
                 // load the appointments of the selected staffmember from db
-                var newStaffAppointments = _db.Treatments.Where(t => t.End > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
+                var newStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newStaffAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedStaffMember = new AppointmentOfSelectedRessource();
                     appointmentOfSelectedStaffMember.Id = appointment.Id;
-                    appointmentOfSelectedStaffMember.Begin = appointment.Begin;
-                    appointmentOfSelectedStaffMember.End = appointment.End;
+                    appointmentOfSelectedStaffMember.BeginDate = appointment.BeginDate;
+                    appointmentOfSelectedStaffMember.EndDate = appointment.EndDate;
                     appointmentOfSelectedStaffMember.Ressource = staffMember.DisplayName;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedStaffMember);
                 }
@@ -333,8 +333,8 @@ namespace BiberDAMM.Controllers
             //Builds a JSon from the appointmentList
             var result = appointmentList.Select(a => new JsonEventTreatment()
             {
-                start = a.Begin.ToString("s"),
-                end = a.End.ToString("s"),
+                start = a.BeginDate.ToString("s"),
+                end = a.EndDate.ToString("s"),
                 title = a.Ressource,
                 id = a.Id.ToString()
 

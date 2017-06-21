@@ -40,8 +40,8 @@ namespace BiberDAMM.Controllers
                     treatments = from m in db.Treatments
                                  select m;
                     //To get treatments, which are running and treatments, which are completed today
-                    treatments = treatments.Where(s => s.Begin.Year <= DateTime.Now.Year && s.Begin.Month <= DateTime.Now.Month && s.Begin.Day <= DateTime.Now.Day && s.End.Year >= DateTime.Now.Year
-                    && s.End.Month >= DateTime.Now.Month && s.End.Day >= DateTime.Now.Day);
+                    treatments = treatments.Where(s => s.BeginDate.Year <= DateTime.Now.Year && s.BeginDate.Month <= DateTime.Now.Month && s.BeginDate.Day <= DateTime.Now.Day && s.EndDate.Year >= DateTime.Now.Year
+                    && s.EndDate.Month >= DateTime.Now.Month && s.EndDate.Day >= DateTime.Now.Day);
 
                     var rooms = new List<Room>();
 
