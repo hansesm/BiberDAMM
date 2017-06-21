@@ -10,58 +10,55 @@
 
 <hr />
 
-<div>
-    <!--This first form includes all inputs for creating a new treatment-->
-    @using (Html.BeginForm("Create", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+<!--This form includes all inputs for creating a new treatment-->
+@using (Html.BeginForm("Create", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken();
+
+    //save all hidden fields
+    @Html.HiddenFor(m => m.StayId);
+    @Html.HiddenFor(m => m.TreatmentTypeId);
+    @Html.HiddenFor(m => m.ClientId);
+    @Html.HiddenFor(m => m.ClientName);
+    if (Model.Rooms != null)
     {
-        @Html.AntiForgeryToken();
-
-        //save all hidden fields
-        @Html.HiddenFor(m => m.StayId);
-        @Html.HiddenFor(m => m.TreatmentTypeId);
-        @Html.HiddenFor(m => m.ClientId);
-        @Html.HiddenFor(m => m.ClientName);
-        @Html.HiddenFor(m => m.SelectedRoomId);
-        if (Model.Rooms != null)
+        for (int i = 0; i < Model.Rooms.Count; i++)
         {
-            for (int i = 0; i < Model.Rooms.Count; i++)
-            {
-                @Html.HiddenFor(m => Model.Rooms[i].Id)
-                @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
-                @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
-            }
+            @Html.HiddenFor(m => Model.Rooms[i].Id)
+            @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
+            @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
         }
-        if (Model.AppointmentsOfSelectedRessources != null)
+    }
+    if (Model.AppointmentsOfSelectedRessources != null)
+    {
+        for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
         {
-            for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
-            {
-                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
-                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
-                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
-                @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
-            }
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
         }
-        if (Model.Staff != null)
+    }
+    if (Model.Staff != null)
+    {
+        for (int i = 0; i < Model.Staff.Count; i++)
         {
-            for (int i = 0; i < Model.Staff.Count; i++)
-            {
-                @Html.HiddenFor(m => Model.Staff[i].Id)
-                @Html.HiddenFor(m => Model.Staff[i].DisplayName)
-                @Html.HiddenFor(m => Model.Staff[i].StaffType)
-                @Html.HiddenFor(m => Model.Staff[i].Selected)
-            }
+            @Html.HiddenFor(m => Model.Staff[i].Id)
+            @Html.HiddenFor(m => Model.Staff[i].DisplayName)
+            @Html.HiddenFor(m => Model.Staff[i].StaffType)
         }
-        if (Model.SelectedStaff != null)
+    }
+    if (Model.SelectedStaff != null)
+    {
+        for (int i = 0; i < Model.SelectedStaff.Count; i++)
         {
-            for (int i = 0; i < Model.SelectedStaff.Count; i++)
-            {
-                @Html.HiddenFor(m => Model.SelectedStaff[i].Id)
-                @Html.HiddenFor(m => Model.SelectedStaff[i].DisplayName)
-                @Html.HiddenFor(m => Model.SelectedStaff[i].StaffType)
-                @Html.HiddenFor(m => Model.SelectedStaff[i].Selected)
-            }
+            @Html.HiddenFor(m => Model.SelectedStaff[i].Id)
+            @Html.HiddenFor(m => Model.SelectedStaff[i].DisplayName)
+            @Html.HiddenFor(m => Model.SelectedStaff[i].StaffType)
+            @Html.HiddenFor(m => Model.SelectedStaff[i].Selected)
         }
-
+    }
+    <div>
         <!--Inputfields for treatment attributes-->
         <!--This row includes options for changing the treatment type and for selecting a room-->
         <div class="row">
@@ -124,10 +121,10 @@
                     <thead class="thead-inverse">
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(m => m.Staff[1].DisplayName)
+                                Name
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.Staff[1].StaffType)
+                                Typ
                             </th>
                         </tr>
                     </thead>
@@ -187,107 +184,19 @@
         <!--This row includes the buttons for creating the treatment and for stopping the creation-->
         <div class="row">
             <div class="col-md-12">
-                <input title="Behandlung speichern" type="submit" value="Speichern" class="btn btn-outline-primary btn-sm">
+                <input title="Behandlung speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm">
             </div>
         </div>
-    }
-    <!--end form-->
-</div>
-
-<hr />
-
-<!-- Container for displaying the calendar-->
-<div class="container-fluid">
-    <h4 style="display: inline-block;"> Kalenderübersicht</h4>
-    <button style="background-color:transparent; border:hidden;" class="btn-outline-primary" data-toggle="modal" data-target="#calendarHelp"><i class="fa fa-question-circle fa-2x icon-outline-primary" aria-hidden="true"></i></button>
-    <div id="calendar"></div>
-    <!-- Empty row-->
-    <br />
-    <!-- Horizontal line-->
-    <hr />
-</div>
-
-
-<!-- changeTreatmentTypeModal -->
-<div id="changeTreatmentTypeModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h4 class="modal-title" style="display: inline-block;">Behandlungstyp ändern</h4>
-                <i class="fa fa-exclamation-triangle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
-            </div>
-
-            <div class="modal-body">
-                <p>Sind Sie sicher, dass Sie den Behandlungstyp wirklich ändern möchten?</p>
-                <p>Alle bisherigen Eingaben gehen verloren!</p>
-            </div>
-
-            <div class="modal-footer">
-                <button title="Ja" class="btn btn-outline-primary btn-sm" onclick="location.href = '@Url.Action("SelectTreatmentType", "Treatment", new {id = Model.StayId})'">Ja</button>
-                <button title="Nein" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Nein</button>
-            </div>
-
-        </div>
-        <!--end Modal content-->
-
     </div>
-</div>
 
-<!-- selectRoomModal -->
-<div id="selectRoomModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <hr />
 
-        <!-- Modal content-->
-        <div class="modal-content">
+    <!-- selectRoomModal -->
+    <div id="selectRoomModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
 
-            <!--This form enables the user to select a room-->
-            @using (Html.BeginForm("UpdateCreatePageByRoomSelection", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <!--save all hidden fields-->
-                @Html.HiddenFor(m => m.StayId)
-                @Html.HiddenFor(m => m.TreatmentTypeId)
-                @Html.HiddenFor(m => m.BeginDate)
-                @Html.HiddenFor(m => m.EndDate)
-                @Html.HiddenFor(m => m.Description)
-                @Html.HiddenFor(m => m.SelectedRoomNumber)
-                @Html.HiddenFor(m => m.TreatmentTypeName)
-                @Html.HiddenFor(m => m.ClientId);
-                @Html.HiddenFor(m => m.ClientName);
-                if (Model.AppointmentsOfSelectedRessources != null)
-                {
-                    for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
-                    {
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
-                    }
-                }
-                if (Model.Staff != null)
-                {
-                    for (int i = 0; i < Model.Staff.Count; i++)
-                    {
-                        @Html.HiddenFor(m => Model.Staff[i].Id)
-                        @Html.HiddenFor(m => Model.Staff[i].DisplayName)
-                        @Html.HiddenFor(m => Model.Staff[i].StaffType)
-                        @Html.HiddenFor(m => Model.Staff[i].Selected)
-                    }
-                }
-                if (Model.SelectedStaff != null)
-                {
-                    for (int i = 0; i < Model.SelectedStaff.Count; i++)
-                    {
-                        @Html.HiddenFor(m => Model.SelectedStaff[i].Id)
-                        @Html.HiddenFor(m => Model.SelectedStaff[i].DisplayName)
-                        @Html.HiddenFor(m => Model.SelectedStaff[i].StaffType)
-                        @Html.HiddenFor(m => Model.SelectedStaff[i].Selected)
-                    }
-                }
+            <!-- Modal content-->
+            <div class="modal-content">
 
                 <div class="modal-header">
                     <h4 class="modal-title" style="display: inline-block;">Raumauswahl</h4>
@@ -302,10 +211,10 @@
                         <thead class="thead-inverse">
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(m => m.Rooms[1].RoomNumber)
+                                    Raumnummer
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(m => m.Rooms[1].RoomTypeName)
+                                    Raumtyp
                                 </th>
                                 <th>
                                     Auswahl
@@ -320,9 +229,6 @@
                                 for (int i = 0; i < Model.Rooms.Count; i++)
                                 {
                                     <tr>
-                                        @Html.HiddenFor(m => Model.Rooms[i].RoomTypeName)
-                                        @Html.HiddenFor(m => Model.Rooms[i].Id)
-                                        @Html.HiddenFor(m => Model.Rooms[i].RoomNumber)
                                         <td>
                                             @Html.DisplayFor(m => Model.Rooms[i].RoomNumber)
                                         </td>
@@ -350,65 +256,24 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Auswahl bestätigen" type="submit" value="Auswählen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Raumauswahl bestätigen" type="submit" name="command" value="Raum verwenden" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
 
-            }
-            <!--end form-->
+            </div>
+            <!--end modal content-->
 
         </div>
-        <!--end modal content-->
-
     </div>
-</div>
-<!-- end selectRoomModal -->
+    <!-- end selectRoomModal -->
 
+    <!-- selectStaffModal -->
+    <div id="selectStaffModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
 
-<!-- selectStaffModal -->
-<div id="selectStaffModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            @using (Html.BeginForm("UpdateCreatePageByStaffSelection", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <!--save all hidden fields-->
-                @Html.HiddenFor(m => m.StayId)
-                @Html.HiddenFor(m => m.TreatmentTypeId)
-                @Html.HiddenFor(m => m.BeginDate)
-                @Html.HiddenFor(m => m.EndDate)
-                @Html.HiddenFor(m => m.Description)
-                @Html.HiddenFor(m => m.SelectedRoomId)
-                @Html.HiddenFor(m => m.SelectedRoomNumber)
-                @Html.HiddenFor(m => m.TreatmentTypeName)
-                @Html.HiddenFor(m => m.ClientId);
-                @Html.HiddenFor(m => m.ClientName);
-                if (Model.AppointmentsOfSelectedRessources != null)
-                {
-                    for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
-                    {
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
-                        @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
-                    }
-                }
-                if (Model.Rooms != null)
-                {
-                    for (int i = 0; i < Model.Rooms.Count; i++)
-                    {
-                        @Html.HiddenFor(m => m.Rooms[i].Id)
-                        @Html.HiddenFor(m => m.Rooms[i].RoomNumber)
-                        @Html.HiddenFor(m => m.Rooms[i].RoomTypeName)
-                    }
-                }
-                @*
-                    The list "Modal.SelectedStaff" doesn't have to be saved, because it is always build up new if the form is send to the post method
-                *@
+            <!-- Modal content-->
+            <div class="modal-content">
 
                 <div class="modal-header">
                     <h4 class="modal-title" style="display: inline-block;">Mitarbeiterauswahl</h4>
@@ -423,13 +288,13 @@
                         <thead class="thead-inverse">
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(m => Model.Staff[1].DisplayName)
+                                    Name
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(m => Model.Staff[1].StaffType)
+                                    Typ
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(m => Model.Staff[1].Selected)
+                                    Auswahl
                                 </th>
                             </tr>
                         </thead>
@@ -441,9 +306,6 @@
                                 for (int i = 0; i < Model.Staff.Count; i++)
                                 {
                                     <tr>
-                                        @Html.HiddenFor(m => Model.Staff[i].DisplayName)
-                                        @Html.HiddenFor(m => Model.Staff[i].Id)
-                                        @Html.HiddenFor(m => Model.Staff[i].StaffType)
                                         <td>
                                             @Html.DisplayFor(m => Model.Staff[i].DisplayName)
                                         </td>
@@ -473,20 +335,61 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Auswahl bestätigen" type="submit" value="Auswählen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="Mitarbeiter einplanen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
 
-            }
-            <!--end form-->
+            </div>
+            <!--end modal content-->
 
         </div>
-        <!--end modal content-->
+    </div>
+    <!-- end selectStaffModal -->
+
+}
+<!--end create treatment form-->
+
+<!-- Container for displaying the calendar-->
+<div class="container-fluid">
+    <h4 style="display: inline-block;"> Kalenderübersicht</h4>
+    <button style="background-color:transparent; border:hidden;" class="btn-outline-primary" data-toggle="modal" data-target="#calendarHelp"><i class="fa fa-question-circle fa-2x icon-outline-primary" aria-hidden="true"></i></button>
+    <div id="calendar"></div>
+    <!-- Empty row-->
+    <br />
+    <!-- Horizontal line-->
+    <hr />
+</div>
+<!--end calendar-->
+
+<!-- changeTreatmentTypeModal -->
+<div id="changeTreatmentTypeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Behandlungstyp ändern</h4>
+                <i class="fa fa-exclamation-triangle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+
+            <div class="modal-body">
+                <p>Sind Sie sicher, dass Sie den Behandlungstyp wirklich ändern möchten?</p>
+                <p>Alle bisherigen Eingaben gehen verloren!</p>
+            </div>
+
+            <div class="modal-footer">
+                <button title="Ja" class="btn btn-outline-primary btn-sm" onclick="location.href = '@Url.Action("SelectTreatmentType", "Treatment", new {id = Model.StayId})'">Ja</button>
+                <button title="Nein" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Nein</button>
+            </div>
+
+        </div>
+        <!--end Modal content-->
 
     </div>
 </div>
-<!-- end selectStaffModal -->
+<!-- end changeTreatmentTypeModal -->
 
 <!-- calenderHelp modal -->
 <div id="calendarHelp" class="modal fade" role="dialog">

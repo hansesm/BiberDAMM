@@ -172,12 +172,34 @@ namespace BiberDAMM.Controllers
             return View(treatmentCreationModel);
         }
 
-        // GET: Treatment/Create [KrabsJ]
+        // POST: Treatment/Create [KrabsJ]
         // TODO: this is just a dummy method to check if validation already works
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreationTreatment treatmentCreationModel)
+        public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
         {
+            //if a new room was selected, update the viewModel and return the View again
+            if (command.Equals("Raum verwenden"))
+            {
+                CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
+
+                //clear ModeState, so that values are loaded from the updated model
+                ModelState.Clear();
+
+                return View(updatedTreatmentCreationModel);
+            }
+
+            //if new staff was selected, update the viewModel and return the View again
+            if (command.Equals("Mitarbeiter einplanen"))
+            {
+                CreationTreatment updatedTreatmentCreationModel = UpdateCreatePageByStaffSelection(treatmentCreationModel);
+
+                //clear ModeState, so that values are loaded from the updated model
+                ModelState.Clear();
+
+                return View(updatedTreatmentCreationModel);
+            }
+
             // check if model is valid
             if (ModelState.IsValid)
             {
@@ -195,14 +217,11 @@ namespace BiberDAMM.Controllers
             return View(treatmentCreationModel);
         }
 
-        //POST: Treatment/UpdateCreatePageByRoomSelection [KrabsJ]
-        //this method returns the view "create" with an updated viewModel
-        //it updates the viewModel data depending on the selected room
+        //[KrabsJ]
+        //this method updates the viewModel data depending on the selected room
         //expected parameter: CreationTreatment viewModel
-        //return: view("create", CreationTreatment viewModel)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateCreatePageByRoomSelection(CreationTreatment treatmentCreationModel)
+        //return: CreationTreatment viewModel
+        public CreationTreatment UpdateViewModelByRoomSelection(CreationTreatment treatmentCreationModel)
         {
             // if there was no room selected the selectedRoomId is 0 [db-IDs start with 1]
             // in this case no data has to be updated
@@ -251,21 +270,15 @@ namespace BiberDAMM.Controllers
             }
             treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
-            //clear ModeState, so that values are loaded from the updated model
-            ModelState.Clear();
-
-            // return view
-            return View("Create", treatmentCreationModel);
+            // return ViewModel
+            return treatmentCreationModel;
         }
 
-        //POST: Treatment/UpdateCreatePageByStaffSelection [KrabsJ]
-        //this method returns the view "create" with an updated viewModel
-        //it updates the viewModel data depending on the selected staffMembers
+        //[KrabsJ]
+        //this method updates the viewModel data depending on the selected staffMembers
         //expected parameter: CreationTreatment viewModel
-        //return: view("create", CreationTreatment viewModel)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
+        //return: CreationTreatment viewModel
+        public CreationTreatment UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
         {
             //initialize list of selectedStaff (delete old selection)
             treatmentCreationModel.SelectedStaff = new List<Staff>();
@@ -320,11 +333,8 @@ namespace BiberDAMM.Controllers
             // create JsonResult for calendar in view
             treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
-            //clear ModeState, so that values are loaded from the updated model
-            ModelState.Clear();
-
-            //return view
-            return View("Create", treatmentCreationModel);
+            //return ViewModel
+            return treatmentCreationModel;
         }
 
         //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
