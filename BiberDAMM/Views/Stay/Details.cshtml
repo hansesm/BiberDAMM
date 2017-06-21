@@ -277,7 +277,7 @@
                     @Html.DisplayNameFor(model => blocksHeaderHelper.EndDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Model)
+                    @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.BedModels)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => blocksHeaderHelper.Bed.Room.RoomNumber)
@@ -299,7 +299,7 @@
                         @item.EndDate.ToString("d")
                     </td>
                     <td>
-                        @Html.DisplayFor(modeItem => item.Bed.Model)
+                        @Html.DisplayFor(modeItem => item.Bed.BedModels)
                     </td>
                     <td>
                         @Html.DisplayFor(modeItem => item.Bed.Room.RoomNumber)
@@ -355,7 +355,7 @@
 
     <!-- Fullcalendar with settings [HanseM]-->
     <script>
-        @*console.log(@Html.Raw(Json.Encode(Model.ListTreatments.Data)));*@
+        @*console.log(@Html.Raw(Json.Encode(BedModels.ListTreatments.Data)));*@
 
         //When the document is ready we initalize the calendar-view [HansesM]
         $(document).ready(function() {

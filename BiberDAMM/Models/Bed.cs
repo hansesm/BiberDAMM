@@ -8,7 +8,7 @@ namespace BiberDAMM.Models
     * Added an enum list of all available bed models
     */
 
-    public enum Models
+    public enum BedModels
     {
         Inkubator,
         Intensivbett,
@@ -17,13 +17,14 @@ namespace BiberDAMM.Models
         Säuglingsbett,
         Schwerlastbett
     }
+
     public class Bed
     {
         public int Id { get; set; }
 
         [Required]
         [Display(Name = "Modell")]
-        public Models Model { get; set; }
+        public BedModels BedModels { get; set; }
 
         [Required]
         [Display(Name = "Raum")]
