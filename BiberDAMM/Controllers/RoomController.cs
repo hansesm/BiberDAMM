@@ -15,7 +15,7 @@ namespace BiberDAMM.Controllers
 
         // GET all: Room [JEL]
         public ActionResult Index()
-        {
+        {   // returns listed rooms
             return View(db.Rooms.ToList());
         }
 
@@ -30,7 +30,7 @@ namespace BiberDAMM.Controllers
                 TempData["CreateRoomFailed"] = " " + Room.RoomNumber + " existiert bereits.";
                 return RedirectToAction("Create", Room);
             }
-
+            // checks if ModelState is valid, if this is the case the room will be saved 
             if (ModelState.IsValid)
             {
                 db.Rooms.Add(Room);
@@ -38,12 +38,12 @@ namespace BiberDAMM.Controllers
                 TempData["CreateRoomSuccess"] = " " + Room.RoomNumber + " wurde hinzugefügt.";
                 return RedirectToAction("Index");
             }
+            //Get all roomTypes from the database           
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
                 selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
-
-
+            //creats viewModel
             var viewModel = new RoomViewModel(Room, selectedListRoomTypes);
             return View(viewModel);
         }
@@ -55,17 +55,20 @@ namespace BiberDAMM.Controllers
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
                 selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
-
             var room = new Room();
+            //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
             return View(viewModel);
         }
 
         //DELETE: Room [JEL]
         public ActionResult Delete(int? id)
-        {
+        {   
+            //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
                 return RedirectToAction("Index");
+
+            //checks if room with given id exists
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
@@ -89,7 +92,7 @@ namespace BiberDAMM.Controllers
                 TempData["DeleteRoomFailed"] = " Es bestehen Abhängigkeiten zu anderen Krankenhausdaten.";
                 return RedirectToAction("Details", "Room", new {id});
             }
-
+            //deletes room
             var room = db.Rooms.Find(id);
             db.Rooms.Remove(room);
             db.SaveChanges();
@@ -100,8 +103,10 @@ namespace BiberDAMM.Controllers
         //CHANGE: Room [JEL] 
         public ActionResult Edit(int? id)
         {
+            //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
                 return RedirectToAction("Index");
+            //checks if room with given id exists
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
@@ -112,6 +117,7 @@ namespace BiberDAMM.Controllers
             //selectedListRoomTypes.Add(new SelectListItem{ Text = " ", Value = null });
             foreach (var m in listRoomTypes)
                 selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+            //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
             return View(viewModel);
         }
@@ -119,7 +125,8 @@ namespace BiberDAMM.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Room room, string command)
-        {
+        {   
+           
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Room", new {id = room.Id});
             //checks if roomNumber exists already and if the current id is not equal to an existing id
@@ -138,12 +145,13 @@ namespace BiberDAMM.Controllers
                 TempData["EditRoomSuccess"] = " Die Raumdetails wurden aktualisiert.";
                 return RedirectToAction("Details", "room", new {id = room.Id});
             }
+            //Get all roomTypes from the database
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
                 selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
 
-
+            //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
             return View(viewModel);
         }
@@ -151,11 +159,14 @@ namespace BiberDAMM.Controllers
         //GET SINGLE: Room [JEL]
         public ActionResult Details(int? id)
         {
+            //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
                 return RedirectToAction("Index");
+            //checks if room with given id exists
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
+            //returns room
             return View(room);
         }
 
