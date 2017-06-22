@@ -21,30 +21,30 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model => model.RoomId)
-        <div class="form-group">
-            @Html.LabelFor(model => model.BedModels, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.BedModels, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BedModels, "", new { @class = "text-danger" })
+        @*Html.HiddenFor(model => model.RoomId)*@
+            <div class="form-group">
+                @Html.LabelFor(model => model.BedModels, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EnumDropDownListFor(model => model.BedModels, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BedModels, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RoomId, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                        @Html.DropDownList("RoomId", ViewBag.RoomList as SelectList, Model.Room.RoomNumber, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Room.RoomNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input title="Änderungen speichern"  type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
+                    <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.RoomId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                    @Html.DropDownList("RoomId", ViewBag.RoomList as SelectList, Model.Room.RoomNumber, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Room.RoomNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input title="Änderungen speichern"  type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
-                <input title="Zur Detailssicht" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
-            </div>
-        </div>
-    </div>
-}
+    }
 
-@section Scripts { 
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

@@ -20,33 +20,34 @@ namespace BiberDAMM.Controllers
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        //-- GET Index page /Bed/ --//
+        //-- GET Index page /Bed/ and return a list of all beds --//
+        [HttpGet]
         public ActionResult Index()
         {
             return View(db.Beds.ToList());
         }
-  
-        //-- GET page /Bed/Create to add a bed --//
+
+        //-- GET page /Bed/Create to add a new bed --//
         [HttpGet]
         public ActionResult Create()
         {
             /* 
-             * Create a list containing all rooms
-             * List all created beds
+             * Create a list containing all rooms.
+             * List all created beds.
              * Iterate through rooms and cross check with capacity if beds can be placed in it. 
              * Rooms with MaxSize of 0 are not selectable for bed placement same goes
-             * for Rooms which reached their maximum bed capacity
+             * for rooms which reached their maximum bed capacity
              */
-            var AllRooms = db.Rooms.ToList();
+            var AllRooms = db.Rooms.ToList(); // list of all rooms
             var AllBeds = new List<Bed>().AsQueryable();
-            AllBeds = from m in db.Beds select m;
-            var RoomListing = new List<Room>();
-            foreach (Room AvailableRoom in AllRooms)
+            AllBeds = from m in db.Beds select m; // list of all beds
+            var RoomListing = new List<Room>(); // new list for all rooms with less than max. beds 
+            foreach (Room AvailableRoom in AllRooms) // iterate though all rooms
             {
-                var ListTempBeds = AllBeds.Where(a => a.RoomId.Equals(AvailableRoom.Id));
-                if (ListTempBeds.Count() < AvailableRoom.RoomMaxSize)
+                var ListTempBeds = AllBeds.Where(a => a.RoomId.Equals(AvailableRoom.Id)); // temp list for beds in each room
+                if (ListTempBeds.Count() < AvailableRoom.RoomMaxSize) // check if bed capacity reached in current room
                 {
-                    RoomListing.Add(AvailableRoom);
+                    RoomListing.Add(AvailableRoom); // if not add room to list RoomListing
                 }
             }
             // Returned list of all selectable rooms for bed placement
@@ -54,24 +55,25 @@ namespace BiberDAMM.Controllers
             return View();
         }
 
-        //-- SET method to create a new entry for bed --//
+        //-- SET/ Post method to add the newly created bed to the system --//
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Bed bed, string command)
         {
-
+            // if AbortButton is pressed drop selection and return to index page
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index");
 
+            // only if ModelState is valid will the new bed be added
             if (ModelState.IsValid)
             {
                 db.Beds.Add(bed);
                 db.SaveChanges();
-                //-- Return notification if adding a new bed was successful --//
+                // Return notification if adding a new bed was successful
                 TempData["CreateBedSuccess"] = " Das Bett wurde hinzugefügt";
                 return RedirectToAction("Index");
             }
-            
+
             return View(bed);
         }
 
@@ -80,12 +82,12 @@ namespace BiberDAMM.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-                return RedirectToAction("Index");
-            var bed = db.Beds.Find(id);
+                return RedirectToAction("Index"); // return to index if current id is null
+            var bed = db.Beds.Find(id); // return 404 if id not present in db
             if (bed == null)
                 return HttpNotFound();
 
-            // Same as for create method
+            // for detailed comment refer to create bed method
             var AllRooms = db.Rooms.ToList();
             var AllBeds = new List<Bed>().AsQueryable();
             AllBeds = from m in db.Beds select m;
@@ -98,31 +100,37 @@ namespace BiberDAMM.Controllers
                     RoomListing.Add(AvailableRoom);
                 }
             }
-            // Returned list of all selectable rooms for bed placement
+
             ViewBag.RoomList = new SelectList(RoomListing, "Id", "RoomNumber");
             return View(bed);
         }
 
-       //-- SET method to change details of selected entry --// 
-       [HttpPost]
-       [ValidateAntiForgeryToken]
-          public ActionResult Edit(int id, Bed bed, string command)
-          {
-            //System.Diagnostics.Debug.WriteLine(bed.BedModels + " " + bed.RoomId);
+        //-- SET/ Post method to change details of selected bed entry --// 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Bed bed, string command)
+        {
+            /*
+             * temporary added to find cause of a pesky exception
+             * System.Diagnostics.Debug.WriteLine(bed.BedModels + " " + bed.RoomId);
+             */
+
+            // if AbortButton is pressed forgo changes and return to index page
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
 
+            // check if ModelState is valid after edit
             if (ModelState.IsValid)
-            { 
-                  db.Entry(bed).State = EntityState.Modified;
-                  db.SaveChanges();
-                //-- Return notification if editing bed was successful --//
+            {
+                db.Entry(bed).State = EntityState.Modified;
+                db.SaveChanges();
+                // Return notification if editing bed was successful
                 TempData["EditBedSuccess"] = " Die Eigenschaften wurden erfolgreich geändert";
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
             }
             return View(bed);
-          }
-       
+        }
+
         //-- GET Bed/Details page for Bed with id --//
         [HttpGet]
         public ActionResult Details(int? id)
@@ -135,7 +143,7 @@ namespace BiberDAMM.Controllers
             return View(bed);
         }
 
-        //-- Function to delete Bed datasets --//
+        //-- Get for bed deletion --//
         [HttpGet]
         public ActionResult Delete(int? id)
         {
@@ -147,25 +155,27 @@ namespace BiberDAMM.Controllers
             return View(bed);
         }
 
+        //-- Post function to delete Bed --//
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            //-- Check if bed is blocked --//
+            // Check if bed is blocked
             Blocks dependentBlock = db.Blocks.Where(b => b.BedId == id).FirstOrDefault();
 
-            if (dependentBlock != null )
+            if (dependentBlock != null) // if bed is blocked by a patient
             {
                 //-- Return alert-message if deletion of bed not possible --//
                 TempData["DeleteBedFailed"] = " Das Bett ist belegt";
                 return RedirectToAction("Details", "Bed", new { id });
             }
 
+            // if bed is not blocked find id in db and remove bed from db
             var bed = db.Beds.Find(id);
             db.Beds.Remove(bed);
             db.SaveChanges();
-            //-- Return notification if deleting bed was successful --//
+            // Return notification if deleting bed was successful
             TempData["DeleteBedSuccess"] = " Das Bett wurde entfernt";
             return RedirectToAction("Index");
         }
