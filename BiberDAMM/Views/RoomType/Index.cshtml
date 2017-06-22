@@ -5,7 +5,7 @@
 @model IEnumerable<BiberDAMM.Models.RoomType>
 @{ViewBag.Title = "Raumtypen";}
 <!--Alert-Section-->
-<!--If roomtype deleted successfully-->
+<!--Alert if roomtype deleted successfully-->
 @if (TempData["DeleteRoomTypeSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -15,7 +15,7 @@
         <strong>Der Raumtyp wurde erfolgreich gelöscht!</strong>@TempData["DeleteRoomTypeSuccess"]
     </div>
 }
-<!--If roomtype created successfully-->
+<!--Alert if roomtype created successfully-->
 @if (TempData["CreateRoomTypeSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -26,35 +26,34 @@
     </div>
 }
 
-<h2>Raumtypen</h2>
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
-    <thead class="thead-inverse">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @* Todo anzahl an Typen evtl *@
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-        </tr>
-    </thead>
-    <tfoot style="background-color: #263238; text-align: right;">
-        <tr>
-            <td colspan="2">
-                <button title="Raumtyp hinzufügen" onclick="location.href='@(Url.Action("Create", "RoomType"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-            </td>
-        </tr>
-    </tfoot>
-    @foreach (var item in Model)
-    {
-        <tr onclick="location.href = '@(Url.Action("Details", "RoomType", new {id = item.Id}))'">
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modeItem => item.Id)
-            </td>
-        </tr>
-    }
-</table>
+<h2>@ViewBag.Title</h2>
+    <table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+        <thead class="thead-inverse">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>                    
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+            </tr>
+        </thead>
+        <tfoot style="background-color: #263238; text-align: right;">
+            <tr>
+                <td colspan="2">
+                    <button title="Raumtyp hinzufügen" onclick="location.href='@(Url.Action("Create", "RoomType"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                </td>
+            </tr>
+        </tfoot>
+        @foreach (var item in Model)
+        {
+            <tr onclick="location.href = '@(Url.Action("Details", "RoomType", new {id = item.Id}))'">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modeItem => item.Id)
+                </td>
+            </tr>
+        }
+    </table>

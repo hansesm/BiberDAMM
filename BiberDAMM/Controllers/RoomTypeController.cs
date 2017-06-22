@@ -4,9 +4,10 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 using BiberDAMM.Helpers;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers {
-
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
     public class RoomTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();

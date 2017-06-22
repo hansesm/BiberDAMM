@@ -6,9 +6,10 @@ using BiberDAMM.Models;
 using BiberDAMM.Helpers;
 using System.Collections.Generic;
 using BiberDAMM.ViewModels;
+using BiberDAMM.Security;
 
-namespace BiberDAMM.Controllers
-{
+namespace BiberDAMM.Controllers{
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
     public class TreatmentTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();

@@ -8,8 +8,9 @@
     ViewBag.Title = "Raumtypdetails";
 }
 
-<h2>@ViewBag.Title</h2>
-<!--If roomType deleted unsuccessfully-->
+
+<!--Alert-Section-->
+<!--Alert if roomType deleted unsuccessfully-->
 @if (TempData["DeleteRoomTypeFailed"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -19,7 +20,7 @@
         <strong>Raumtyp konnte nicht gelöscht werden!</strong>@TempData["DeleteRoomTypeFailed"]
     </div>
 }
-<!--show alert "EditRoomTypeSuccess" if a roomtype was successfully updated-->
+<!--Alert if a roomtype was successfully updated-->
 @if (TempData["EditRoomTypeSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -30,12 +31,12 @@
     </div>
 }
 
-
+<h2>@ViewBag.Title</h2>
 <div>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)      
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)

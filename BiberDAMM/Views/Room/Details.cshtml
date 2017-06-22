@@ -1,6 +1,6 @@
 ﻿@* AUTHOR     : [JEL] *@
 
-@* Class to show room details *@
+@* Details-View to show room details *@
 
 @model BiberDAMM.Models.Room
 
@@ -8,8 +8,9 @@
     ViewBag.Title = "Raumdetails";
 }
 
-<h2>@ViewBag.Title</h2>
-<!--If room deleted unsuccessfully-->
+
+<!--Alert-Section-->
+<!--Alert if room was deleted unsuccessfully-->
 @if (TempData["DeleteRoomFailed"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -19,7 +20,7 @@
         <strong>Raum konnte nicht gelöscht werden!</strong>@TempData["DeleteRoomFailed"]
     </div>
 }
-<!--show alert "EditRoomSuccess" if a room was successfully updated-->
+<!--Alert if room was successfully updated-->
 @if (TempData["EditRoomSuccess"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -30,7 +31,7 @@
     </div>
 }
 
-
+<h2>@ViewBag.Title</h2>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -57,10 +58,10 @@
         <dd>
             @Html.DisplayFor(model => model.RoomMaxSize)
         </dd>
-       
+
     </dl>
 </div>
-<p>  
+<p>
     <button title="Bearbeiten" onclick="location.href='@Url.Action("Edit", new { id= Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <!-- Trigger the modal with a button -->
     <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -102,12 +103,12 @@
                                     @Html.DisplayFor(model => model.RoomType.Name)
                                 </dd>
                             </dl>
-                        </td>                            
+                        </td>
                     </tr>
                 </table>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("Delete", "Room", new { Id = Model.Id}, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Delete", "Room", new { Id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />
