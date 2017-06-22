@@ -6,8 +6,8 @@ using BiberDAMM.ViewModels;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System;
+using System.Data.Entity.Migrations;
 
 namespace BiberDAMM.Controllers
 {
@@ -173,7 +173,9 @@ namespace BiberDAMM.Controllers
         }
 
         // POST: Treatment/Create [KrabsJ]
-        // TODO: this is just a dummy method to check if validation already works
+        // This method activates the update of the viewModel if a new room or new staff was selected and it stores new treatments in the db
+        // expected parameter: CreationTreatment viewModel, string command
+        // return: View(CreationTreatment viewModel) or RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId })
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
@@ -192,7 +194,7 @@ namespace BiberDAMM.Controllers
             //if new staff was selected, update the viewModel and return the View again
             if (command.Equals("Mitarbeiter einplanen"))
             {
-                CreationTreatment updatedTreatmentCreationModel = UpdateCreatePageByStaffSelection(treatmentCreationModel);
+                CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
 
                 //clear ModeState, so that values are loaded from the updated model
                 ModelState.Clear();
@@ -200,12 +202,161 @@ namespace BiberDAMM.Controllers
                 return View(updatedTreatmentCreationModel);
             }
 
-            // check if model is valid
+            // if the user want to save the new treatment check if the model is valid
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
+                // ensure that BeginDate is before EndDate
+                if (treatmentCreationModel.BeginDate > treatmentCreationModel.EndDate)
+                {
+                    // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
+                    if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
+                    {
+                        treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+                    }
+                    treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
+
+                    // error-message for alert-statement [KrabsJ]
+                    TempData["BeginDateEndDateError"] = " Der Behandlungsbeginn darf nicht nach dem Behandlungsende liegen.";
+
+                    // return view
+                    return View(treatmentCreationModel);
+                }
+
+                // ensure that the treatment is whithin the timeperiod of the stay
+                var stay = _db.Stays.Where(s => s.Id == treatmentCreationModel.StayId).FirstOrDefault();
+                if (stay.EndDate != null && stay.EndDate < treatmentCreationModel.EndDate)
+                {
+                    // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
+                    if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
+                    {
+                        treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+                    }
+                    treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
+
+                    // error-message for alert-statement [KrabsJ]
+                    TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten wurde am " + stay.EndDate + " beendet. Der Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+
+                    // return view
+                    return View(treatmentCreationModel);
+                }
+
+                // if the new treatment is planed in the future it is necessary to check if there are conflicting appointments
+                if (treatmentCreationModel.BeginDate > DateTime.Now)
+                {
+                    // the following steps ensure that there are no conflicts with other appointments
+                    // therefore the program checks the dates from db again, because the dates stored in treatmentCreationModel.AppointmentsOfSelectedRessources could be outworn
+
+                    //helper list for unordered conflicts
+                    List<AppointmentOfSelectedRessource> unorderedConflicts = new List<AppointmentOfSelectedRessource>();
+
+                    //initialize list of conflicting appointments
+                    treatmentCreationModel.ConflictingAppointmentsList = new List<AppointmentOfSelectedRessource>();
+
+                    // check if there are conflicts with other appointments of the client
+                    var conflictingClientAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.Stay.ClientId == treatmentCreationModel.ClientId && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
+                    if (conflictingClientAppointments.Count > 0)
+                    {
+                        foreach (var appointment in conflictingClientAppointments)
+                        {
+                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                            newConflict.Id = appointment.Id;
+                            newConflict.BeginDate = appointment.BeginDate;
+                            newConflict.EndDate = appointment.EndDate;
+                            newConflict.Ressource = "Patient";
+                            unorderedConflicts.Add(newConflict);
+                        }
+                    }
+
+                    // check if there are conflicts with other appointments of the selected room
+                    var conflictingRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
+                    if (conflictingRoomAppointments.Count > 0)
+                    {
+                        foreach (var appointment in conflictingRoomAppointments)
+                        {
+                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                            newConflict.Id = appointment.Id;
+                            newConflict.BeginDate = appointment.BeginDate;
+                            newConflict.EndDate = appointment.EndDate;
+                            newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
+                            unorderedConflicts.Add(newConflict);
+                        }
+                    }
+
+                    // check if there are conflicts with other appointments of the selected staffmembers
+                    if (treatmentCreationModel.SelectedStaff != null)
+                    {
+                        foreach (var staffMember in treatmentCreationModel.SelectedStaff)
+                        {
+                            var conflictingStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id) && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
+                            if (conflictingStaffAppointments.Count > 0)
+                            {
+                                foreach (var appointment in conflictingStaffAppointments)
+                                {
+                                    AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                                    newConflict.Id = appointment.Id;
+                                    newConflict.BeginDate = appointment.BeginDate;
+                                    newConflict.EndDate = appointment.EndDate;
+                                    newConflict.Ressource = staffMember.DisplayName;
+                                    unorderedConflicts.Add(newConflict);
+                                }
+                            }
+                        }
+                    }
+
+                    // store an ordered list of the conflicts in the viewModel
+                    treatmentCreationModel.ConflictingAppointmentsList = unorderedConflicts.OrderBy(c => c.BeginDate).ToList();
+
+                    // if there are any conflicts the treatment is not stored in the db
+                    if (treatmentCreationModel.ConflictingAppointmentsList.Count > 0)
+                    {
+                        // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
+                        if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
+                        {
+                            treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+                        }
+                        treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
+
+                        // error-message for alert-statement [KrabsJ]
+                        TempData["ConflictingAppointments"] = " Es wurden Konflikte mit anderen Terminen gefunden. ";
+
+                        // return view
+                        return View(treatmentCreationModel);
+                    }
+                }
+
+                // this point is reached if there are no conflicting appointments or if the treatment is stored retroactive
+                // a treatment that is stored retroactive (in the past) doesn't have to be checked on conflicts
+
+                List<ApplicationUser> userList = new List<ApplicationUser>();
+                foreach (var staffMember in treatmentCreationModel.SelectedStaff)
+                {
+                    var user = _db.Users.Single(u => u.Id == staffMember.Id);
+                    userList.Add(user);
+                }
+
+                // create the new treatment and store or update it in the db
+                var newTreatment = new Treatment
+                {
+                    BeginDate = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now),
+                    EndDate = treatmentCreationModel.EndDate.GetValueOrDefault(DateTime.Now),
+                    StayId = treatmentCreationModel.StayId,
+                    RoomId = treatmentCreationModel.SelectedRoomId,
+                    Description = treatmentCreationModel.Description,
+                    TreatmentTypeId = treatmentCreationModel.TreatmentTypeId,
+                    ApplicationUsers = userList,
+                };
+
+                _db.Treatments.AddOrUpdate(newTreatment);
+                _db.SaveChanges();
+
+                // success-message for alert-statement
+                TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
+
+                // go back to stays details page
+                return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
             }
 
+            // this point is only reached if the modal was not valid when trying to save the new treatment
             // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
             if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
             {
@@ -278,22 +429,28 @@ namespace BiberDAMM.Controllers
         //this method updates the viewModel data depending on the selected staffMembers
         //expected parameter: CreationTreatment viewModel
         //return: CreationTreatment viewModel
-        public CreationTreatment UpdateCreatePageByStaffSelection(CreationTreatment treatmentCreationModel)
+        public CreationTreatment UpdateViewModelByStaffSelection(CreationTreatment treatmentCreationModel)
         {
             //initialize list of selectedStaff (delete old selection)
             treatmentCreationModel.SelectedStaff = new List<Staff>();
 
-            // write selected staffmembers into the list of viewmodel
+            //helper list for unordered staffmembers
+            List<Staff> unorderedStaff = new List<Staff>();
+
+            // write selected staffmembers into the unordered list
             if (treatmentCreationModel.Staff != null)
             {
                 foreach (var item in treatmentCreationModel.Staff)
                 {
                     if (item.Selected == true)
                     {
-                        treatmentCreationModel.SelectedStaff.Add(item);
+                        unorderedStaff.Add(item);
                     }
                 }
-            }     
+            }
+
+            // sort list by DisplayName and write it into the list of viewModel
+            treatmentCreationModel.SelectedStaff = unorderedStaff.OrderBy(s => s.DisplayName).ToList();
 
             // remove the appointments of the staffmembers that were selected before
             if (treatmentCreationModel.AppointmentsOfSelectedRessources != null)
