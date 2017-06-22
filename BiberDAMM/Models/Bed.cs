@@ -6,6 +6,7 @@ namespace BiberDAMM.Models
 {
     /* Jean-PierreK
     * Added an enum list of all available bed models
+    * Changed enum name to something more error prone
     */
 
     public enum BedModels

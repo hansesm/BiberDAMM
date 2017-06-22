@@ -13,6 +13,18 @@
 
 <h2>@ViewBag.Title</h2>
 
+<!-- Notification if deletion of bed fails -->
+
+@if (TempData["CreateBedFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Eigenschaften konnten nicht geändert werden!</strong>@TempData["DeleteBedFailed"]
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -31,7 +43,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.RoomId, new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.DropDownList("RoomId", ViewBag.RoomList as SelectList, "Bitte auswählen!", new {@class = "form-control"})
+                @Html.DropDownList("RoomId", ViewBag.RoomList as SelectList, "Bitte auswählen!", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Room.RoomNumber, "", new {@class = "text-danger"})
             </div>
         </div>

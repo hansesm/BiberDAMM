@@ -196,6 +196,7 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ContactDataController.cs" />
     <Compile Include="Controllers\ContactTypeController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HealthInsuranceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Helpers\ConstVariables.cs" />
     <Compile Include="Helpers\IdentityExtensions.cs" />
     <Compile Include="Helpers\JsonEventTreatment.cs" />
+    <Compile Include="Helpers\JsonRoomSchedulerEvents.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
@@ -885,6 +887,7 @@
     <Content Include="Views\Blocks\Create.cshtml" />
     <Content Include="Views\Blocks\Details.cshtml" />
     <Content Include="Views\Room\RoomScheduler.cshtml" />
+    <Content Include="Views\Error\Oops.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

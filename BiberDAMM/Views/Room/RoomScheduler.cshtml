@@ -1,20 +1,16 @@
 ﻿@*
-    View for displaying stay information
+    View for displaying a room scheduler for todays treatments
     Author: [HansesM]
 *@
 @model BiberDAMM.ViewModels.RoomSchedulerViewModel
 
 
 @{
-    ViewBag.Title = "RoomScheduler";
+    ViewBag.Title = "Belegungsübersicht";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Raum Belegungsübersicht</h2>
-
-<head>
-    <title>Aufenthaltsdetails</title>
-</head>
+<h2>Heutige Belegungsübersicht nach Raumart</h2>
 
 <div class="row">
 
@@ -27,66 +23,87 @@
 <!-- row-->
 <hr />
 
+<!-- Placeholder for the timetable [HansesM]-->
 <div class="timetable"></div>
 
 @section Scripts{
-    <script>
-        //var timetable = new Timetable();
-        //timetable.setScope(6, 22);
 
-        //timetable.addLocations(['Rotterdam', 'Madrid', 'Los Angeles', 'London', 'New York', 'Jakarta', 'Tokyo']);
-        //console.log(['Rotterdam', 'Madrid', 'Los Angeles', 'London', 'New York', 'Jakarta', 'Tokyo']);
+    <!-- Author: [HansesM]-->
+    <!--Der folgende Java-Script Code ist etwas tricky, ich beschreibe mal was er macht: -->
+    <!-- Bei jedem Change der Dropdownlist werden insgesamt zwei Ajax abgragen an den Rooms-Controller gesendet. -->
+    <!-- Die erste bekommt ein String-Array mit Raumnamen, welche zu der in der Dropdown-Liste ausgewählten Raumtyp passt. Und weißt diese als Locations für die Timetable aus. -->
+    <!-- Die zweite bekommt ein Objekt vom Typ JsonRoomSchedulerEvents zurück, welche alle Behandlungen, welche zu dem heutigen Tag und dem ausgewählten Raumtyp passt zurück -->
+    <!-- Da das Timetable-Objekt die Daten in einer bestimmten Reihenfolge erwartet (erst die Locations, dann die Events) ruft der erste Ajax-Call den zweiten auf sobald der erste erfolgreich war.-->
+    <!-- Nachdem alle Daten erfolgreich abgerufen wurden, wird das Timetable Element gerendert und auf der Seite ausgegeben. -->
 
-        //timetable.addEvent('Sightseeing', 'Rotterdam', new Date(2015, 7, 17, 10, 45), new Date(2015, 7, 17, 12, 30), '#');
-        //timetable.addEvent('Zumba', 'Madrid', new Date(2015, 7, 17, 12), new Date(2015, 7, 17, 13), '#');
-        //timetable.addEvent('Zumbu', 'Madrid', new Date(2015, 7, 17, 13, 30), new Date(2015, 7, 17, 15), '#');
-        //timetable.addEvent('Lasergaming', 'London', new Date(2015, 7, 17, 17, 45), new Date(2015, 7, 17, 19, 30), '#');
-        //timetable.addEvent('All-you-can-eat grill', 'New York', new Date(2015, 7, 17, 21), new Date(2015, 7, 18, 1, 30), '#');
-        //timetable.addEvent('Hackathon', 'Tokyo', new Date(2015, 7, 17, 11, 30), new Date(2015, 7, 17, 20));
-        //timetable.addEvent('Tokyo Hackathon Livestream', 'Los Angeles', new Date(2015, 7, 17, 12, 30), new Date(2015, 7, 17, 16, 15));
-        //timetable.addEvent('Lunch', 'Jakarta', new Date(2015, 7, 17, 9, 30), new Date(2015, 7, 17, 11, 45), '#');
-
-        //var renderer = new Timetable.Renderer(timetable);
-    </script>
 
     <script>
         $(document).ready(function () {
-            //Dropdownlist Selectedchange event
-            $(function () {
-                $("#roomTypeDropDown").change(function () {
+            //Dropdownlist select change event [HansesM]
+            $("#roomTypeDropDown").change(function () {
+                //Checks if dropdownelement is not empty [HansesM]
+                if ($("#roomTypeDropDown").val().length !== 0) {
+                    //create a new timetable [HansesM]
                     var timetable = new Timetable();
-                    timetable.setScope(6, 22);
-                    var renderer = new Timetable.Renderer(timetable);
+                    timetable.setScope(7, 20);
 
-                    //console.log($("#begin").val().length);
-                    //console.log($("#model option:selected").val());
-
-                    var options = {};
-                    options.url = "/room/getSchedulerRooms";
-                    options.type = "POST";
-                    options.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
-
+                    //options for ajax-call for events [HansesM]
+                    var events = {};
+                    events.url = "/room/GetSchedulerEvents";
+                    events.type = "POST";
+                    events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
+                    //Log only for deployment [HansesM]
                     //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
-                    options.dataType = "json";
-                    options.contentType = "application/json";
-                    options.success = function (roomTimeTable) {
+                    events.dataType = "json";
+                    events.contentType = "application/json";
+                    //Funtion that will be called when the ajax-request was succsessfull [HansesM]
+                    events.success = function(roomTimeTableEvents) {
+                        //Log only for deployment [HansesM]
+                        //console.log(roomTimeTableEvents);
 
-                        //TODO insert Elements to scheduler
-                        timetable.addLocations(roomTimeTable);
+                        for (var i = 0; i < roomTimeTableEvents.length; i++) {
+                            timetable.addEvent(roomTimeTableEvents[i].treatmentType,
+                                roomTimeTableEvents[i].roomName,
+                                new Date(roomTimeTableEvents[i].beginDate),
+                                new Date(roomTimeTableEvents[i].endDate));
+                        }
+
+                        var renderer = new Timetable.Renderer(timetable);
                         renderer.draw('.timetable');
-                        console.log(roomTimeTable);
-
-                        //for (var i = 0; i < freeBeds.length; i++) {
-                        //    $("#freeBed").append("<option value=" + freeBeds[i].value + ">" + freeBeds[i].text + "</option>");
-
-                        //}
 
                     };
-                    options.error = function () {
-                        alert("Fehler beim Betten abrufen!");
+                    events.error = function() {
+                        alert("Fehler beim Events abrufen!");
                     };
-                    $.ajax(options);
-                });
+
+                    //options for ajax-call for rooms [HansesM]
+                    var rooms = {};
+                    rooms.url = "/room/GetSchedulerRooms";
+                    rooms.type = "POST";
+                    rooms.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
+                    //Log only for deployment [HansesM]
+                    //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
+                    rooms.dataType = "json";
+                    rooms.contentType = "application/json";
+                    //Funtion that will be called when the ajax-request was succsessfull [HansesM]
+                    rooms.success = function(roomTimeTableRooms) {
+
+                        timetable.addLocations(roomTimeTableRooms);
+                        //Log only for deployment [HansesM]
+                        //console.log(roomTimeTableRooms);
+
+                        //Ajax-Call events started ! [HansesM]
+                        $.ajax(events);
+
+                    };
+                    rooms.error = function() {
+                        alert("Fehler beim Räume abrufen!");
+                    };
+
+                    //Ajax-Call room started ! [HansesM]
+                    $.ajax(rooms);
+                }
+
             });
         });
     </script>
