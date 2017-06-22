@@ -3265,7 +3265,13 @@ a.badge:focus, a.badge:hover {
     color: inherit; }
 
 .alert-link {
-    font-weight: bold; }
+    font-weight: bold;
+    }
+
+/*show cursor as pointer on hovering [KrabsJ]*/
+.alert-link:hover {
+    cursor: pointer;
+}
 
 .alert-dismissible .close {
     position: relative;

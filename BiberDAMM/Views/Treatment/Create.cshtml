@@ -8,6 +8,39 @@
 
 <h2>@ViewBag.Title</h2>
 
+<!--show alert "BeginDateEndDateError" if the selected BeginDate is after the selected EndDate-->
+@if (TempData["BeginDateEndDateError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Fehlerhafte Eingaben!</strong>@TempData["BeginDateEndDateError"]
+    </div>
+}
+
+<!--show alert "StayClosedError" if the selected EndDate is after the EndDate of the associated stay-->
+@if (TempData["StayClosedError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Fehlerhafte Eingaben!</strong>@TempData["StayClosedError"]
+    </div>
+}
+
+<!--show alert "ConflictingAppointments" if there are conflicting appointments-->
+@if (TempData["ConflictingAppointments"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Terminüberschneidungen!</strong>@TempData["ConflictingAppointments"]<a class="alert-link" style="text-decoration:underline" data-toggle="modal" data-target="#conflictingAppointmentsModal">Anzeigen</a>.
+    </div>
+}
+
 <hr />
 
 <!--This form includes all inputs for creating a new treatment-->
@@ -91,7 +124,6 @@
 
         </div>
         <!--end row-->
-
         <!--This row includes options for selecting the begin and end of the treatment-->
         <div class="row">
 
@@ -109,7 +141,6 @@
 
         </div>
         <!--end row-->
-
         <!--This row includes the option for selecting staffmembers-->
         <div class="row">
 
@@ -168,7 +199,6 @@
 
         </div>
         <!--end row-->
-
         <!--This row includes the option for writing a comment-->
         <div class="row">
 
@@ -180,7 +210,6 @@
 
         </div>
         <!--end row-->
-
         <!--This row includes the buttons for creating the treatment and for stopping the creation-->
         <div class="row">
             <div class="col-md-12">
@@ -349,7 +378,6 @@
 
 }
 <!--end create treatment form-->
-
 <!-- Container for displaying the calendar-->
 <div class="container-fluid">
     <h4 style="display: inline-block;"> Kalenderübersicht</h4>
@@ -361,7 +389,6 @@
     <hr />
 </div>
 <!--end calendar-->
-
 <!-- changeTreatmentTypeModal -->
 <div id="changeTreatmentTypeModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -390,7 +417,6 @@
     </div>
 </div>
 <!-- end changeTreatmentTypeModal -->
-
 <!-- calenderHelp modal -->
 <div id="calendarHelp" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -423,6 +449,81 @@
     </div>
 </div>
 <!-- end calenderHelp modal -->
+<!-- conflictingAppointments modal -->
+<div id="conflictingAppointmentsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Terminkonflikte</h4>
+                <i class="fa fa-bolt fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+            <!--end modal header-->
+
+            <div class="modal-body">
+
+                @if (Model.ConflictingAppointmentsList != null && Model.ConflictingAppointmentsList.Count > 0)
+                {
+                    <table class="table table-striped table-bordered">
+
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ConflictingAppointmentsList[1].BeginDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ConflictingAppointmentsList[1].EndDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => m.ConflictingAppointmentsList[1].Ressource)
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @for (int i = 0; i < Model.ConflictingAppointmentsList.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(m => m.ConflictingAppointmentsList[i].BeginDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => m.ConflictingAppointmentsList[i].EndDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => m.ConflictingAppointmentsList[i].Ressource)
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                        <tfoot style="background-color: #263238; color: white; text-align: right;">
+                            <tr>
+                                <td colspan="3">
+                                </td>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                }
+            </div>
+            <!--end modal body-->
+
+            <div class="modal-footer">
+                <button title="Ok" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+            <!--end modal footer-->
+
+        </div>
+        <!--end modal content-->
+
+    </div>
+</div>
+<!-- end conflictingAppointments modal -->
 
 @section Scripts{
     <!--dynamic table for room list-->

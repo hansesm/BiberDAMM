@@ -53,6 +53,9 @@ namespace BiberDAMM.ViewModels
         public IList<AppointmentOfSelectedRessource> AppointmentsOfSelectedRessources { get; set; }
 
         public JsonResult JsonAppointmentsOfSelectedRessources { get; set; }
+
+        // attributes for showing conflicting appointments
+        public IList<AppointmentOfSelectedRessource> ConflictingAppointmentsList { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]
@@ -74,10 +77,13 @@ namespace BiberDAMM.ViewModels
     {
         public int Id { get; set; }
 
+        [Display(Name = "Betroffene Ressource")]
         public string Ressource { get; set; }
 
+        [Display(Name = "Anfang")]
         public DateTime BeginDate { get; set; }
 
+        [Display(Name = "Ende")]
         public DateTime EndDate { get; set; }
     }
 

@@ -41,8 +41,6 @@ namespace BiberDAMM.Controllers
             private set { _userManager = value; }
         }
 
-        // TODO [KrabsJ] make search caseinsensitive & maybe think about a better solution than always access the db --> wait until Michi and Leon checked if we use other searchfunctions
-        // if we need a custom caseinsensitive search follow this link: http://stackoverflow.com/questions/444798/case-insensitive-containsstring
         // GET: /Account/Index
         // returns a list with all ApplicationUsers that match the searchString [KrabsJ]
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
