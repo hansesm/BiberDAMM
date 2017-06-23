@@ -110,7 +110,7 @@ namespace BiberDAMM.Controllers
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
-
+            
             //Get all roomTypes from the database
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
@@ -135,6 +135,16 @@ namespace BiberDAMM.Controllers
                 TempData["EditRoomFailed"] = " " + room.RoomNumber + " existiert bereits.";
                 return RedirectToAction("Edit", room);
             }
+            // check if there are beds dependent to the room
+            var dependentBed = db.Beds.Where(b => b.RoomId == room.Id).FirstOrDefault();
+            // if there is a bed that is linked to the room, the room can't be edited
+            if (dependentBed != null)
+            {
+                // failure-message for alert-statement
+                TempData["EditRoomFailed"] = " Es befindet sich noch mindestens ein Bett im Raum.";
+                return RedirectToAction("Edit", room);
+            }
+
 
 
             if (ModelState.IsValid)
