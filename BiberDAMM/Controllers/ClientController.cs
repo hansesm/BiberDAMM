@@ -28,12 +28,12 @@ namespace BiberDAMM.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                string [] searchStringSplit = searchString.Split(' ');
-                
+                string[] searchStringSplit = searchString.Split(' ');
+
                 clients = from m in db.Clients
                           select m;
 
-                
+
                 //Split Searchstring to search for multiple substrings
                 foreach (string currentSearchString in searchStringSplit)
                 {
@@ -48,19 +48,19 @@ namespace BiberDAMM.Controllers
 
                         foreach (Client actOutClient in clientsOut)
                         {
-                            if(actOutClient.Id == actTempClient.Id)
+                            if (actOutClient.Id == actTempClient.Id)
                             {
                                 clientConained = true;
                             }
                         }
                         //add Client if not contained
-                        if(!clientConained)
+                        if (!clientConained)
                         {
                             clientsOut.Add(actTempClient);
                         }
                     }
                 }
-                
+
             }
 
 
@@ -100,7 +100,14 @@ namespace BiberDAMM.Controllers
         {
             Session["TempClient"] = null;
             if (id == null)
-                return RedirectToAction((String)Session["ClientIndexPage"]);
+            {
+                string redirectString = (String)Session["ClientIndexPage"];
+                if (redirectString == null || redirectString.Equals(""))
+                {
+                    redirectString = "LastNIndex";
+                }
+                return RedirectToAction(redirectString);
+            }
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
@@ -146,6 +153,7 @@ namespace BiberDAMM.Controllers
                     client.RowVersion = 1;
                     db.Clients.Add(client);
                     db.SaveChanges();
+                    Session["TempNewClient"] = null;
 
 
 
@@ -165,7 +173,14 @@ namespace BiberDAMM.Controllers
                     */
 
                     TempData["ClientSuccess"] = "Patient erfolgreich gespeichert!";
-                    return RedirectToAction((String)Session["ClientIndexPage"]);
+
+                    string redirectString = (String)Session["ClientIndexPage"];
+                    if (redirectString == null || redirectString.Equals(""))
+                    {
+                        redirectString = "LastNIndex";
+                    }
+                    return RedirectToAction(redirectString);
+
                 }
                 TempData["ClientError"] = "Daten unvollständig oder fehlerhaft";
                 return View(client);
@@ -175,7 +190,12 @@ namespace BiberDAMM.Controllers
                 Session["TempNewClient"] = null;
 
                 TempData["ClientError"] = "Bearbeitung abgebrochen";
-                return RedirectToAction((String)Session["ClientIndexPage"]);
+                string redirectString = (String)Session["ClientIndexPage"];
+                if (redirectString == null || redirectString.Equals(""))
+                {
+                    redirectString = "LastNIndex";
+                }
+                return RedirectToAction(redirectString);
             }
             else if (Request.Form["ChangeHealthInsurance"] != null)
             {
@@ -193,13 +213,20 @@ namespace BiberDAMM.Controllers
 
         }
 
-        
+
         //Getter and Setter for the Editing Page
 
         public ActionResult Edit(int? id)
         {
             if (id == null)
-                return RedirectToAction((String)Session["ClientIndexPage"]);
+            {
+                string redirectString = (String)Session["ClientIndexPage"];
+                if (redirectString == null || redirectString.Equals(""))
+                {
+                    redirectString = "LastNIndex";
+                }
+                return RedirectToAction(redirectString);
+            }
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
@@ -245,7 +272,12 @@ namespace BiberDAMM.Controllers
             {
                 Session["TempClient"] = null;
                 TempData["ClientError"] = "Bearbeitung abgebrochen";
-                return RedirectToAction((String)Session["ClientIndexPage"]);
+                string redirectString = (String)Session["ClientIndexPage"];
+                if (redirectString == null || redirectString.Equals(""))
+                {
+                    redirectString = "LastNIndex";
+                }
+                return RedirectToAction(redirectString);
             }
             else if (Request.Form["EditContacts"] != null)
             {

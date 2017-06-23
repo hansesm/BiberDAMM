@@ -87,16 +87,17 @@ namespace BiberDAMM.Controllers
             var stay = _db.Stays.SingleOrDefault(m => m.Id == blocks.StayId);
             blocks.Stay = stay;
 
-            //Gets a list of beds for the dropdownlist [HansesM]
-            var listBedModels = _db.Beds.ToList();
-
             //Builds a selectesList out of the list of beds, only id and text are required [HansesM]
             //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
             var selectetlistBedModels = new List<SelectListItem>();
-            foreach (var m in listBedModels)
-                // usage of type conversion to get enum for bed types to work and be able to test it [Jean-Pierre]
-                selectetlistBedModels.Add(new SelectListItem { Value = (m.BedModels.ToString()) });
-
+            foreach (BedModels m in Enum.GetValues(typeof(BedModels)))
+            {
+                //Gets the value from the enum [HansesM]
+                var a = (int)m;
+                //Puts text and value into the enum [HansesM]
+                selectetlistBedModels.Add(new SelectListItem { Text = (m.ToString()), Value = a.ToString() });
+            };
+        
             //Creates a View-BedModels and returns the view with the view-model inside [HansesM]
             var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
 
