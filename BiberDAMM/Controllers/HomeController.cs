@@ -6,6 +6,7 @@ using BiberDAMM.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
@@ -14,8 +15,11 @@ namespace BiberDAMM.Controllers
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
         // load the different homepages based on the usertype of the logged in user [KrabsJ]
+
+        //Author: ChristesR
         public ActionResult Index()
         {
+
             // show warning alert statement if the initialPassword flag is true
             if (User.Identity.GetInitialPassword() == true.ToString())
             {
@@ -27,7 +31,33 @@ namespace BiberDAMM.Controllers
                 case ConstVariables.RoleAdministrator:
                     return View("IndexAdmin");
                 case ConstVariables.RoleDoctor:
-                    return View("IndexDoctor");
+
+                    //Gets all treatments not older than 7 Days [ChristesR]
+                    //var events = db.Treatments.Where(e => e.BeginDate>=DateTime.Now.AddDays(-7)).ToList();
+
+                    //var userEvents = from m in db.Clients
+                                             //  select m;
+
+
+
+                    List<Treatment> events = new List<Treatment>();
+
+                    //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+                    var result = events.Select(e => new JsonEventTreatment()
+                    {
+                        start = e.BeginDate.ToString("s"),
+                        end = e.EndDate.ToString("s"),
+                        title = e.TreatmentType.Name.ToString(),
+                        id = e.Id.ToString()
+
+                    }).ToList();
+
+                    //Creates a JsonResult from the Json [HansesM]
+                    JsonResult resultJson = new JsonResult { Data = result };
+
+                    DoctorIndexViewModel viewModel = new DoctorIndexViewModel(resultJson);
+
+                    return View("IndexDoctor", viewModel);
                 case ConstVariables.RoleNurse:
                     return View("IndexNursingStaff");
                 case ConstVariables.RoleCleaner:
