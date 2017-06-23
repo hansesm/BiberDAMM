@@ -1,5 +1,6 @@
 ﻿<!--This is the view for creating a new treatment [KrabsJ]-->
 
+@using BiberDAMM.Helpers
 @model BiberDAMM.ViewModels.CreationTreatment
 
 @{
@@ -214,6 +215,7 @@
         <div class="row">
             <div class="col-md-12">
                 <input title="Behandlung speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm">
+                <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
             </div>
         </div>
     </div>
