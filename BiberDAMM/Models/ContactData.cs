@@ -34,6 +34,7 @@ namespace BiberDAMM.Models
         public int? ClientId { get; set; }
         public virtual Client Client { get; set; }
 
+        [Display(Name = "Kontakttyp")]
         public int ContactTypeId { get; set; }
         public virtual ContactType ContactType { get; set; }
     }
