@@ -8,6 +8,7 @@ author: KrabsJ
 
 @{
     ViewBag.Title = "Benutzer anlegen";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -109,9 +110,4 @@ author: KrabsJ
             <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate"/>
         </div>
     </div>
-}
-
-<!--enable scripts for validation-->
-@section Scripts {
-    @Scripts.Render("~/bundles/scripts")
 }
