@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using BiberDAMM.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace BiberDAMM.Controllers
 {
@@ -33,14 +34,14 @@ namespace BiberDAMM.Controllers
                 case ConstVariables.RoleDoctor:
 
                     //Gets all treatments not older than 7 Days [ChristesR]
-                    //var events = db.Treatments.Where(e => e.BeginDate>=DateTime.Now.AddDays(-7)).ToList();
+                    var events = db.Treatments.Where(e => e.BeginDate>=DateTime.Now.AddDays(-7) && e.ApplicationUsers.Any(a => a.Id.ToString().Equals(User.Identity.GetUserId()))).ToList();
 
                     //var userEvents = from m in db.Clients
                                              //  select m;
 
 
 
-                    List<Treatment> events = new List<Treatment>();
+                    //List<Treatment> events = new List<Treatment>();
 
                     //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
                     var result = events.Select(e => new JsonEventTreatment()
