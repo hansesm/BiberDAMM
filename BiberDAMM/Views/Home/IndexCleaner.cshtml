@@ -47,13 +47,12 @@
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
             <td colspan="2">
-                <button title="Raum hinzufügen" onclick="location.href='@(Url.Action("Create", "Room"))';return false;" style="background-color:transparent; border:hidden;" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
-            </td>
+                </td>
         </tr>
     </tfoot>
     @foreach (var item in Model)
     {
-        <tr onclick="location.href = '@(Url.Action("Details", "Room", new {id = item.Id}))'">
+        <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.RoomNumber)
             </td>
