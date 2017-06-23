@@ -30,7 +30,13 @@ namespace BiberDAMM.Controllers
                 TempData["CreateRoomFailed"] = " " + Room.RoomNumber + " existiert bereits.";
                 return RedirectToAction("Create", Room);
             }
-            // checks if ModelState is valid, if this is the case the room will be saved 
+            // checks if RoomMaxSize is negative
+            if (Room.RoomMaxSize < 0)
+            {
+                TempData["CreateRoomFailed"] = " Der Wert für Max. Betten darf nicht negativ sein.";
+                return RedirectToAction("Create", Room);
+            }
+            //checks if ModelState is valid, if this is the case the room will be saved
             if (ModelState.IsValid)
             {
                 db.Rooms.Add(Room);
@@ -129,6 +135,13 @@ namespace BiberDAMM.Controllers
            
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Room", new {id = room.Id});
+
+            // checks if RoomMaxSize is negative
+            if (room.RoomMaxSize < 0)
+            {
+                TempData["EditRoomFailed"] = " Der Wert für Max. Betten darf nicht negativ sein.";
+                return RedirectToAction("Edit", room);
+            }
             //checks if roomNumber exists already and if the current id is not equal to an existing id
             if (db.Rooms.Any(r => r.RoomNumber.Equals(room.RoomNumber) && !r.Id.Equals(room.Id)))
             {
