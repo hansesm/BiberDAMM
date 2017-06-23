@@ -24,8 +24,33 @@
         <strong>Unerwarteter Fehler!</strong>@TempData["UnexpectedFailure"]
     </div>
 }
-
-<div class="jumbotron">
     <h1>Willkommen @User.Identity.GetUserName()</h1>
-    <p class="lead">Dies ist die Homeseite für Administratoren</p>
-</div>
+    <!--JEL-->
+    <span style="display:inline-block;height:20px"></span>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-lg btn-primary btn-block" href="/Account/Register">
+                    <i class="fa fa-address-card fa-2x pull-left"></i> Neuen Nutzer <br>anlegen
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-lg btn-danger btn-block" href="/Room/Create">
+                    <i class="fa fa-hospital-o fa-2x pull-left"></i> Neuen Raum <br>anlegen
+                </a>
+            </div>
+            <div class="w-100">
+                <span style="display:inline-block;height:20px"></span>
+            </div>
+            <div class="col">
+                <a class="btn btn-lg btn-success btn-block" href="/Bed/Create">
+                    <i class="fa fa-bed fa-2x pull-left"></i> Neues Bett <br>anlegen
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-lg btn-warning btn-block" href="/HealthInsurance/Create">
+                    <i class="fa fa-university fa-2x pull-left"></i> Neue Krankenkasse <br>anlegen
+                </a>
+            </div>
+        </div>
+    </div>
