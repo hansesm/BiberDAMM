@@ -95,24 +95,25 @@ namespace BiberDAMM.Controllers
             
             /* Here it is imperative to add the current room of selected bed 
              * to the selectlist RoomList even if Room reached its max capacity 
-             * to avoid an exception being thrown when changing BedModel in a full room */
-            foreach (Room CurrentRoom in AllRooms)
-            { 
-                var RoomOfCurrentBed = AllBeds.Where(q => q.Id == id).Select(q => q.RoomId).FirstOrDefault();
-                if (RoomOfCurrentBed.Equals(CurrentRoom.Id) )
-                { 
-                RoomListing.Add(CurrentRoom);
-                }
-            }
-
+             * to avoid an exception being thrown when changing BedModel in a full room.
+             * Second if statement in the loop checks if Room is full and then checks if RoomId
+             * matches the Room of currently selected bed.
+             */
             foreach (Room AvailableRoom in AllRooms)
             {
                 var ListTempBeds = AllBeds.Where(a => a.RoomId.Equals(AvailableRoom.Id));
+                var RoomOfCurrentBed = AllBeds.Where(q => q.Id == id).Select(q => q.RoomId).FirstOrDefault();
                 if (ListTempBeds.Count() < AvailableRoom.RoomMaxSize)
                 {
                     RoomListing.Add(AvailableRoom);
                 }
-
+                if (ListTempBeds.Count() == AvailableRoom.RoomMaxSize)
+                {
+                    if (RoomOfCurrentBed.Equals(AvailableRoom.Id))
+                    {
+                        RoomListing.Add(AvailableRoom);
+                    }
+                }
             }
 
             ViewBag.RoomList = new SelectList(RoomListing, "Id", "RoomNumber");
