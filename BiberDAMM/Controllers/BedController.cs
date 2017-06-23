@@ -92,6 +92,19 @@ namespace BiberDAMM.Controllers
             var AllBeds = new List<Bed>().AsQueryable();
             AllBeds = from m in db.Beds select m;
             var RoomListing = new List<Room>();
+            
+            /* Here it is imperative to add the current room of selected bed 
+             * to the selectlist RoomList even if Room reached its max capacity 
+             * to avoid an exception being thrown when changing BedModel in a full room */
+            foreach (Room CurrentRoom in AllRooms)
+            { 
+                var RoomOfCurrentBed = AllBeds.Where(q => q.Id == id).Select(q => q.RoomId).FirstOrDefault();
+                if (RoomOfCurrentBed.Equals(CurrentRoom.Id) )
+                { 
+                RoomListing.Add(CurrentRoom);
+                }
+            }
+
             foreach (Room AvailableRoom in AllRooms)
             {
                 var ListTempBeds = AllBeds.Where(a => a.RoomId.Equals(AvailableRoom.Id));
@@ -99,6 +112,7 @@ namespace BiberDAMM.Controllers
                 {
                     RoomListing.Add(AvailableRoom);
                 }
+
             }
 
             ViewBag.RoomList = new SelectList(RoomListing, "Id", "RoomNumber");
@@ -110,10 +124,6 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Bed bed, string command)
         {
-            /*
-             * temporary added to find cause of a pesky exception
-             * System.Diagnostics.Debug.WriteLine(bed.BedModels + " " + bed.RoomId);
-             */
 
             // if AbortButton is pressed forgo changes and return to index page
             if (command.Equals(ConstVariables.AbortButton))

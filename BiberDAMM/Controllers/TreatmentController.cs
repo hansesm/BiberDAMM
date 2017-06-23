@@ -180,6 +180,12 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
         {
+            // if abortButton was clicked, go back to details page of stay
+            if (command.Equals(ConstVariables.AbortButton))
+            {
+                return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
+            }
+
             //if a new room was selected, update the viewModel and return the View again
             if (command.Equals("Raum verwenden"))
             {
