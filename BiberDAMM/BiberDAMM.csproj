@@ -217,6 +217,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
+    <Compile Include="Models\Cleaner.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\ContactData.cs" />
     <Compile Include="Models\ContactType.cs" />

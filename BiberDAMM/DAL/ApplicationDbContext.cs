@@ -37,6 +37,7 @@ namespace BiberDAMM.DAL
 
         public DbSet<Bed> Beds { get; set; }
         public DbSet<Blocks> Blocks { get; set; }
+        public DbSet<Cleaner> Cleaner { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<ContactData> ContactDatas { get; set; }
         public DbSet<ContactType> ContactTypes { get; set; }

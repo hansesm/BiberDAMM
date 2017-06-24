@@ -5,8 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace BiberDAMM.Models
 {
     /* Jean-PierreK
-    * Added an enum list of all available bed models
-    * Changed enum name to something more error prone
+    * Enum list for all available bed models
     */
 
     public enum BedModels
