@@ -31,13 +31,6 @@ namespace BiberDAMM.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            /* 
-             * Create a list containing all rooms.
-             * List all created beds.
-             * Iterate through rooms and cross check with capacity if beds can be placed in it. 
-             * Rooms with MaxSize of 0 are not selectable for bed placement same goes
-             * for rooms which reached their maximum bed capacity
-             */
             var AllRooms = db.Rooms.ToList(); // list of all rooms
             var AllBeds = new List<Bed>().AsQueryable();
             AllBeds = from m in db.Beds select m; // list of all beds
@@ -52,6 +45,7 @@ namespace BiberDAMM.Controllers
             }
             // Returned list of all selectable rooms for bed placement
             ViewBag.RoomList = new SelectList(RoomListing, "Id", "RoomNumber");
+
             return View();
         }
 
@@ -64,12 +58,11 @@ namespace BiberDAMM.Controllers
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Index");
 
-            // only if ModelState is valid will the new bed be added
             if (ModelState.IsValid)
             {
                 db.Beds.Add(bed);
                 db.SaveChanges();
-                // Return notification if adding a new bed was successful
+                // Return notification if adding the new bed was successful
                 TempData["CreateBedSuccess"] = " Das Bett wurde hinzugefügt";
                 return RedirectToAction("Index");
             }
@@ -82,36 +75,33 @@ namespace BiberDAMM.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-                return RedirectToAction("Index"); // return to index if current id is null
-            var bed = db.Beds.Find(id); // return 404 if id not present in db
+                return RedirectToAction("Index");
+            var bed = db.Beds.Find(id);
             if (bed == null)
                 return HttpNotFound();
 
-            // for detailed comment refer to create bed method
             var AllRooms = db.Rooms.ToList();
             var AllBeds = new List<Bed>().AsQueryable();
             AllBeds = from m in db.Beds select m;
             var RoomListing = new List<Room>();
-            
-            /* Here it is imperative to add the current room of selected bed 
-             * to the selectlist RoomList even if Room reached its max capacity 
-             * to avoid an exception being thrown when changing BedModel in a full room.
-             * Second if statement in the loop checks if Room is full and then checks if RoomId
-             * matches the Room of currently selected bed.
-             */
+
+            /* Here it is necessary to add the current room of selected bed 
+             * to RoomList, even if Room reached its max capacity. */
             foreach (Room AvailableRoom in AllRooms)
             {
                 var ListTempBeds = AllBeds.Where(a => a.RoomId.Equals(AvailableRoom.Id));
+                // Return room of selected bed from db
                 var RoomOfCurrentBed = AllBeds.Where(q => q.Id == id).Select(q => q.RoomId).FirstOrDefault();
                 if (ListTempBeds.Count() < AvailableRoom.RoomMaxSize)
                 {
                     RoomListing.Add(AvailableRoom);
                 }
-                if (ListTempBeds.Count() == AvailableRoom.RoomMaxSize)
+                if (ListTempBeds.Count() == AvailableRoom.RoomMaxSize) // if room is full
                 {
-                    if (RoomOfCurrentBed.Equals(AvailableRoom.Id))
+                    // if RoomId matches the room of currently selected bed add that room to RoomList
+                    if (RoomOfCurrentBed.Equals(AvailableRoom.Id))  
                     {
-                        RoomListing.Add(AvailableRoom);
+                        RoomListing.Add(AvailableRoom); 
                     }
                 }
             }
@@ -125,8 +115,7 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Bed bed, string command)
         {
-
-            // if AbortButton is pressed forgo changes and return to index page
+            // if AbortButton is pressed forgo changes and return to details page
             if (command.Equals(ConstVariables.AbortButton))
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
 
@@ -135,7 +124,7 @@ namespace BiberDAMM.Controllers
             {
                 db.Entry(bed).State = EntityState.Modified;
                 db.SaveChanges();
-                // Return notification if editing bed was successful
+                // Return notification if editing was successful
                 TempData["EditBedSuccess"] = " Die Eigenschaften wurden erfolgreich geändert";
                 return RedirectToAction("Details", "Bed", new { id = bed.Id });
             }
@@ -172,21 +161,20 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            // Check if bed is blocked
+            // Check if bed is occupied by a patient
             Blocks dependentBlock = db.Blocks.Where(b => b.BedId == id).FirstOrDefault();
 
-            if (dependentBlock != null) // if bed is blocked by a patient
+            if (dependentBlock != null) // if bed is blocked
             {
-                //-- Return alert-message if deletion of bed not possible --//
+                // Return alert-message if bed deletion not possible
                 TempData["DeleteBedFailed"] = " Das Bett ist belegt";
                 return RedirectToAction("Details", "Bed", new { id });
             }
 
-            // if bed is not blocked find id in db and remove bed from db
             var bed = db.Beds.Find(id);
             db.Beds.Remove(bed);
             db.SaveChanges();
-            // Return notification if deleting bed was successful
+            // Return notification if delete was successful
             TempData["DeleteBedSuccess"] = " Das Bett wurde entfernt";
             return RedirectToAction("Index");
         }
