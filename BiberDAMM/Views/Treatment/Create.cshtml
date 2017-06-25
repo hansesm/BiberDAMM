@@ -460,6 +460,40 @@
     </div>
 </div>
 <!-- end calenderHelp modal -->
+<!-- calenderEvent modal -->
+<div id="calenderEvent" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Termindetails</h4>
+                <i class="fa fa-calendar fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+            <!--end modal header-->
+
+            <div class="modal-body">
+                <div id="clickedEventDescription" style="font-weight: bold;">
+                </div>
+                <div id="clickedEventBeginDate">
+                </div>
+                <div id="clickedEventEndDate">
+                </div>
+            </div>
+            <!--end modal body-->
+
+            <div class="modal-footer">
+                <button title="Ok" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Ok</button>
+            </div>
+            <!--end modal footer-->
+
+        </div>
+        <!--end modal content-->
+
+    </div>
+</div>
+<!-- end calenderEvent modal -->
 <!-- conflictingAppointments modal -->
 <div id="conflictingAppointmentsModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -600,6 +634,18 @@
                     }
                 ],
 
+                //show event details in modal, when clicked on event
+                eventClick: function (calEvent, jsEvent, view) {
+                    //console.log(calEvent.start._i);
+                    var beginDate = calEvent.start._i.substr(8, 2) + "." + calEvent.start._i.substr(5, 2) + "." + calEvent.start._i.substr(0, 4);
+                    var beginTime = calEvent.start._i.substr(11, 8);
+                    var endDate = calEvent.end._i.substr(8, 2) + "." + calEvent.end._i.substr(5, 2) + "." + calEvent.end._i.substr(0, 4);
+                    var endTime = calEvent.end._i.substr(11, 8);
+                    $("#clickedEventDescription").html(calEvent.title);
+                    $("#clickedEventBeginDate").html("Begin: " + beginDate + " " + beginTime);
+                    $("#clickedEventEndDate").html("Ende: " + endDate + " " + endTime);
+                    $('#calenderEvent').modal('show');
+                }
             });
         });
     </script>
