@@ -59,6 +59,9 @@ namespace BiberDAMM.ViewModels
 
         // attribute for displaying the right day in calendar
         public string ShowCalendarDay { get; set; }
+
+        // attribute for planning a cleaning event
+        public CleaningDuration CleaningDuration { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]

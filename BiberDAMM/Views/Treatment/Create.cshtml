@@ -1,6 +1,7 @@
 ﻿<!--This is the view for creating a new treatment [KrabsJ]-->
 
 @using BiberDAMM.Helpers
+@using BiberDAMM.Models
 @model BiberDAMM.ViewModels.CreationTreatment
 
 @{
@@ -214,6 +215,31 @@
 
         </div>
         <!--end row-->
+
+        @Html.Label("Raumreinigung planen", new { @class = "col-form-label" })
+        <div class="row" style="padding-left:15px; padding-right:15px; margin-bottom:20px">
+            <div class ="col-md-12" style="border-style: solid; padding-bottom:15px; padding-top:15px">
+                <div class="row">
+                    <div class="col-md-3" style="text-align:center">
+                        <label for="@CleaningDuration.noCleaning" style="margin-top: .5rem">keine Reinigung</label>
+                        @Html.RadioButtonFor(m => m.CleaningDuration, CleaningDuration.noCleaning)
+                    </div>
+                    <div class="col-md-3" style="text-align:center">
+                        <label for="@CleaningDuration.tenMinutes" style="margin-top: .5rem">10min</label>
+                        @Html.RadioButtonFor(m => m.CleaningDuration, CleaningDuration.tenMinutes)
+                    </div>
+                    <div class="col-md-3" style="text-align:center">
+                        <label for="@CleaningDuration.twentyMinutes" style="margin-top: .5rem">20min</label>
+                        @Html.RadioButtonFor(m => m.CleaningDuration, CleaningDuration.twentyMinutes)
+                    </div>
+                    <div class="col-md-3" style="text-align:center">
+                        <label for="@CleaningDuration.thirtyMinutes" style="margin-top: .5rem">30min</label>
+                        @Html.RadioButtonFor(m => m.CleaningDuration, CleaningDuration.thirtyMinutes)
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!--This row includes the buttons for creating the treatment and for stopping the creation-->
         <div class="row">
             <div class="col-md-12">

@@ -466,6 +466,30 @@ namespace BiberDAMM.Controllers
                     appointmentOfSelectedRoom.EndDate = appointment.EndDate;
                     appointmentOfSelectedRoom.Ressource = ConstVariables.AppointmentOfRoom;
                     appointmentOfSelectedRoom.EventColor = "#32CD32";
+
+                    // check if there is a cleaning appointment that relates to the roomappointment
+                    var optionalCleaningAppointment = _db.Cleaner.SingleOrDefault(c => c.TreatmentId == appointment.Id);
+                    // if there is a cleaning appointment add the duration to the roomappointment
+                    if (optionalCleaningAppointment != null)
+                    {
+                        switch (optionalCleaningAppointment.CleaningDuration)
+                        {
+                            case CleaningDuration.noCleaning:
+                                break;
+                            case CleaningDuration.tenMinutes:
+                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(10);
+                                break;
+                            case CleaningDuration.twentyMinutes:
+                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(20);
+                                break;
+                            case CleaningDuration.thirtyMinutes:
+                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(30);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
                 }
             }

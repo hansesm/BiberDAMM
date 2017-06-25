@@ -613,6 +613,17 @@ namespace BiberDAMM.DAL
                 },
                 new Treatment
                 {
+                    BeginDate = DateTime.Today.Date.AddDays(3).AddHours(10),
+                    EndDate = DateTime.Today.Date.AddDays(3).AddHours(12),
+                    StayId = 4,
+                    RoomId = 1,
+                    Description = "Nasenbeinoperation",
+                    TreatmentTypeId = 2,
+                    ApplicationUsers = new List<ApplicationUser> {user4, user6},
+                    UpdateTimeStamp = DateTime.Now
+                },
+                new Treatment
+                {
                     BeginDate = DateTime.Today.Date.AddDays(1).AddHours(8),
                     EndDate = DateTime.Today.Date.AddDays(1).AddHours(9),
                     StayId = 5,
@@ -624,6 +635,40 @@ namespace BiberDAMM.DAL
                 }
             };
             treatments.ForEach(t => _context.Treatments.Add(t));
+            _context.SaveChanges();
+
+            // creating cleaning appointments
+            var cleaningAppointments = new List<Cleaner>
+            {
+                new Cleaner
+                {
+                    BeginDate = treatments[6].EndDate,
+                    EndDate = treatments[6].EndDate.AddMinutes(20),
+                    CleaningDuration = CleaningDuration.twentyMinutes,
+                    RoomId = treatments[6].RoomId,
+                    CleaningDone = false,
+                    TreatmentId = treatments[6].Id
+                },
+                new Cleaner
+                {
+                    BeginDate = treatments[9].EndDate,
+                    EndDate = treatments[9].EndDate.AddMinutes(10),
+                    CleaningDuration = CleaningDuration.tenMinutes,
+                    RoomId = treatments[9].RoomId,
+                    CleaningDone = false,
+                    TreatmentId = treatments[9].Id
+                },
+                new Cleaner
+                {
+                    BeginDate = treatments[10].EndDate,
+                    EndDate = treatments[10].EndDate.AddMinutes(30),
+                    CleaningDuration = CleaningDuration.thirtyMinutes,
+                    RoomId = treatments[10].RoomId,
+                    CleaningDone = false,
+                    TreatmentId = treatments[10].Id
+                }
+            };
+            cleaningAppointments.ForEach(c => _context.Cleaner.Add(c));
             _context.SaveChanges();
         }
 
