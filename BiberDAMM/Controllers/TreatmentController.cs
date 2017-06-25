@@ -379,10 +379,13 @@ namespace BiberDAMM.Controllers
                 // a treatment that is stored retroactive (in the past) doesn't have to be checked on conflicts
 
                 List<ApplicationUser> userList = new List<ApplicationUser>();
-                foreach (var staffMember in treatmentCreationModel.SelectedStaff)
+                if (treatmentCreationModel.SelectedStaff != null)
                 {
-                    var user = _db.Users.Single(u => u.Id == staffMember.Id);
-                    userList.Add(user);
+                    foreach (var staffMember in treatmentCreationModel.SelectedStaff)
+                    {
+                        var user = _db.Users.Single(u => u.Id == staffMember.Id);
+                        userList.Add(user);
+                    }
                 }
 
                 // create the new treatment and store or update it in the db
@@ -394,6 +397,7 @@ namespace BiberDAMM.Controllers
                     RoomId = treatmentCreationModel.SelectedRoomId,
                     Description = treatmentCreationModel.Description,
                     TreatmentTypeId = treatmentCreationModel.TreatmentTypeId,
+                    UpdateTimeStamp = DateTime.Now,
                     ApplicationUsers = userList,
                 };
 

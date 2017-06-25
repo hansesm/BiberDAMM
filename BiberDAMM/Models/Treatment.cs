@@ -26,6 +26,7 @@ namespace BiberDAMM.Models
         [Display(Name = "Beschreibung")]
         public string Description { get; set; }
 
+        public DateTime UpdateTimeStamp { get; set; }
 
         public int TreatmentTypeId { get; set; }
         public virtual TreatmentType TreatmentType { get; set; }

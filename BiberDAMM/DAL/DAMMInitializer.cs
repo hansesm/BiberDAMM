@@ -509,7 +509,8 @@ namespace BiberDAMM.DAL
                     RoomId = 6,
                     Description = "Vorsorgeuntersuchung",
                     TreatmentTypeId = 1,
-                    ApplicationUsers = new List<ApplicationUser> {user2}
+                    ApplicationUsers = new List<ApplicationUser> {user2},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -519,7 +520,8 @@ namespace BiberDAMM.DAL
                     RoomId = 2,
                     Description = "Nasenbeinoperation",
                     TreatmentTypeId = 2,
-                    ApplicationUsers = new List<ApplicationUser> {user2, user5, user6}
+                    ApplicationUsers = new List<ApplicationUser> {user2, user5, user6},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -529,7 +531,8 @@ namespace BiberDAMM.DAL
                     RoomId = 5,
                     Description = "Untersuchung der Beschwerden",
                     TreatmentTypeId = 1,
-                    ApplicationUsers = new List<ApplicationUser> {user3}
+                    ApplicationUsers = new List<ApplicationUser> {user3},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -539,7 +542,8 @@ namespace BiberDAMM.DAL
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
                     TreatmentTypeId = 3,
-                    ApplicationUsers = new List<ApplicationUser> {user10}
+                    ApplicationUsers = new List<ApplicationUser> {user10},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -549,7 +553,8 @@ namespace BiberDAMM.DAL
                     RoomId = 5,
                     Description = "Physiotherapie rechtes Handgelenk",
                     TreatmentTypeId = 3,
-                    ApplicationUsers = new List<ApplicationUser> {user10}
+                    ApplicationUsers = new List<ApplicationUser> {user10},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -559,7 +564,8 @@ namespace BiberDAMM.DAL
                     RoomId = 6,
                     Description = "Aufnahmeuntersuchung",
                     TreatmentTypeId = 1,
-                    ApplicationUsers = new List<ApplicationUser> {user4}
+                    ApplicationUsers = new List<ApplicationUser> {user4},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -569,7 +575,8 @@ namespace BiberDAMM.DAL
                     RoomId = 7,
                     Description = "Aufnahmeuntersuchung",
                     TreatmentTypeId = 1,
-                    ApplicationUsers = new List<ApplicationUser> {user2}
+                    ApplicationUsers = new List<ApplicationUser> {user2},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -579,7 +586,8 @@ namespace BiberDAMM.DAL
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
                     TreatmentTypeId = 4,
-                    ApplicationUsers = new List<ApplicationUser> {user7}
+                    ApplicationUsers = new List<ApplicationUser> {user7},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -589,7 +597,8 @@ namespace BiberDAMM.DAL
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
                     TreatmentTypeId = 4,
-                    ApplicationUsers = new List<ApplicationUser> {user7}
+                    ApplicationUsers = new List<ApplicationUser> {user7},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -599,7 +608,8 @@ namespace BiberDAMM.DAL
                     RoomId = 8,
                     Description = "Calciumkanalblocker verabreichen",
                     TreatmentTypeId = 4,
-                    ApplicationUsers = new List<ApplicationUser> {user7}
+                    ApplicationUsers = new List<ApplicationUser> {user7},
+                    UpdateTimeStamp = DateTime.Now
                 },
                 new Treatment
                 {
@@ -609,7 +619,8 @@ namespace BiberDAMM.DAL
                     RoomId = 7,
                     Description = "Aufnahmeuntersuchung",
                     TreatmentTypeId = 1,
-                    ApplicationUsers = new List<ApplicationUser> {user3}
+                    ApplicationUsers = new List<ApplicationUser> {user3},
+                    UpdateTimeStamp = DateTime.Now
                 }
             };
             treatments.ForEach(t => _context.Treatments.Add(t));
