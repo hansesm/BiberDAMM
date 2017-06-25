@@ -56,6 +56,9 @@ namespace BiberDAMM.ViewModels
 
         // attributes for showing conflicting appointments
         public IList<AppointmentOfSelectedRessource> ConflictingAppointmentsList { get; set; }
+
+        // attribute for displaying the right day in calendar
+        public string ShowCalendarDay { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]
@@ -85,6 +88,8 @@ namespace BiberDAMM.ViewModels
 
         [Display(Name = "Ende")]
         public DateTime EndDate { get; set; }
+
+        public string EventColor { get; set; }
     }
 
     // [KrabsJ]

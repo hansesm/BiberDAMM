@@ -54,6 +54,7 @@
     @Html.HiddenFor(m => m.TreatmentTypeId);
     @Html.HiddenFor(m => m.ClientId);
     @Html.HiddenFor(m => m.ClientName);
+    @Html.HiddenFor(m => m.ShowCalendarDay);
     if (Model.Rooms != null)
     {
         for (int i = 0; i < Model.Rooms.Count; i++)
@@ -71,6 +72,7 @@
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EventColor)
         }
     }
     if (Model.Staff != null)
@@ -142,6 +144,7 @@
 
         </div>
         <!--end row-->
+
         <!--This row includes the option for selecting staffmembers-->
         <div class="row">
 
@@ -221,6 +224,12 @@
     </div>
 
     <hr />
+
+    <div class="row">
+        <div class="form-group col-md-12">
+            <input title="Kalendaransicht aktualisieren" type="submit" name="command" value="Aktualisieren" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+        </div>
+    </div>
 
     <!-- selectRoomModal -->
     <div id="selectRoomModal" class="modal fade" role="dialog">
@@ -505,8 +514,7 @@
 
                         <tfoot style="background-color: #263238; color: white; text-align: right;">
                             <tr>
-                                <td colspan="3">
-                                </td>
+                                <td colspan="3"></td>
                             </tr>
                         </tfoot>
 
@@ -559,17 +567,19 @@
     <!-- Fullcalendar with settings-->
     <script>
         console.log(@Html.Raw(Json.Encode(Model.JsonAppointmentsOfSelectedRessources.Data)));
+        console.log(@Html.Raw(Json.Encode(Model.ShowCalendarDay)));
 
         $(document).ready(function() {
             $("#calendar").fullCalendar({
+                defaultDate: @Html.Raw(Json.Encode(Model.ShowCalendarDay)),
                 theme: true,
                 defaultView: 'agendaWeek',
                 height: 550,
                 editable: false,
                 header: {
-                    left: 'title',
-                    center: '',
-                    right: 'today prev,next'
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'agendaWeek agendaDay'
                 },
                 events: @Html.Raw(Json.Encode(Model.JsonAppointmentsOfSelectedRessources.Data)),
                 allDaySlot: false,
@@ -590,6 +600,22 @@
                     }
                 ],
 
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            //console.log("ready!");
+
+            //when selecting beginDate, set endDate on beginDate if endDate is null
+            $("#beginDate").change(function () {
+                //console.log($("#beginDate").val());
+                //console.log($("#endDate").val().length)
+                if ($("#endDate").val().length == 0) {
+                    //console.log("set endDate!");
+                    $("#endDate").datepicker("setDate", $("#beginDate").val());
+                }
             });
         });
     </script>

@@ -16,5 +16,6 @@
         //const variables for creating/editing treatments
         public const string AppointmentOfClient = "Patientenbehandlung";
         public const string AppointmentOfRoom = "Raum belegt";
+        public const string PlannedTreatment = "geplante Behandlung";
     }
 }
