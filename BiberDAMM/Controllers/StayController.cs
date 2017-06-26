@@ -134,19 +134,13 @@ namespace BiberDAMM.Controllers
 
             //Gets all doctors from the database [HansesM]
             var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
-            //listDoctors = listDoctors.Where(s => s.UserType == UserType.Arzt);
-
+            
             //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
             var selectetListDoctors = new List<SelectListItem>();
             foreach (var m in listDoctors)
             {
                 selectetListDoctors.Add(new SelectListItem { Text = (m.Title + " " + m.Lastname), Value = (m.Id.ToString()) });
             }
-
-            //_db.ApplicationUser.SqlQuery("select Id, Title, Surname, Lastname from AspNetUsers where UserType = 3;");
-
-            //var listTreatments = _db.Treatments.AsQueryable();
-            //listTreatments = listTreatments.Where(t => t.Stay.ClientId == id);
 
             //Gets a treatments from the given stay [HansesM]
             var events = stay.Treatments.ToList();

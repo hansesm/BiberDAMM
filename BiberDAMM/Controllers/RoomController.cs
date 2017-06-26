@@ -236,7 +236,7 @@ namespace BiberDAMM.Controllers
             //Gets a list of treatments, matching the given parameters! [HansesM]
             var events = db.Treatments.SqlQuery(
                 "select * from treatments t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '" +
-                roomTypeName + "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104))");
+                roomTypeName + "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104)) ORDER BY t.UpdateTimeStamp DESC");
 
             //Builds a JSon from the treatments [HansesM]
             var resultEvent = events.Select(a => new JsonRoomSchedulerEvents
