@@ -81,8 +81,6 @@ namespace BiberDAMM.ViewModels
     // it is used for showing the appointments of the selected Room, client and Users when creating a new treatment
     public class AppointmentOfSelectedRessource
     {
-        public int Id { get; set; }
-
         [Display(Name = "Betroffene Ressource")]
         public string Ressource { get; set; }
 

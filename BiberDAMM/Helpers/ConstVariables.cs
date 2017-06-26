@@ -17,5 +17,6 @@
         public const string AppointmentOfClient = "Patientenbehandlung";
         public const string AppointmentOfRoom = "Raum belegt";
         public const string PlannedTreatment = "geplante Behandlung";
+        public const string PlannedCleaning = "geplante Raumreinigung";
     }
 }

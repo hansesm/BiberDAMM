@@ -292,7 +292,26 @@ namespace BiberDAMM.Controllers
                 }
 
                 // if the new treatment is planed in the future it is necessary to check if there are conflicting appointments
-                if (treatmentCreationModel.EndDate > DateTime.Now)
+                // therefor it is necessary to determine the end of the treatment while considering an optional cleaning event
+                DateTime endOfTreatmentAndCleaning = treatmentCreationModel.EndDate.Value;
+                switch (treatmentCreationModel.CleaningDuration)
+                {
+                    case CleaningDuration.noCleaning:
+                        break;
+                    case CleaningDuration.tenMinutes:
+                        endOfTreatmentAndCleaning = treatmentCreationModel.EndDate.Value.AddMinutes(10);
+                        break;
+                    case CleaningDuration.twentyMinutes:
+                        endOfTreatmentAndCleaning = treatmentCreationModel.EndDate.Value.AddMinutes(20);
+                        break;
+                    case CleaningDuration.thirtyMinutes:
+                        endOfTreatmentAndCleaning = treatmentCreationModel.EndDate.Value.AddMinutes(30);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (endOfTreatmentAndCleaning > DateTime.Now)
                 {
                     // the following steps ensure that there are no conflicts with other appointments
                     // therefore the program checks the dates from db again, because the dates stored in treatmentCreationModel.AppointmentsOfSelectedRessources could be outworn
@@ -310,7 +329,6 @@ namespace BiberDAMM.Controllers
                         foreach (var appointment in conflictingClientAppointments)
                         {
                             AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                            newConflict.Id = appointment.Id;
                             newConflict.BeginDate = appointment.BeginDate;
                             newConflict.EndDate = appointment.EndDate;
                             newConflict.Ressource = "Patient";
@@ -319,13 +337,26 @@ namespace BiberDAMM.Controllers
                     }
 
                     // check if there are conflicts with other appointments of the selected room
-                    var conflictingRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
+                    var conflictingRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId && t.BeginDate < endOfTreatmentAndCleaning && treatmentCreationModel.BeginDate < t.EndDate).ToList();
                     if (conflictingRoomAppointments.Count > 0)
                     {
                         foreach (var appointment in conflictingRoomAppointments)
                         {
                             AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                            newConflict.Id = appointment.Id;
+                            newConflict.BeginDate = appointment.BeginDate;
+                            newConflict.EndDate = appointment.EndDate;
+                            newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
+                            unorderedConflicts.Add(newConflict);
+                        }
+                    }
+
+                    // check if there are conflicts with room cleaning appointments
+                    var conflictingRoomCleaningAppointments = _db.Cleaner.Where(c => c.EndDate > DateTime.Now && c.RoomId == treatmentCreationModel.SelectedRoomId && c.BeginDate < endOfTreatmentAndCleaning && treatmentCreationModel.BeginDate < c.EndDate).ToList();
+                    if (conflictingRoomCleaningAppointments.Count > 0)
+                    {
+                        foreach (var appointment in conflictingRoomCleaningAppointments)
+                        {
+                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
                             newConflict.BeginDate = appointment.BeginDate;
                             newConflict.EndDate = appointment.EndDate;
                             newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
@@ -344,7 +375,6 @@ namespace BiberDAMM.Controllers
                                 foreach (var appointment in conflictingStaffAppointments)
                                 {
                                     AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                                    newConflict.Id = appointment.Id;
                                     newConflict.BeginDate = appointment.BeginDate;
                                     newConflict.EndDate = appointment.EndDate;
                                     newConflict.Ressource = staffMember.DisplayName;
@@ -391,8 +421,8 @@ namespace BiberDAMM.Controllers
                 // create the new treatment and store or update it in the db
                 var newTreatment = new Treatment
                 {
-                    BeginDate = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now),
-                    EndDate = treatmentCreationModel.EndDate.GetValueOrDefault(DateTime.Now),
+                    BeginDate = treatmentCreationModel.BeginDate.Value,
+                    EndDate = treatmentCreationModel.EndDate.Value,
                     StayId = treatmentCreationModel.StayId,
                     RoomId = treatmentCreationModel.SelectedRoomId,
                     Description = treatmentCreationModel.Description,
@@ -403,6 +433,54 @@ namespace BiberDAMM.Controllers
 
                 _db.Treatments.AddOrUpdate(newTreatment);
                 _db.SaveChanges();
+
+                // create an optional cleaningAppointment
+                switch (treatmentCreationModel.CleaningDuration)
+                {
+                    case CleaningDuration.noCleaning:
+                        break;
+                    case CleaningDuration.tenMinutes:
+                        var newCleaningAppointmentTen = new Cleaner
+                        {
+                            BeginDate = treatmentCreationModel.EndDate.Value,
+                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(10),
+                            RoomId = treatmentCreationModel.SelectedRoomId,
+                            CleaningDone = false,
+                            CleaningDuration = CleaningDuration.tenMinutes,
+                            TreatmentId = newTreatment.Id
+                        };
+                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentTen);
+                        _db.SaveChanges();
+                        break;
+                    case CleaningDuration.twentyMinutes:
+                        var newCleaningAppointmentTwenty = new Cleaner
+                        {
+                            BeginDate = treatmentCreationModel.EndDate.Value,
+                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(20),
+                            RoomId = treatmentCreationModel.SelectedRoomId,
+                            CleaningDone = false,
+                            CleaningDuration = CleaningDuration.twentyMinutes,
+                            TreatmentId = newTreatment.Id
+                        };
+                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentTwenty);
+                        _db.SaveChanges();
+                        break;
+                    case CleaningDuration.thirtyMinutes:
+                        var newCleaningAppointmentThirty = new Cleaner
+                        {
+                            BeginDate = treatmentCreationModel.EndDate.Value,
+                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(30),
+                            RoomId = treatmentCreationModel.SelectedRoomId,
+                            CleaningDone = false,
+                            CleaningDuration = CleaningDuration.thirtyMinutes,
+                            TreatmentId = newTreatment.Id
+                        };
+                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentThirty);
+                        _db.SaveChanges();
+                        break;
+                    default:
+                        break;
+                }
 
                 // success-message for alert-statement
                 TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
@@ -461,36 +539,25 @@ namespace BiberDAMM.Controllers
                 foreach (var appointment in newRoomAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedRoom = new AppointmentOfSelectedRessource();
-                    appointmentOfSelectedRoom.Id = appointment.Id;
                     appointmentOfSelectedRoom.BeginDate = appointment.BeginDate;
                     appointmentOfSelectedRoom.EndDate = appointment.EndDate;
                     appointmentOfSelectedRoom.Ressource = ConstVariables.AppointmentOfRoom;
                     appointmentOfSelectedRoom.EventColor = "#32CD32";
+                    treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
+
 
                     // check if there is a cleaning appointment that relates to the roomappointment
                     var optionalCleaningAppointment = _db.Cleaner.SingleOrDefault(c => c.TreatmentId == appointment.Id);
-                    // if there is a cleaning appointment add the duration to the roomappointment
+                    // if there is a cleaning appointment add it to the viewModel
                     if (optionalCleaningAppointment != null)
                     {
-                        switch (optionalCleaningAppointment.CleaningDuration)
-                        {
-                            case CleaningDuration.noCleaning:
-                                break;
-                            case CleaningDuration.tenMinutes:
-                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(10);
-                                break;
-                            case CleaningDuration.twentyMinutes:
-                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(20);
-                                break;
-                            case CleaningDuration.thirtyMinutes:
-                                appointmentOfSelectedRoom.EndDate = appointmentOfSelectedRoom.EndDate.AddMinutes(30);
-                                break;
-                            default:
-                                break;
-                        }
+                        AppointmentOfSelectedRessource cleaningAppointment = new AppointmentOfSelectedRessource();
+                        cleaningAppointment.BeginDate = optionalCleaningAppointment.BeginDate;
+                        cleaningAppointment.EndDate = optionalCleaningAppointment.EndDate;
+                        cleaningAppointment.EventColor = "#32CD32";
+                        cleaningAppointment.Ressource = ConstVariables.AppointmentOfRoom;
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(cleaningAppointment);
                     }
-
-                    treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointmentOfSelectedRoom);
                 }
             }
 
@@ -530,7 +597,7 @@ namespace BiberDAMM.Controllers
             {
                 foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
                 {
-                    if (appointment.Ressource != ConstVariables.AppointmentOfRoom && appointment.Ressource != ConstVariables.AppointmentOfClient && appointment.Ressource != ConstVariables.PlannedTreatment)
+                    if (appointment.Ressource != ConstVariables.AppointmentOfRoom && appointment.Ressource != ConstVariables.AppointmentOfClient && appointment.Ressource != ConstVariables.PlannedTreatment && appointment.Ressource != ConstVariables.PlannedCleaning)
                     {
                         treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
                     }
@@ -552,7 +619,6 @@ namespace BiberDAMM.Controllers
                 foreach (var appointment in newStaffAppointments)
                 {
                     AppointmentOfSelectedRessource appointmentOfSelectedStaffMember = new AppointmentOfSelectedRessource();
-                    appointmentOfSelectedStaffMember.Id = appointment.Id;
                     appointmentOfSelectedStaffMember.BeginDate = appointment.BeginDate;
                     appointmentOfSelectedStaffMember.EndDate = appointment.EndDate;
                     appointmentOfSelectedStaffMember.Ressource = staffMember.DisplayName;
@@ -592,7 +658,6 @@ namespace BiberDAMM.Controllers
             foreach (var treatment in ClientTreatments)
             {
                 AppointmentOfSelectedRessource appointmentOfClient = new AppointmentOfSelectedRessource();
-                appointmentOfClient.Id = treatment.Id;
                 appointmentOfClient.BeginDate = treatment.BeginDate;
                 appointmentOfClient.EndDate = treatment.EndDate;
                 appointmentOfClient.Ressource = ConstVariables.AppointmentOfClient;
@@ -613,7 +678,7 @@ namespace BiberDAMM.Controllers
             {
                 foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
                 {
-                    if (appointment.Ressource == ConstVariables.PlannedTreatment)
+                    if (appointment.Ressource == ConstVariables.PlannedTreatment || appointment.Ressource == ConstVariables.PlannedCleaning)
                     {
                         treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
                     }
@@ -630,14 +695,43 @@ namespace BiberDAMM.Controllers
             {
                 AppointmentOfSelectedRessource plannedTreatment = new AppointmentOfSelectedRessource()
                 {
-                    //all appointments that come from db have an Id of 1 or higher --> so the Id=0 is free
-                    Id = 0,
-                    BeginDate = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now),
-                    EndDate = treatmentCreationModel.EndDate.GetValueOrDefault(DateTime.Now),
+                    BeginDate = treatmentCreationModel.BeginDate.Value,
+                    EndDate = treatmentCreationModel.EndDate.Value,
                     Ressource = ConstVariables.PlannedTreatment,
                     EventColor = "#FF8C00"
                 };
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedTreatment);
+
+                // add an optional planned cleaning
+                AppointmentOfSelectedRessource plannedCleaning = new AppointmentOfSelectedRessource();
+                switch (treatmentCreationModel.CleaningDuration)
+                {
+                    case CleaningDuration.noCleaning:
+                        break;
+                    case CleaningDuration.tenMinutes:
+                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
+                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(10);
+                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                        plannedCleaning.EventColor = "#FF8C00";
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                        break;
+                    case CleaningDuration.twentyMinutes:
+                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
+                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(20);
+                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                        plannedCleaning.EventColor = "#FF8C00";
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                        break;
+                    case CleaningDuration.thirtyMinutes:
+                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
+                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(30);
+                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                        plannedCleaning.EventColor = "#FF8C00";
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             return treatmentCreationModel;
@@ -652,7 +746,6 @@ namespace BiberDAMM.Controllers
                 start = a.BeginDate.ToString("s"),
                 end = a.EndDate.ToString("s"),
                 title = a.Ressource,
-                id = a.Id.ToString(),
                 color = a.EventColor,
             }).ToList();
 

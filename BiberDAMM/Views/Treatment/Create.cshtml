@@ -69,7 +69,6 @@
     {
         for (int i = 0; i < Model.AppointmentsOfSelectedRessources.Count; i++)
         {
-            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Id)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].BeginDate)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
@@ -662,7 +661,7 @@
 
                 //show event details in modal, when clicked on event
                 eventClick: function (calEvent, jsEvent, view) {
-                    //console.log(calEvent.start._i);
+                    console.log(calEvent.end._i);
                     var beginDate = calEvent.start._i.substr(8, 2) + "." + calEvent.start._i.substr(5, 2) + "." + calEvent.start._i.substr(0, 4);
                     var beginTime = calEvent.start._i.substr(11, 8);
                     var endDate = calEvent.end._i.substr(8, 2) + "." + calEvent.end._i.substr(5, 2) + "." + calEvent.end._i.substr(0, 4);
