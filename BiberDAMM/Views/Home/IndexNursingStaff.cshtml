@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@model BiberDAMM.ViewModels.NurseIndexViewModel
 @{
     ViewBag.Title = "Home Pflegekraft";
 }
@@ -29,3 +30,53 @@
     <h1>Willkommen @User.Identity.GetUserName()</h1>
     <p class="lead">Dies ist die Homeseite für Pflegekräfte</p>
 </div>
+
+<!--
+    Author: ChristesR
+-->
+<!-- Container for displaying the calendar [ChristesR]-->
+<div class="container-fluid">
+    <h4> Durchzuführende Behandlungen für</h4>
+    <div id="calendar"></div>
+
+    <!-- Horizontal line-->
+    <hr />
+</div>
+
+
+@section Scripts{
+    <!-- Daycalendar[ChristesR]-->
+    <script>
+
+        //When the document is ready we initalize the calendar-view [HansesM]
+        $(document).ready(function() {
+            $("#calendar").fullCalendar({
+                theme: true,
+                defaultView: 'agendaDay',
+                height: 550,
+                editable: false,
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'today prev,next'
+                },
+                events: @Html.Raw(Json.Encode(Model.ListTreatments.Data)),
+                allDaySlot: false,
+                slotDuration: "00:15:00",
+                scrollTime: "08:00:00",
+                minTime: "7:00:00",
+                maxTime: "21:00:00",
+
+
+                //On click on Calendar-Event we redirect the user to the relating treatment-details page [HansesM]
+                eventClick: function(calEvent, jsEvent, view) {
+
+                    window.location.href = "/Treatment/Details/" + calEvent.id;
+                    //alert("Event mit der ID geklickt: " + calEvent.id);
+                    //$(this).css('border-color', 'red');
+                }
+            });
+        });
+
+    </script>
+}

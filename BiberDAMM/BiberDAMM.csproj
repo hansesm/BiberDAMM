@@ -238,6 +238,7 @@
     <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\CreationHealthInsurance.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
+    <Compile Include="ViewModels\NurseIndexViewModel.cs" />
     <Compile Include="ViewModels\RoomSchedulerViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\CreationRoomType.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="ViewModels\StayCreateViewModel.cs" />
     <Compile Include="ViewModels\StayDetailsViewModel.cs" />
     <Compile Include="ViewModels\StayIndexViewModel.cs" />
+    <Compile Include="ViewModels\TherapistIndexViewModel.cs" />
     <Compile Include="ViewModels\TreatmentTypeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

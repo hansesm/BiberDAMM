@@ -34,17 +34,13 @@ namespace BiberDAMM.Controllers
                 case ConstVariables.RoleDoctor:
 
                     //Gets all treatments not older than 7 Days [ChristesR]
-                    var events = db.Treatments.Where(e => e.BeginDate>=DateTime.Now.AddDays(-7) && e.ApplicationUsers.Any(a => a.Id.ToString().Equals(User.Identity.GetUserId()))).ToList();
-
-                    //var userEvents = from m in db.Clients
-                                             //  select m;
-
-
-
-                    //List<Treatment> events = new List<Treatment>();
-
+                    DateTime daysConstantDoctor = DateTime.Now.AddDays(-7);
+                    string loggedInUserIDDoctor = User.Identity.GetUserId();
+                    var eventsDoctor = db.Treatments.Where(e => e.BeginDate>= daysConstantDoctor && e.ApplicationUsers.Any
+                    (a => a.Id.ToString().Equals(loggedInUserIDDoctor))).ToList();
+                    
                     //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
-                    var result = events.Select(e => new JsonEventTreatment()
+                    var resultDoctor = eventsDoctor.Select(e => new JsonEventTreatment()
                     {
                         start = e.BeginDate.ToString("s"),
                         end = e.EndDate.ToString("s"),
@@ -54,13 +50,34 @@ namespace BiberDAMM.Controllers
                     }).ToList();
 
                     //Creates a JsonResult from the Json [HansesM]
-                    JsonResult resultJson = new JsonResult { Data = result };
+                    JsonResult resultJson = new JsonResult { Data = resultDoctor };
 
-                    DoctorIndexViewModel viewModel = new DoctorIndexViewModel(resultJson);
+                    DoctorIndexViewModel viewModelDoctor = new DoctorIndexViewModel(resultJson);
 
-                    return View("IndexDoctor", viewModel);
+                    return View("IndexDoctor", viewModelDoctor);
                 case ConstVariables.RoleNurse:
-                    return View("IndexNursingStaff");
+
+                    //Gets all treatments not older than 7 Days [ChristesR]
+                    DateTime daysConstantNurse = DateTime.Now.AddDays(-7);
+                    string loggedInUserIDNurse = User.Identity.GetUserId();
+                    var eventsNurse = db.Treatments.Where(e => e.BeginDate >= daysConstantNurse && e.ApplicationUsers.Any
+                    (a => a.Id.ToString().Equals(loggedInUserIDNurse))).ToList();
+
+                    //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+                    var resultNurse = eventsNurse.Select(e => new JsonEventTreatment()
+                    {
+                        start = e.BeginDate.ToString("s"),
+                        end = e.EndDate.ToString("s"),
+                        title = e.TreatmentType.Name.ToString(),
+                        id = e.Id.ToString()
+
+                    }).ToList();
+
+                    //Creates a JsonResult from the Json [HansesM]
+                    JsonResult resultJsonNurse = new JsonResult { Data = resultNurse };
+
+                    NurseIndexViewModel viewModelNurse = new NurseIndexViewModel(resultJsonNurse);
+                    return View("IndexNursingStaff", viewModelNurse);
                 case ConstVariables.RoleCleaner:
 
                     //Author: ChristeR
@@ -101,7 +118,28 @@ namespace BiberDAMM.Controllers
                     return View("IndexCleaner", rooms);
 
                 case ConstVariables.RoleTherapist:
-                    return View("IndexTherapist");
+
+                    //Gets all treatments not older than 7 Days [ChristesR]
+                    DateTime daysConstantTherapist = DateTime.Now.AddDays(-7);
+                    string loggedInUserIDTherapist = User.Identity.GetUserId();
+                    var eventsTherapist = db.Treatments.Where(e => e.BeginDate >= daysConstantTherapist && e.ApplicationUsers.Any
+                    (a => a.Id.ToString().Equals(loggedInUserIDTherapist))).ToList();
+
+                    //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
+                    var resultTherapist = eventsTherapist.Select(e => new JsonEventTreatment()
+                    {
+                        start = e.BeginDate.ToString("s"),
+                        end = e.EndDate.ToString("s"),
+                        title = e.TreatmentType.Name.ToString(),
+                        id = e.Id.ToString()
+
+                    }).ToList();
+
+                    //Creates a JsonResult from the Json [HansesM]
+                    JsonResult resultJsonTherapist = new JsonResult { Data = resultTherapist };
+
+                    TherapistIndexViewModel viewModelTherapist = new TherapistIndexViewModel(resultJsonTherapist);
+                    return View("IndexTherapist", viewModelTherapist);
                 default:
                     return RedirectToAction("Login", "Account");
             }
