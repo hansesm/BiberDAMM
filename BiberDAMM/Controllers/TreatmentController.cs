@@ -703,31 +703,96 @@ namespace BiberDAMM.Controllers
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedTreatment);
 
                 // add an optional planned cleaning
-                AppointmentOfSelectedRessource plannedCleaning = new AppointmentOfSelectedRessource();
-                switch (treatmentCreationModel.CleaningDuration)
+                if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                 {
-                    case CleaningDuration.noCleaning:
+                    var optionalCleaningAppointment = CreateOptionalCleaningAppointment(treatmentCreationModel.EndDate.Value, treatmentCreationModel.CleaningDuration);
+                    treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointment);
+                }
+
+                // create optional series events
+                switch (treatmentCreationModel.Series)
+                {
+                    case Series.noSeries:
                         break;
-                    case CleaningDuration.tenMinutes:
-                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
-                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(10);
-                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
-                        plannedCleaning.EventColor = "#FF8C00";
-                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                    case Series.day:
+                        for (int i = 1; i <= treatmentCreationModel.SeriesCounter; i++)
+                        {
+                            AppointmentOfSelectedRessource plannedSeriesTreatment = new AppointmentOfSelectedRessource()
+                            {
+                                BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i*1),
+                                EndDate = treatmentCreationModel.EndDate.Value.AddDays(i*1),
+                                Ressource = ConstVariables.PlannedTreatment,
+                                EventColor = "#FF8C00"
+                            };
+                            treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
+
+                            // add an optional planned cleaning
+                            if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
+                            {
+                                var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
+                            }
+                        }
                         break;
-                    case CleaningDuration.twentyMinutes:
-                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
-                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(20);
-                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
-                        plannedCleaning.EventColor = "#FF8C00";
-                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                    case Series.week:
+                        for (int i = 1; i <= treatmentCreationModel.SeriesCounter; i++)
+                        {
+                            AppointmentOfSelectedRessource plannedSeriesTreatment = new AppointmentOfSelectedRessource()
+                            {
+                                BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 7),
+                                EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 7),
+                                Ressource = ConstVariables.PlannedTreatment,
+                                EventColor = "#FF8C00"
+                            };
+                            treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
+
+                            // add an optional planned cleaning
+                            if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
+                            {
+                                var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
+                            }
+                        }
                         break;
-                    case CleaningDuration.thirtyMinutes:
-                        plannedCleaning.BeginDate = plannedTreatment.EndDate;
-                        plannedCleaning.EndDate = plannedTreatment.EndDate.AddMinutes(30);
-                        plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
-                        plannedCleaning.EventColor = "#FF8C00";
-                        treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedCleaning);
+                    case Series.twoWeeks:
+                        for (int i = 1; i <= treatmentCreationModel.SeriesCounter; i++)
+                        {
+                            AppointmentOfSelectedRessource plannedSeriesTreatment = new AppointmentOfSelectedRessource()
+                            {
+                                BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 14),
+                                EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 14),
+                                Ressource = ConstVariables.PlannedTreatment,
+                                EventColor = "#FF8C00"
+                            };
+                            treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
+
+                            // add an optional planned cleaning
+                            if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
+                            {
+                                var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
+                            }
+                        }
+                        break;
+                    case Series.month:
+                        for (int i = 1; i <= treatmentCreationModel.SeriesCounter; i++)
+                        {
+                            AppointmentOfSelectedRessource plannedSeriesTreatment = new AppointmentOfSelectedRessource()
+                            {
+                                BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 28),
+                                EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 28),
+                                Ressource = ConstVariables.PlannedTreatment,
+                                EventColor = "#FF8C00"
+                            };
+                            treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
+
+                            // add an optional planned cleaning
+                            if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
+                            {
+                                var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -735,6 +800,42 @@ namespace BiberDAMM.Controllers
             }
 
             return treatmentCreationModel;
+        }
+
+        // [KrabsJ]
+        // this method creates an cleaning appointment
+        // expected parameters: DateTime endOfPlannedTreatment, CleaningDuration plannedCleaningDuration
+        // return: AppointmentOfSelectedRessource plannedCleaning
+        private AppointmentOfSelectedRessource CreateOptionalCleaningAppointment(DateTime endOfPlannedTreatment, CleaningDuration plannedCleaningDuration)
+        {
+            AppointmentOfSelectedRessource plannedCleaning = new AppointmentOfSelectedRessource();
+            switch (plannedCleaningDuration)
+            {
+                case CleaningDuration.noCleaning:
+                    break;
+                case CleaningDuration.tenMinutes:
+                    plannedCleaning.BeginDate = endOfPlannedTreatment;
+                    plannedCleaning.EndDate = endOfPlannedTreatment.AddMinutes(10);
+                    plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                    plannedCleaning.EventColor = "#FF8C00";
+                    break;
+                case CleaningDuration.twentyMinutes:
+                    plannedCleaning.BeginDate = endOfPlannedTreatment;
+                    plannedCleaning.EndDate = endOfPlannedTreatment.AddMinutes(20);
+                    plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                    plannedCleaning.EventColor = "#FF8C00";
+                    break;
+                case CleaningDuration.thirtyMinutes:
+                    plannedCleaning.BeginDate = endOfPlannedTreatment;
+                    plannedCleaning.EndDate = endOfPlannedTreatment.AddMinutes(30);
+                    plannedCleaning.Ressource = ConstVariables.PlannedCleaning;
+                    plannedCleaning.EventColor = "#FF8C00";
+                    break;
+                default:
+                    break;
+            }
+
+            return plannedCleaning;
         }
 
         //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
