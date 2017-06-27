@@ -68,7 +68,6 @@ namespace BiberDAMM.Models
         [Required]
         [Display(Name="Zimmerart")]
         public ClientRoomType ClientRoomType { get; set; }
-
-
+        
     }
 }
