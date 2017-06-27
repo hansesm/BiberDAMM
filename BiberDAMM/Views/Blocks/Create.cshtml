@@ -140,7 +140,7 @@
                         options.url = "/blocks/GetFreeBeds";
                         options.type = "POST";
                         options.data = JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").val(), roomType: $("#roomType option:selected").val() });
-                        console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").val(), roomType: $("#roomType option:selected").val() }));
+                        //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").val(), roomType: $("#roomType option:selected").val() }));
                         options.dataType = "json";
                         options.contentType = "application/json";
                         options.success = function(freeBeds) {

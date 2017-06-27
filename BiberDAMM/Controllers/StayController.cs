@@ -165,7 +165,6 @@ namespace BiberDAMM.Controllers
             return View(viewModel);
         }
 
-
         //CHANGE: Stay [HansesM]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -250,6 +249,31 @@ namespace BiberDAMM.Controllers
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Stay stay, string command)
+        {
+
+            var stayInDb = _db.Stays.SingleOrDefault(m => m.Id == stay.Id);
+
+            if (stayInDb.Treatments.Count != 0 || stayInDb.Blocks.Count != 0)
+            {
+                TempData["DeleteStayError"] = " Aufenthalt kann nicht gelöscht werden, da noch abhängige Daten vorhanden sind.";
+                return RedirectToAction("Details", "Stay", new { id = stay.Id });
+            }
+            else
+            {
+                var tempClientId = stayInDb.ClientId;
+                _db.Stays.Remove(stayInDb);
+                _db.SaveChanges();
+
+                TempData["DeleteStaySuccsess"] = " Aufenthalt erfolgreich gelöscht.";
+                return RedirectToAction("Details", "Client", new { id = tempClientId });
+            }
+
+            
         }
 
         //Override on Dispose for security reasons. [HansesM]

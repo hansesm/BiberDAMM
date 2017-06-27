@@ -10,15 +10,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Heutige Belegungsübersicht nach Raumart</h2>
+<h2>Belegungsübersicht nach Raumart</h2>
 
 <div class="row">
-
-    <div class="form-group col-md-12">
-        @Html.Label("Raumtyp", new { @class = "col-form-label" })
-        @Html.DropDownList("Bed", Model.ListRooms, new { @class = "form-control", id = "roomTypeDropDown" })
-        @*@Html.DropDownList(model => model.Blocks.Bed.BedModels, BedModels.ListBedBedModelss, null, new { @class = "form-control" , id = "model"})*@
+    <div class="form-group col-md-6">
+        @Html.Label("Datum", new { @class = "col-form-label" })
+        @Html.TextBox("01.01.2017", null, new { @class = "form-control", id = "schedulerDate" })
     </div>
+
+    <div class="form-group col-md-6">
+        @Html.Label("Raumtyp", new {@class = "col-form-label"})
+        @Html.DropDownList("Bed", Model.ListRooms, new {@class = "form-control", id = "roomTypeDropDown"})
+    </div>
+
+
 </div>
 <!-- row-->
 <hr />
@@ -27,6 +32,17 @@
 <div class="timetable"></div>
 
 @section Scripts{
+    
+    <!-- Datetimepicker for Date [HansesM]-->
+    <script>
+        $("#schedulerDate").datepicker({
+            sliderAccessArgs: { touchonly: false },
+            dateFormat: "dd.mm.yy"
+        });
+
+        $("#schedulerDate").datepicker("setDate", new Date());
+    </script>
+    
 
     <!-- Author: [HansesM]-->
     <!--Der folgende Java-Script Code ist etwas tricky, ich beschreibe mal was er macht: -->
@@ -40,7 +56,7 @@
     <script>
         $(document).ready(function () {
             //Dropdownlist select change event [HansesM]
-            $("#roomTypeDropDown").change(function () {
+            $("#roomTypeDropDown, #schedulerDate").change(function () {
                 //Checks if dropdownelement is not empty [HansesM]
                 if ($("#roomTypeDropDown").val().length !== 0) {
                     //create a new timetable [HansesM]
@@ -51,7 +67,7 @@
                     var events = {};
                     events.url = "/room/GetSchedulerEvents";
                     events.type = "POST";
-                    events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text() });
+                    events.data = JSON.stringify({ roomTypeName: $("#roomTypeDropDown option:selected").text(), schedulerDate: $("#schedulerDate").val() });
                     //Log only for deployment [HansesM]
                     //console.log(JSON.stringify({ end: $("#end").val(), begin: $("#begin").val(), model: $("#model option:selected").text(), roomType: $("#roomType option:selected").val() }));
                     events.dataType = "json";
