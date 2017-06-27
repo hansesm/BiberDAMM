@@ -157,9 +157,7 @@ namespace BiberDAMM.Controllers
                 TempData["EditRoomFailed"] = " Es befindet sich noch mindestens ein Bett im Raum.";
                 return RedirectToAction("Edit", room);
             }
-
-
-
+            
             if (ModelState.IsValid)
             {
                 db.Entry(room).State = EntityState.Modified;
@@ -228,18 +226,18 @@ namespace BiberDAMM.Controllers
         }
 
         //Post-method witch will be called by room-scheduler
-        //Jquery-Ajax and returns a list of treatments witch matches roomtype and the current-date
+        //Jquery-Ajax and returns a list of treatments and cleanings witch matches roomtype and the current-date
         //[HansesM]
         [HttpPost]
         public JsonResult GetSchedulerEvents(string roomTypeName)
         {
             //Gets a list of treatments, matching the given parameters! [HansesM]
-            var events = db.Treatments.SqlQuery(
+            var treatments = db.Treatments.SqlQuery(
                 "select * from treatments t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '" +
                 roomTypeName + "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104)) ORDER BY t.UpdateTimeStamp DESC");
 
             //Builds a JSon from the treatments [HansesM]
-            var resultEvent = events.Select(a => new JsonRoomSchedulerEvents
+            var treatmentEvents = treatments.Select(a => new JsonRoomSchedulerEvents
             {
                 roomName = a.Room.RoomNumber.ToString(),
                 treatmentType = a.Description.ToString(),
@@ -247,8 +245,23 @@ namespace BiberDAMM.Controllers
                 endDate = a.EndDate.ToString("s")
             }).ToList();
 
+            var cleanings = db.Cleaner.SqlQuery(
+                "select * from cleaners t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '" +
+                roomTypeName +
+                "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104))");
+
+            var cleaningEvents = cleanings.Select(a => new JsonRoomSchedulerEvents
+            {
+                roomName = a.Room.RoomNumber.ToString(),
+                treatmentType = "Reinigung",
+                beginDate = a.BeginDate.ToString("s"),
+                endDate = a.EndDate.ToString("s")
+            }).ToList();
+
+            var combinedEvents = treatmentEvents.Concat(cleaningEvents);
+
             //returns the Json to the calling-function [HansesM]
-            return Json(resultEvent);
+            return Json(combinedEvents);
         }
     }
 }
