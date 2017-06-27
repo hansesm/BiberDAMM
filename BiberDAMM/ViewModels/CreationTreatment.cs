@@ -6,6 +6,15 @@ using System.Web.Mvc;
 
 namespace BiberDAMM.ViewModels
 {
+    public enum Series
+    {
+        noSeries,
+        day,
+        week,
+        twoWeeks,
+        month,
+    }
+
     // This is a ViewModel used to create a new treatment [KrabsJ]
     public class CreationTreatment
     {
@@ -62,6 +71,11 @@ namespace BiberDAMM.ViewModels
 
         // attribute for planning a cleaning event
         public CleaningDuration CleaningDuration { get; set; }
+
+        // attributes for planning a series of treatments
+        public Series Series { get; set; }
+        [Display(Name ="Anzahl Wiederholungen")]
+        public int SeriesCounter { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]
