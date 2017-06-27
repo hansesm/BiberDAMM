@@ -33,6 +33,17 @@
     </div>
 }
 
+<!--show alert "SeriesInPastError" if the planned treatment is in the past and has got series events-->
+@if (TempData["SeriesInPastError"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Fehlerhafte Eingaben!</strong>@TempData["SeriesInPastError"]
+    </div>
+}
+
 <!--show alert "ConflictingAppointments" if there are conflicting appointments-->
 @if (TempData["ConflictingAppointments"] != null)
 {
@@ -271,6 +282,7 @@
                 <div class="col-md-12" style="text-align:center; border-top-style:groove; padding-top:15px">
                         @Html.LabelFor(m => m.SeriesCounter, new { @class = "control-label" })
                         @Html.EditorFor(m => m.SeriesCounter, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.SeriesCounter, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>

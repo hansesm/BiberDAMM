@@ -75,6 +75,7 @@ namespace BiberDAMM.ViewModels
         // attributes for planning a series of treatments
         public Series Series { get; set; }
         [Display(Name ="Anzahl Wiederholungen")]
+        [Range(0, int.MaxValue, ErrorMessage = "Der eingegebene Wert befindet sich ausserhalb des zulässigen Wertebereichs")]
         public int SeriesCounter { get; set; }
     }
 
