@@ -229,12 +229,12 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of treatments and cleanings witch matches roomtype and the current-date
         //[HansesM]
         [HttpPost]
-        public JsonResult GetSchedulerEvents(string roomTypeName)
+        public JsonResult GetSchedulerEvents(string roomTypeName, string schedulerDate)
         {
             //Gets a list of treatments, matching the given parameters! [HansesM]
             var treatments = db.Treatments.SqlQuery(
                 "select * from treatments t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '" +
-                roomTypeName + "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104)) ORDER BY t.UpdateTimeStamp DESC");
+                roomTypeName + "')) and (convert(date, BeginDate, 104) = convert(date, '" + schedulerDate + "', 104)) ORDER BY t.UpdateTimeStamp DESC");
 
             //Builds a JSon from the treatments [HansesM]
             var treatmentEvents = treatments.Select(a => new JsonRoomSchedulerEvents
@@ -248,7 +248,7 @@ namespace BiberDAMM.Controllers
             var cleanings = db.Cleaner.SqlQuery(
                 "select * from cleaners t where t.RoomId in (select ro.id from rooms ro where ro.RoomTypeId = (select rt.Id from RoomTypes rt where rt.name like '" +
                 roomTypeName +
-                "')) and (convert(date, BeginDate, 104) = convert(date, CURRENT_TIMESTAMP, 104))");
+                "')) and (convert(date, BeginDate, 104) = convert(date, '" + schedulerDate + "', 104))");
 
             var cleaningEvents = cleanings.Select(a => new JsonRoomSchedulerEvents
             {
