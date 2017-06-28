@@ -97,6 +97,13 @@ namespace BiberDAMM.Controllers
 
             }
 
+            //Checks if begin is greater than enddate [HansesM]
+            if (stay.BeginDate > stay.EndDate)
+            {
+                //Added errormessage name to dispay in loginview [HansesM]
+                ModelState.AddModelError("EndDateError", "Das Enddatum muss nach dem Beginndatum liegen");
+            }
+
             //Checks if Modelstate is valid [HanseM]
             if (ModelState.IsValid)
             {
@@ -170,6 +177,13 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Details(Stay stay, string command)
         {
+            //Checks if begin is greater than enddate [HansesM]
+            if (stay.BeginDate > stay.EndDate)
+            {
+                //Added errormessage name to dispay in loginview [HansesM]
+                ModelState.AddModelError("EndDateError", "Das Enddatum muss nach dem Beginndatum liegen");
+            }
+
             //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
             {
