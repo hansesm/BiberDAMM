@@ -156,31 +156,9 @@ namespace BiberDAMM.Controllers
                     Session["TempNewClient"] = null;
 
 
+                    TempData["ClientSuccess"] = "Patient erfolgreich hinzugefügt!";
 
-                    //Update Contact-Rows which are temporary inserted with Null-Value  
-                    /*
-                    int clientID = db.Clients.Max(u => u.Id);
-
-                    var results = from p in db.ContactDatas select p;
-                    results = results.Where(s => s.ClientId == null);
-
-                    foreach (ContactData c in results)
-                    {
-                        c.ClientId = clientID;
-                    }
-
-                    db.SaveChanges();
-                    */
-
-                    TempData["ClientSuccess"] = "Patient erfolgreich gespeichert!";
-
-                    string redirectString = (String)Session["ClientIndexPage"];
-                    if (redirectString == null || redirectString.Equals(""))
-                    {
-                        redirectString = "LastNIndex";
-                    }
-                    return RedirectToAction(redirectString);
-
+                    return RedirectToAction("Edit", new { id = client.Id });
                 }
                 TempData["ClientError"] = "Daten unvollständig oder fehlerhaft";
                 return View(client);
