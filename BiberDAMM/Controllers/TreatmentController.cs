@@ -896,8 +896,21 @@ namespace BiberDAMM.Controllers
             return plannedCleaning;
         }
 
-        //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
-        private JsonResult CreateJsonResult(IList<AppointmentOfSelectedRessource> appointmentList)
+        // GET: Treatment/Details [KrabsJ]
+        // this method returns the view "Details" that shows the details data of a treatment
+        // expected parameter: int treatmentId
+        // return: view(Treatment treatment)
+        public ActionResult Details(int Id)
+        {
+            // get treatment from db
+            var treatment = _db.Treatments.Single(t => t.Id == Id);
+
+            //return view
+            return View(treatment);
+        }
+
+            //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
+            private JsonResult CreateJsonResult(IList<AppointmentOfSelectedRessource> appointmentList)
         {
             //Builds a JSon from the appointmentList
             var result = appointmentList.Select(a => new JsonEventTreatment()

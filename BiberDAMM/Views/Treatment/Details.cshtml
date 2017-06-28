@@ -1,0 +1,126 @@
+﻿<!-- details page for treatments [KrabsJ]-->
+
+@model BiberDAMM.Models.Treatment
+
+@{
+    ViewBag.Title = Model.TreatmentType.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr />
+
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h4>Grundinformationen</h4>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Patient
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(m => m.Stay.Client.Surname)
+                        @Html.DisplayFor(m => m.Stay.Client.Lastname)
+                    </dd>
+                </dl>
+            </div>
+            <div class="form-group col-md-3">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(m => m.Room.RoomNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(m => m.Room.RoomNumber)
+                    </dd>
+                </dl>
+            </div>
+            <div class="form-group col-md-3">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(m => m.BeginDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(m => m.BeginDate)
+                    </dd>
+                </dl>
+            </div>
+            <div class="form-group col-md-3">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(m => m.EndDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(m => m.EndDate)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="form-group col-md-12">
+        <h4>eingeplante Mitarbeiter</h4>
+        <table class="table table-striped table-bordered">
+
+            <thead class="thead-inverse">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Typ
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.ApplicationUsers == null || Model.ApplicationUsers.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" style="text-align:center">
+                            Es wurden keine Mitarbeiter für diese Behandlung eingeplant
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var staffMember in Model.ApplicationUsers)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => staffMember.Title)
+                                @Html.DisplayFor(modelItem => staffMember.Surname)
+                                @Html.DisplayFor(modelItem => staffMember.Lastname)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => staffMember.UserType)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+            <tfoot style="background-color: #263238; color: white; text-align: right;">
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+
+        </table>
+    </div>
+    <hr />
+    <div class="form-group col-md-12">
+        <h4>Kommentar</h4>
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "6", @readonly = "readonly" })
+    </div>
+
+    <div class="form-group col-md-12">
+        <button title="Bearbeiten" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+        <button title="Zurück zum Aufenthalt" onclick="location.href = '@Url.Action("Details", "Stay", new {id = Model.StayId})'" class="btn btn-outline-primary btn-sm">Zurück</button>
+    </div>
+</div>
