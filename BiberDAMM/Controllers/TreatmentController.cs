@@ -174,31 +174,9 @@ namespace BiberDAMM.Controllers
             // if button "Aktualisieren" was clicked, update the appointments of selected ressources and update the planned treatment to show it in the calendar
             if (command.Equals("Aktualisieren"))
             {
-                // update the data for appointments of the client
-                // remove the appointments of the client that was found before
-                if (treatmentCreationModel.AppointmentsOfSelectedRessources != null)
-                {
-                    foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
-                    {
-                        if (appointment.Ressource == ConstVariables.AppointmentOfClient)
-                        {
-                            treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
-                        }
-                    }
-                }
-                else
-                {
-                    // for adding new client appointments (see the steps below) it is necessary that the list is not null
-                    treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
-                }
-                List<AppointmentOfSelectedRessource> clientAppointments = GetClientAppointments(treatmentCreationModel.ClientId);
-                foreach (var appointment in clientAppointments)
-                {
-                    treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointment);
-                }
-
-                // update data for plannedTreatment, appointments of selected room and appointments of selected staff
+                // update all data in the viewModel
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
+                updatedTreatmentCreationModel = UpdateViewModelClientAppointments(updatedTreatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByRoomSelection(updatedTreatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByStaffSelection(updatedTreatmentCreationModel);
 
@@ -311,75 +289,94 @@ namespace BiberDAMM.Controllers
                         break;
                 }
 
+                // the following steps ensure that there are no conflicts with other appointments
+                // these conflicts-checks works with the data stored in the viewModel (AppointmentsOfSelectedRessources)
+                // therefor it is necessary that this data is up-to-date --> all data is updated here:
+                treatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelClientAppointments(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
+
+                // extract the appointments that represent the planned treatments and cleaning events
+                // these time periods have to be checked on conflicts
+                List<AppointmentOfSelectedRessource> checkListOfPlannedTreatments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedTreatment).ToList();
+                List<AppointmentOfSelectedRessource> checkListOfPlannedCleanings = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedCleaning).ToList();
+
+                // extract the appointments that represent appointments of the room, the client and the staffmembers
+                // these time periods work as control instances
+                List<AppointmentOfSelectedRessource> controlListOfFutureClientAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfClient).ToList();
+                List<AppointmentOfSelectedRessource> controlListOfFutureRoomAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfRoom).ToList();
+                List<AppointmentOfSelectedRessource> controlListOfFutureStaffAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource != ConstVariables.AppointmentOfClient && a.Ressource != ConstVariables.AppointmentOfRoom && a.Ressource != ConstVariables.PlannedCleaning && a.Ressource != ConstVariables.PlannedTreatment).ToList();
+
+                //helper list for unordered conflicts
+                List<AppointmentOfSelectedRessource> unorderedConflicts = new List<AppointmentOfSelectedRessource>();
+
+                //initialize list of conflicting appointments
+                treatmentCreationModel.ConflictingAppointmentsList = new List<AppointmentOfSelectedRessource>();
+
+                // if the planned treatment is in the future: check on conflicts
                 if (endOfTreatmentAndCleaning > DateTime.Now)
                 {
-                    // the following steps ensure that there are no conflicts with other appointments
-                    // therefore the program checks the dates from db again, because the dates stored in treatmentCreationModel.AppointmentsOfSelectedRessources could be outworn
-
-                    //helper list for unordered conflicts
-                    List<AppointmentOfSelectedRessource> unorderedConflicts = new List<AppointmentOfSelectedRessource>();
-
-                    //initialize list of conflicting appointments
-                    treatmentCreationModel.ConflictingAppointmentsList = new List<AppointmentOfSelectedRessource>();
-
-                    // check if there are conflicts with other appointments of the client
-                    var conflictingClientAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.Stay.ClientId == treatmentCreationModel.ClientId && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
-                    if (conflictingClientAppointments.Count > 0)
+                    // check all planned treatments for conflicts with other appointments
+                    foreach (var plannedTreatment in checkListOfPlannedTreatments)
                     {
-                        foreach (var appointment in conflictingClientAppointments)
+                        // check if there are conflicts with other appointments of the client
+                        var conflictingClientAppointments = controlListOfFutureClientAppointments.Where(a => a.BeginDate < plannedTreatment.EndDate && plannedTreatment.BeginDate < a.EndDate).ToList();
+                        if (conflictingClientAppointments.Count > 0)
                         {
-                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                            newConflict.BeginDate = appointment.BeginDate;
-                            newConflict.EndDate = appointment.EndDate;
-                            newConflict.Ressource = "Patient";
-                            unorderedConflicts.Add(newConflict);
-                        }
-                    }
-
-                    // check if there are conflicts with other appointments of the selected room
-                    var conflictingRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId && t.BeginDate < endOfTreatmentAndCleaning && treatmentCreationModel.BeginDate < t.EndDate).ToList();
-                    if (conflictingRoomAppointments.Count > 0)
-                    {
-                        foreach (var appointment in conflictingRoomAppointments)
-                        {
-                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                            newConflict.BeginDate = appointment.BeginDate;
-                            newConflict.EndDate = appointment.EndDate;
-                            newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
-                            unorderedConflicts.Add(newConflict);
-                        }
-                    }
-
-                    // check if there are conflicts with room cleaning appointments
-                    var conflictingRoomCleaningAppointments = _db.Cleaner.Where(c => c.EndDate > DateTime.Now && c.RoomId == treatmentCreationModel.SelectedRoomId && c.BeginDate < endOfTreatmentAndCleaning && treatmentCreationModel.BeginDate < c.EndDate).ToList();
-                    if (conflictingRoomCleaningAppointments.Count > 0)
-                    {
-                        foreach (var appointment in conflictingRoomCleaningAppointments)
-                        {
-                            AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                            newConflict.BeginDate = appointment.BeginDate;
-                            newConflict.EndDate = appointment.EndDate;
-                            newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
-                            unorderedConflicts.Add(newConflict);
-                        }
-                    }
-
-                    // check if there are conflicts with other appointments of the selected staffmembers
-                    if (treatmentCreationModel.SelectedStaff != null)
-                    {
-                        foreach (var staffMember in treatmentCreationModel.SelectedStaff)
-                        {
-                            var conflictingStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id) && t.BeginDate < treatmentCreationModel.EndDate && treatmentCreationModel.BeginDate < t.EndDate).ToList();
-                            if (conflictingStaffAppointments.Count > 0)
+                            foreach (var appointment in conflictingClientAppointments)
                             {
-                                foreach (var appointment in conflictingStaffAppointments)
-                                {
-                                    AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
-                                    newConflict.BeginDate = appointment.BeginDate;
-                                    newConflict.EndDate = appointment.EndDate;
-                                    newConflict.Ressource = staffMember.DisplayName;
-                                    unorderedConflicts.Add(newConflict);
-                                }
+                                AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                                newConflict.BeginDate = appointment.BeginDate;
+                                newConflict.EndDate = appointment.EndDate;
+                                newConflict.Ressource = "Patient";
+                                unorderedConflicts.Add(newConflict);
+                            }
+                        }
+
+                        // check if there are conflicts with other appointments of the selected room (this includes cleaning appointments of this room)
+                        var conflictingRoomAppointments = controlListOfFutureRoomAppointments.Where(a => a.BeginDate < plannedTreatment.EndDate && plannedTreatment.BeginDate < a.EndDate).ToList();
+                        if (conflictingRoomAppointments.Count > 0)
+                        {
+                            foreach (var appointment in conflictingRoomAppointments)
+                            {
+                                AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                                newConflict.BeginDate = appointment.BeginDate;
+                                newConflict.EndDate = appointment.EndDate;
+                                newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
+                                unorderedConflicts.Add(newConflict);
+                            }
+                        }
+
+                        // check if there are conflicts with other appointments of the selected staffmembers
+                        var conflictingStaffAppointments = controlListOfFutureStaffAppointments.Where(a => a.BeginDate < plannedTreatment.EndDate && plannedTreatment.BeginDate < a.EndDate).ToList();
+                        if (conflictingStaffAppointments.Count > 0)
+                        {
+                            foreach (var appointment in conflictingStaffAppointments)
+                            {
+                                AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                                newConflict.BeginDate = appointment.BeginDate;
+                                newConflict.EndDate = appointment.EndDate;
+                                newConflict.Ressource = appointment.Ressource;
+                                unorderedConflicts.Add(newConflict);
+                            }
+                        }
+                    }
+
+                    // check all planned cleanings for conflicts with other appointments (cleanings only have to be checked against room appointments, because other ressources are not effected by cleanings)
+                    foreach (var plannedCleaning in checkListOfPlannedCleanings)
+                    {
+                        // check if there are conflicts with other appointments of the selected room (this includes cleaning appointments of this room)
+                        var conflictingRoomAppointments = controlListOfFutureRoomAppointments.Where(a => a.BeginDate < plannedCleaning.EndDate && plannedCleaning.BeginDate < a.EndDate).ToList();
+                        if (conflictingRoomAppointments.Count > 0)
+                        {
+                            foreach (var appointment in conflictingRoomAppointments)
+                            {
+                                AppointmentOfSelectedRessource newConflict = new AppointmentOfSelectedRessource();
+                                newConflict.BeginDate = appointment.BeginDate;
+                                newConflict.EndDate = appointment.EndDate;
+                                newConflict.Ressource = "Raum: " + treatmentCreationModel.SelectedRoomNumber;
+                                unorderedConflicts.Add(newConflict);
                             }
                         }
                     }
@@ -438,70 +435,73 @@ namespace BiberDAMM.Controllers
                     }
                 }
 
-                // create the new treatment and store or update it in the db
-                var newTreatment = new Treatment
+                // create the new treatments and store or update them in the db
+                foreach (var plannedTreatment in checkListOfPlannedTreatments)
                 {
-                    BeginDate = treatmentCreationModel.BeginDate.Value,
-                    EndDate = treatmentCreationModel.EndDate.Value,
-                    StayId = treatmentCreationModel.StayId,
-                    RoomId = treatmentCreationModel.SelectedRoomId,
-                    Description = treatmentCreationModel.Description,
-                    TreatmentTypeId = treatmentCreationModel.TreatmentTypeId,
-                    UpdateTimeStamp = DateTime.Now,
-                    ApplicationUsers = userList,
-                };
+                    var newTreatment = new Treatment
+                    {
+                        BeginDate = plannedTreatment.BeginDate,
+                        EndDate = plannedTreatment.EndDate,
+                        StayId = treatmentCreationModel.StayId,
+                        RoomId = treatmentCreationModel.SelectedRoomId,
+                        Description = treatmentCreationModel.Description,
+                        TreatmentTypeId = treatmentCreationModel.TreatmentTypeId,
+                        UpdateTimeStamp = DateTime.Now,
+                        ApplicationUsers = userList,
+                    };
 
-                _db.Treatments.AddOrUpdate(newTreatment);
-                _db.SaveChanges();
+                    _db.Treatments.AddOrUpdate(newTreatment);
+                    _db.SaveChanges();
 
-                // create an optional cleaningAppointment
-                switch (treatmentCreationModel.CleaningDuration)
-                {
-                    case CleaningDuration.noCleaning:
-                        break;
-                    case CleaningDuration.tenMinutes:
-                        var newCleaningAppointmentTen = new Cleaner
-                        {
-                            BeginDate = treatmentCreationModel.EndDate.Value,
-                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(10),
-                            RoomId = treatmentCreationModel.SelectedRoomId,
-                            CleaningDone = false,
-                            CleaningDuration = CleaningDuration.tenMinutes,
-                            TreatmentId = newTreatment.Id
-                        };
-                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentTen);
-                        _db.SaveChanges();
-                        break;
-                    case CleaningDuration.twentyMinutes:
-                        var newCleaningAppointmentTwenty = new Cleaner
-                        {
-                            BeginDate = treatmentCreationModel.EndDate.Value,
-                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(20),
-                            RoomId = treatmentCreationModel.SelectedRoomId,
-                            CleaningDone = false,
-                            CleaningDuration = CleaningDuration.twentyMinutes,
-                            TreatmentId = newTreatment.Id
-                        };
-                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentTwenty);
-                        _db.SaveChanges();
-                        break;
-                    case CleaningDuration.thirtyMinutes:
-                        var newCleaningAppointmentThirty = new Cleaner
-                        {
-                            BeginDate = treatmentCreationModel.EndDate.Value,
-                            EndDate = treatmentCreationModel.EndDate.Value.AddMinutes(30),
-                            RoomId = treatmentCreationModel.SelectedRoomId,
-                            CleaningDone = false,
-                            CleaningDuration = CleaningDuration.thirtyMinutes,
-                            TreatmentId = newTreatment.Id
-                        };
-                        _db.Cleaner.AddOrUpdate(newCleaningAppointmentThirty);
-                        _db.SaveChanges();
-                        break;
-                    default:
-                        break;
+                    // create an optional cleaningAppointment
+                    switch (treatmentCreationModel.CleaningDuration)
+                    {
+                        case CleaningDuration.noCleaning:
+                            break;
+                        case CleaningDuration.tenMinutes:
+                            var newCleaningAppointmentTen = new Cleaner
+                            {
+                                BeginDate = plannedTreatment.EndDate,
+                                EndDate = plannedTreatment.EndDate.AddMinutes(10),
+                                RoomId = treatmentCreationModel.SelectedRoomId,
+                                CleaningDone = false,
+                                CleaningDuration = CleaningDuration.tenMinutes,
+                                TreatmentId = newTreatment.Id
+                            };
+                            _db.Cleaner.AddOrUpdate(newCleaningAppointmentTen);
+                            _db.SaveChanges();
+                            break;
+                        case CleaningDuration.twentyMinutes:
+                            var newCleaningAppointmentTwenty = new Cleaner
+                            {
+                                BeginDate = plannedTreatment.EndDate,
+                                EndDate = plannedTreatment.EndDate.AddMinutes(20),
+                                RoomId = treatmentCreationModel.SelectedRoomId,
+                                CleaningDone = false,
+                                CleaningDuration = CleaningDuration.twentyMinutes,
+                                TreatmentId = newTreatment.Id
+                            };
+                            _db.Cleaner.AddOrUpdate(newCleaningAppointmentTwenty);
+                            _db.SaveChanges();
+                            break;
+                        case CleaningDuration.thirtyMinutes:
+                            var newCleaningAppointmentThirty = new Cleaner
+                            {
+                                BeginDate = plannedTreatment.EndDate,
+                                EndDate = plannedTreatment.EndDate.AddMinutes(30),
+                                RoomId = treatmentCreationModel.SelectedRoomId,
+                                CleaningDone = false,
+                                CleaningDuration = CleaningDuration.thirtyMinutes,
+                                TreatmentId = newTreatment.Id
+                            };
+                            _db.Cleaner.AddOrUpdate(newCleaningAppointmentThirty);
+                            _db.SaveChanges();
+                            break;
+                        default:
+                            break;
+                    }
                 }
-
+                
                 // success-message for alert-statement
                 TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
 
@@ -648,6 +648,40 @@ namespace BiberDAMM.Controllers
             }
 
             //return ViewModel
+            return treatmentCreationModel;
+        }
+
+        //[KrabsJ]
+        //this method updates the viewModel data of client appointments
+        //expected parameter: CreationTreatment viewModel
+        //return: CreationTreatment viewModel
+        private CreationTreatment UpdateViewModelClientAppointments(CreationTreatment treatmentCreationModel)
+        {
+            // remove the appointments of the client that was found before
+            if (treatmentCreationModel.AppointmentsOfSelectedRessources != null)
+            {
+                foreach (var appointment in treatmentCreationModel.AppointmentsOfSelectedRessources.ToArray())
+                {
+                    if (appointment.Ressource == ConstVariables.AppointmentOfClient)
+                    {
+                        treatmentCreationModel.AppointmentsOfSelectedRessources.Remove(appointment);
+                    }
+                }
+            }
+            else
+            {
+                // for adding new client appointments (see the steps below) it is necessary that the list is not null
+                treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+            }
+
+            // get all client appointments from db
+            List<AppointmentOfSelectedRessource> clientAppointments = GetClientAppointments(treatmentCreationModel.ClientId);
+
+            // store the (new) found client appointments in the viewModel
+            foreach (var appointment in clientAppointments)
+            {
+                treatmentCreationModel.AppointmentsOfSelectedRessources.Add(appointment);
+            }
             return treatmentCreationModel;
         }
 
