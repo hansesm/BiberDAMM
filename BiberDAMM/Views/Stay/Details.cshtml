@@ -173,7 +173,7 @@
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Stay.EndDate, new { @class = "col-form-label" })
                 @Html.TextBoxFor(model => model.Stay.EndDate, new { @class = "form-control", id = "endDate" })
-                @Html.ValidationMessageFor(model => model.Stay.EndDate, "", new { @class = "text-danger" })
+                @Html.ValidationMessage("EndDateError", new { @class = "text-danger" })
             </div>
 
         </div>
