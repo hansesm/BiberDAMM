@@ -69,9 +69,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Birthdate, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Birthdate, new { @class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control" } })
+               @* @Html.TextBoxFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control", id = "birthDate" } })*@
+                @Html.TextBoxFor(model => model.Birthdate, new { @class = "form-control", id = "birthDate" })
                 @Html.ValidationMessageFor(model => model.Birthdate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -103,10 +104,10 @@
 
                 @Html.HiddenFor(model => model.HealthInsuranceId)
 
-                <br /> 
+                <br />
                 <br />
 
-                
+
             </div>
         </div>
 
@@ -132,3 +133,16 @@
             @Html.ValidationMessageFor(model => model.HealthInsuranceId, "", new { @class = "text-danger" })
         </div>
 *@
+
+@section Scripts{
+
+
+    <!-- Datetimepicker for begin-->
+    <script>
+        $("#birthDate").datepicker({
+            sliderAccessArgs: { touchonly: false },
+            dateFormat: "dd.mm.yy"
+        });
+    </script>
+
+}
