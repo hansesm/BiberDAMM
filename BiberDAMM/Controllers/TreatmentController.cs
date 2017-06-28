@@ -435,6 +435,10 @@ namespace BiberDAMM.Controllers
                     }
                 }
 
+                // helper variables for storing information about series
+                int idOfSeries = 0;
+                int loopCounter = 1;
+
                 // create the new treatments and store or update them in the db
                 foreach (var plannedTreatment in checkListOfPlannedTreatments)
                 {
@@ -449,9 +453,25 @@ namespace BiberDAMM.Controllers
                         UpdateTimeStamp = DateTime.Now,
                         ApplicationUsers = userList,
                     };
+                    // if loopCounter is greater than 1, it is a series of treatments that is stored in th db
+                    // in this case, the idOfSeries is the ID of the first treatment that is stored
+                    if (loopCounter > 1)
+                    {
+                        newTreatment.IdOfSeries = idOfSeries;
+                    }
 
                     _db.Treatments.AddOrUpdate(newTreatment);
                     _db.SaveChanges();
+
+                    // if a series of treatment should be stored, remember the ID of the first stored treatment, because this is used as the idOfSeries
+                    // also this attribute has to be set to the first stored treatment
+                    if (loopCounter == 1 && checkListOfPlannedTreatments.Count > 1)
+                    {
+                        idOfSeries = newTreatment.Id;
+                        newTreatment.IdOfSeries = idOfSeries;
+                        _db.Treatments.AddOrUpdate(newTreatment);
+                        _db.SaveChanges();
+                    }
 
                     // create an optional cleaningAppointment
                     switch (treatmentCreationModel.CleaningDuration)
@@ -500,6 +520,7 @@ namespace BiberDAMM.Controllers
                         default:
                             break;
                     }
+                    loopCounter = loopCounter + 1;
                 }
                 
                 // success-message for alert-statement
@@ -905,12 +926,43 @@ namespace BiberDAMM.Controllers
             // get treatment from db
             var treatment = _db.Treatments.Single(t => t.Id == Id);
 
+            // create viewModel
+            DetailsTreatment treatmentDetails = new DetailsTreatment
+            {
+                Treatment = treatment,
+                DeleteOption = TreatmentSeriesDeleteOptions.onlySelectedTreatment
+            };
+
             //return view
-            return View(treatment);
+            return View(treatmentDetails);
         }
 
-            //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
-            private JsonResult CreateJsonResult(IList<AppointmentOfSelectedRessource> appointmentList)
+        // POST: Treatment/Delete [KrabsJ]
+        // this method deletes a single treatment
+        // expected parameter: int treatmentId
+        // return: redirectToAction("Details", "Stay", int stayId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int Id)
+        {
+            var stayId = _db.Treatments.Single(t => t.Id == Id).StayId;
+            return RedirectToAction("Details", "Stay", new { id = stayId });
+        }
+
+        // POST: Treatment/Delete [KrabsJ]
+        // this method deletes one or many treatments of a series, depending on the selected option
+        // expected parameter: DetailsTreatment treatmentDetails
+        // return: redirectToAction("Details", "Stay", int stayId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteWithOption(DetailsTreatment treatmentDetails)
+        {
+            var stayId = treatmentDetails.Treatment.StayId;
+            return RedirectToAction("Details", "Stay", new { id = stayId });
+        }
+
+        //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]
+        private JsonResult CreateJsonResult(IList<AppointmentOfSelectedRessource> appointmentList)
         {
             //Builds a JSon from the appointmentList
             var result = appointmentList.Select(a => new JsonEventTreatment()

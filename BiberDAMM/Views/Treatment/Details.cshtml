@@ -1,9 +1,9 @@
 ﻿<!-- details page for treatments [KrabsJ]-->
-
-@model BiberDAMM.Models.Treatment
+@model BiberDAMM.ViewModels.DetailsTreatment
+@using BiberDAMM.ViewModels
 
 @{
-    ViewBag.Title = Model.TreatmentType.Name;
+    ViewBag.Title = Model.Treatment.TreatmentType.Name;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -21,41 +21,41 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(m => m.Stay.Client.Surname)
-                        @Html.DisplayFor(m => m.Stay.Client.Lastname)
+                        @Html.DisplayFor(m => m.Treatment.Stay.Client.Surname)
+                        @Html.DisplayFor(m => m.Treatment.Stay.Client.Lastname)
                     </dd>
                 </dl>
             </div>
             <div class="form-group col-md-3">
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.DisplayNameFor(m => m.Room.RoomNumber)
+                        @Html.DisplayNameFor(m => m.Treatment.Room.RoomNumber)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(m => m.Room.RoomNumber)
+                        @Html.DisplayFor(m => m.Treatment.Room.RoomNumber)
                     </dd>
                 </dl>
             </div>
             <div class="form-group col-md-3">
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.DisplayNameFor(m => m.BeginDate)
+                        @Html.DisplayNameFor(m => m.Treatment.BeginDate)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(m => m.BeginDate)
+                        @Html.DisplayFor(m => m.Treatment.BeginDate)
                     </dd>
                 </dl>
             </div>
             <div class="form-group col-md-3">
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.DisplayNameFor(m => m.EndDate)
+                        @Html.DisplayNameFor(m => m.Treatment.EndDate)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(m => m.EndDate)
+                        @Html.DisplayFor(m => m.Treatment.EndDate)
                     </dd>
                 </dl>
             </div>
@@ -78,7 +78,7 @@
             </thead>
 
             <tbody>
-                @if (Model.ApplicationUsers == null || Model.ApplicationUsers.Count == 0)
+                @if (Model.Treatment.ApplicationUsers == null || Model.Treatment.ApplicationUsers.Count == 0)
                 {
                     <tr>
                         <td colspan="2" style="text-align:center">
@@ -88,7 +88,7 @@
                 }
                 else
                 {
-                    foreach (var staffMember in Model.ApplicationUsers)
+                    foreach (var staffMember in Model.Treatment.ApplicationUsers)
                     {
                         <tr>
                             <td>
@@ -115,12 +115,114 @@
     <hr />
     <div class="form-group col-md-12">
         <h4>Kommentar</h4>
-        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "6", @readonly = "readonly" })
+        @Html.TextAreaFor(m => m.Treatment.Description, new { @class = "form-control", rows = "6", @readonly = "readonly" })
     </div>
 
     <div class="form-group col-md-12">
         <button title="Bearbeiten" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-        <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-        <button title="Zurück zum Aufenthalt" onclick="location.href = '@Url.Action("Details", "Stay", new {id = Model.StayId})'" class="btn btn-outline-primary btn-sm">Zurück</button>
+        <button id="deleteButton" type="button" title="Löschen" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+        <button title="Zurück zum Aufenthalt" onclick="location.href = '@Url.Action("Details", "Stay" , new {id=Model.Treatment.StayId})'" class="btn btn-outline-primary btn-sm">Zurück</button>
     </div>
 </div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: inline-block;">Behandlung löschen</h4>
+                <i class="fa fa-exclamation-triangle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <b>
+                        Möchten Sie diese Behandlung wirklich löschen?
+                    </b>
+                </p>
+                <p>(Zugehörige Raumreinigungen werden ebenfalls gelöscht)</p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Delete", "Treatment", new { Id = Model.Treatment.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />
+                    <button title="Abbrechen" type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end Delete Modal -->
+<!-- Delete Series Option Modal -->
+<div id="deleteSeriesOptionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteWithOption", "Treatment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.HiddenFor(m => m.Treatment.Id)
+                @Html.HiddenFor(m => m.Treatment.StayId)
+                @Html.HiddenFor(m => m.Treatment.BeginDate)
+                @Html.HiddenFor(m => m.Treatment.EndDate)
+                @Html.HiddenFor(m => m.Treatment.Description)
+                @Html.HiddenFor(m => m.Treatment.IdOfSeries)
+                @Html.HiddenFor(m => m.Treatment.RoomId)
+                @Html.HiddenFor(m => m.Treatment.TreatmentTypeId)
+                @Html.HiddenFor(m => m.Treatment.UpdateTimeStamp)
+                <div class="modal-header">
+                    <h4 class="modal-title" style="display: inline-block;">Behandlung löschen</h4>
+                    <i class="fa fa-exclamation-triangle fa-3x icon-outline-primary" aria-hidden="true" style="float: right;"></i>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <b>
+                            Möchten Sie diese Behandlung wirklich löschen?
+                        </b>
+                    </p>
+                    <p>(Zugehörige Raumreinigungen werden ebenfalls gelöscht)</p>
+                    <hr />
+                    <p>
+                        <b>
+                            Diese Behandlung ist Teil einer Serie. Bitte wählen Sie eine Option aus:
+                        </b>
+                    </p>
+                    @Html.RadioButtonFor(m => m.DeleteOption, TreatmentSeriesDeleteOptions.onlySelectedTreatment)
+                    <label for="@TreatmentSeriesDeleteOptions.onlySelectedTreatment" style="margin-top: .5rem">nur die ausgewählte Behandlung löschen</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DeleteOption, TreatmentSeriesDeleteOptions.selectedAndFutureTreatments)
+                    <label for="@TreatmentSeriesDeleteOptions.selectedAndFutureTreatments" style="margin-top: .5rem">die ausgewählte und alle darauf folgenden Behandlungen löschen</label>
+                    <br />
+                    @Html.RadioButtonFor(m => m.DeleteOption, TreatmentSeriesDeleteOptions.allTreatments)
+                    <label for="@TreatmentSeriesDeleteOptions.allTreatments" style="margin-top: .5rem">alle Behandlungen löschen</label>
+                </div>
+                <div class="modal-footer">
+                    @Html.AntiForgeryToken()
+                    <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />
+                    <button title="Abbrechen" type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+    $(document).ready(function () {
+        $('#deleteButton').click(function () {
+            var idOfSeries = @Html.Raw(Json.Encode(Model.Treatment.IdOfSeries));
+            //console.log(idOfSeries);
+            if (idOfSeries == null) {
+                $('#deleteModal').modal('show');
+            }
+            else {
+                $('#deleteSeriesOptionModal').modal('show');
+            }
+            });
+        });
+    </script>
+}
