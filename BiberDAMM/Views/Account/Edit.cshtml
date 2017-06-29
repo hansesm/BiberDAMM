@@ -12,6 +12,17 @@ author: KrabsJ
 <h2 style="display: inline-block;">@ViewBag.Title</h2>
 <button style="float: right;" title="Neues Passwort vergeben" onclick="location.href = '@Url.Action("NewInitialPassword", "Account", new { userId = Model.Id })'" class="btn btn-outline-primary btn-sm">Neues Passwort</button>
 
+<!--show alert "ErrorDependenciesOnRole" if the edit-method failed, because of role dependencies of the user-->
+@if (TempData["ErrorDependenciesOnRole"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Änderung fehlgeschlagen!</strong>@TempData["ErrorDependenciesOnRole"]
+    </div>
+}
+
 <!--show alert "EditUserFailed" if the edit-method failed-->
 @if (TempData["EditUserFailed"] != null)
 {
