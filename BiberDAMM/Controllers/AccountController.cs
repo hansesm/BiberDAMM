@@ -113,7 +113,19 @@ namespace BiberDAMM.Controllers
 
                 // check if the userRole has to be changed
                 if (editUser.UserType != model.UserType)
+                {
+                    // check if there are dependencies
+                    Stay dependentStay = db.Stays.Where(s => s.ApplicationUserId == model.Id).FirstOrDefault();
+                    Treatment dependentTreatment = db.Users.Where(u => u.Id == model.Id).SelectMany(u => u.Treatments).FirstOrDefault();
+                    if (dependentStay != null || dependentTreatment != null)
+                    {
+                        // error-message for alert-statement
+                        TempData["ErrorDependenciesOnRole"] = " Der Benutzer ist in seiner Rolle als " + editUser.UserType.ToString() + " noch Behandlungen oder Aufenthalten zugeteilt. Bitte löschen Sie zunächst diese Abhängigkeiten oder legen Sie einen neuen Benutzer an.";
+                        return View("Edit", model);
+                    }
                     changeRole = true;
+                }
+                    
 
                 // get the new data from the EditViewModel
                 editUser.Title = model.Title;

@@ -435,6 +435,10 @@ namespace BiberDAMM.Controllers
                     }
                 }
 
+                // helper variables for storing information about series
+                int idOfSeries = 0;
+                int loopCounter = 1;
+
                 // create the new treatments and store or update them in the db
                 foreach (var plannedTreatment in checkListOfPlannedTreatments)
                 {
@@ -449,9 +453,25 @@ namespace BiberDAMM.Controllers
                         UpdateTimeStamp = DateTime.Now,
                         ApplicationUsers = userList,
                     };
+                    // if loopCounter is greater than 1, it is a series of treatments that is stored in th db
+                    // in this case, the idOfSeries is the ID of the first treatment that is stored
+                    if (loopCounter > 1)
+                    {
+                        newTreatment.IdOfSeries = idOfSeries;
+                    }
 
                     _db.Treatments.AddOrUpdate(newTreatment);
                     _db.SaveChanges();
+
+                    // if a series of treatment should be stored, remember the ID of the first stored treatment, because this is used as the idOfSeries
+                    // also this attribute has to be set to the first stored treatment
+                    if (loopCounter == 1 && checkListOfPlannedTreatments.Count > 1)
+                    {
+                        idOfSeries = newTreatment.Id;
+                        newTreatment.IdOfSeries = idOfSeries;
+                        _db.Treatments.AddOrUpdate(newTreatment);
+                        _db.SaveChanges();
+                    }
 
                     // create an optional cleaningAppointment
                     switch (treatmentCreationModel.CleaningDuration)
@@ -500,6 +520,7 @@ namespace BiberDAMM.Controllers
                         default:
                             break;
                     }
+                    loopCounter = loopCounter + 1;
                 }
                 
                 // success-message for alert-statement
@@ -894,6 +915,114 @@ namespace BiberDAMM.Controllers
             }
 
             return plannedCleaning;
+        }
+
+        // GET: Treatment/Details [KrabsJ]
+        // this method returns the view "Details" that shows the details data of a treatment
+        // expected parameter: int treatmentId
+        // return: view(Treatment treatment)
+        public ActionResult Details(int Id)
+        {
+            // get treatment from db
+            var treatment = _db.Treatments.Single(t => t.Id == Id);
+
+            // create viewModel
+            DetailsTreatment treatmentDetails = new DetailsTreatment
+            {
+                Treatment = treatment,
+                DeleteOption = TreatmentSeriesDeleteOptions.onlySelectedTreatment
+            };
+
+            //return view
+            return View(treatmentDetails);
+        }
+
+        // POST: Treatment/Delete [KrabsJ]
+        // this method deletes a single treatment
+        // expected parameter: int treatmentId
+        // return: redirectToAction("Details", "Stay", int stayId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int Id)
+        {
+            // get treatment that will be deleted
+            var deleteTreatment = _db.Treatments.Single(t => t.Id == Id);
+            // save stayId for return value
+            var stayId = deleteTreatment.StayId;
+
+            // get an associated cleaning event if existing
+            var deleteCleaning = _db.Cleaner.SingleOrDefault(c => c.TreatmentId == deleteTreatment.Id);
+
+            // if an cleaning event exists, delete it first, so that there are no dependencies on the treatment
+            if (deleteCleaning != null)
+            {
+                _db.Cleaner.Remove(deleteCleaning);
+                _db.SaveChanges();
+            }
+
+            // delete the treatment
+            _db.Treatments.Remove(deleteTreatment);
+            _db.SaveChanges();
+
+            // success-message for alert-statement
+            TempData["DeleteTreatmentSuccess"] = " Die Behandlung wurde erfolgreich gelöscht.";
+
+            // redirect to detailspage of stay
+            return RedirectToAction("Details", "Stay", new { id = stayId });
+        }
+
+        // POST: Treatment/Delete [KrabsJ]
+        // this method deletes one or many treatments of a series, depending on the selected option
+        // expected parameter: DetailsTreatment treatmentDetails
+        // return: redirectToAction("Details", "Stay", int stayId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteWithOption(DetailsTreatment treatmentDetails)
+        {
+            // save stayId for return value
+            var stayId = treatmentDetails.Treatment.StayId;
+
+            // get treatments that will be deleted depending on the selected delete option
+            List<Treatment> deleteTreatmentList = new List<Treatment>();
+            switch (treatmentDetails.DeleteOption)
+            {
+                case TreatmentSeriesDeleteOptions.onlySelectedTreatment:
+                    // call delete method, which deletes a single treatment
+                    return Delete(treatmentDetails.Treatment.Id);
+                case TreatmentSeriesDeleteOptions.selectedAndFutureTreatments:
+                    deleteTreatmentList = _db.Treatments.Where(t => t.IdOfSeries != null && t.IdOfSeries == treatmentDetails.Treatment.IdOfSeries && t.BeginDate >= treatmentDetails.Treatment.BeginDate).ToList();
+                    break;
+                case TreatmentSeriesDeleteOptions.allTreatments:
+                    deleteTreatmentList = _db.Treatments.Where(t => t.IdOfSeries != null && t.IdOfSeries == treatmentDetails.Treatment.IdOfSeries).ToList();
+                    break;
+                default:
+                    break;
+            }
+
+            // get associated cleaning events if existing
+            List<Cleaner> deleteCleaningsList = new List<Cleaner>();
+            foreach (var treatment in deleteTreatmentList)
+            {
+                var deleteCleaning = _db.Cleaner.SingleOrDefault(c => c.TreatmentId == treatment.Id);
+                if (deleteCleaning != null)
+                {
+                    deleteCleaningsList.Add(deleteCleaning);
+                }
+
+            }
+
+            // delete Cleanings first, so that there are no dependencies on the treatment
+            _db.Cleaner.RemoveRange(deleteCleaningsList);
+            _db.SaveChanges();
+
+            // delete treatments
+            _db.Treatments.RemoveRange(deleteTreatmentList);
+            _db.SaveChanges();
+
+            // success-message for alert-statement
+            TempData["DeleteTreatmentSuccess"] = " Die Behandlungen wurde erfolgreich gelöscht.";
+
+            return RedirectToAction("Details", "Stay", new { Id = stayId });
         }
 
         //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]

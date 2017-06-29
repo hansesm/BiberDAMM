@@ -238,6 +238,7 @@
     <Compile Include="ViewModels\CreationContactData.cs" />
     <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\CreationHealthInsurance.cs" />
+    <Compile Include="ViewModels\DetailsTreatment.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
     <Compile Include="ViewModels\NurseIndexViewModel.cs" />
     <Compile Include="ViewModels\RoomSchedulerViewModel.cs" />
@@ -894,6 +895,7 @@
     <Content Include="Views\Blocks\Details.cshtml" />
     <Content Include="Views\Room\RoomScheduler.cshtml" />
     <Content Include="Views\Error\Oops.cshtml" />
+    <Content Include="Views\Treatment\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

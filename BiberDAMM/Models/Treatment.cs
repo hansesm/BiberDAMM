@@ -31,6 +31,8 @@ namespace BiberDAMM.Models
         public int TreatmentTypeId { get; set; }
         public virtual TreatmentType TreatmentType { get; set; }
 
+        public int? IdOfSeries { get; set; }
+
         public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
