@@ -105,6 +105,17 @@
     </div>
 }
 
+<!-- Alert if a new treatment was successfully deleted [KrabsJ]-->
+@if (TempData["DeleteTreatmentSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Erfolgreich:</strong>@TempData["DeleteTreatmentSuccess"]
+    </div>
+}
+
 <!-- Alert if a Delete cant be processte [HansesM]-->
 @if (TempData["DeleteStayError"] != null)
 {
