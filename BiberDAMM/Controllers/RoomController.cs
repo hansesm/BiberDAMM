@@ -6,6 +6,7 @@ using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using BiberDAMM.ViewModels;
+using System;
 
 namespace BiberDAMM.Controllers
 {
@@ -178,7 +179,19 @@ namespace BiberDAMM.Controllers
         }
 
         //GET SINGLE: Room [JEL]
-        public ActionResult Details(int? id)
+        //public ActionResult Details(int? id)
+        //{
+        //    //checks if given id is equal null, if this is the case return to "index-view" 
+        //    if (id == null)
+        //        return RedirectToAction("Index");
+        //    //checks if room with given id exists
+        //    var room = db.Rooms.Find(id);
+        //    if (room == null)
+        //        return HttpNotFound();
+        //    //returns room
+        //    return View(room);
+        //}
+        public ActionResult Details (int? id)
         {
             //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
@@ -187,8 +200,24 @@ namespace BiberDAMM.Controllers
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
-            //returns room
-            return View(room);
+
+            //lists all beds which are placed in the given room
+            List <Bed> listEmptyBeds = db.Beds.Where(b => b.RoomId == room.Id).ToList();
+            //lists all blocks which are connected to the beds which are placed in the given room
+            List<Blocks> currentBedBlocks = new List<Blocks>();
+            foreach (var bed in listEmptyBeds.ToArray())
+            {
+                Blocks newBlock = db.Blocks.SingleOrDefault(b => b.BeginDate <= DateTime.Now && b.EndDate >= DateTime.Now && b.BedId == bed.Id);
+                if(newBlock != null)
+                {
+                    currentBedBlocks.Add(newBlock);
+                    //remove empty beds to avoid doule occurrence
+                    listEmptyBeds.Remove(bed);
+                }
+            }
+            //creates viewModel
+            var viewModel = new BedsInRoomViewModel(room, currentBedBlocks, listEmptyBeds);
+            return View(viewModel);
         }
 
         public ActionResult RoomScheduler()
