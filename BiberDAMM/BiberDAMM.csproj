@@ -234,10 +234,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BedsInRoomViewModel.cs" />
     <Compile Include="ViewModels\CreationBed.cs" />
-    <Compile Include="ViewModels\CreationClient.cs" />
-    <Compile Include="ViewModels\CreationContactData.cs" />
     <Compile Include="ViewModels\CreationContactType.cs" />
-    <Compile Include="ViewModels\CreationHealthInsurance.cs" />
     <Compile Include="ViewModels\DetailsTreatment.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
     <Compile Include="ViewModels\NurseIndexViewModel.cs" />
