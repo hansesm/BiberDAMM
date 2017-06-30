@@ -15,16 +15,11 @@ namespace BiberDAMM.Models
     public class Client
     {
         public int Id { get; set; }
-        // TODO Check if working and names like Ügüglülü can be saved
-        // TODO [for all] delete the regular expressions on validation surname and lastname? it doesn't work
-
         [Required]
-//        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]
         [Display(Name = "Vorname")]
         public string Surname { get; set; }
 
         [Required]
-//        [RegularExpression("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð,.'-]+$/u")]
         [Display(Name = "Nachname")]
         public string Lastname { get; set; }
 

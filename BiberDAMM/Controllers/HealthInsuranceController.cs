@@ -111,9 +111,6 @@ namespace BiberDAMM.Controllers
 
 
         //Function for deleting Datasets
-        //[HttpPost]
-        //[ActionName("Details")]
-        //[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             var healthInsurance = db.HealthInsurances.Find(id);
