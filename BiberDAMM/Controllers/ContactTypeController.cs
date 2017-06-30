@@ -50,8 +50,7 @@ namespace BiberDAMM.Controllers
 
             TempData["CreateContactTypeSaved_Bool"] = "1";
             TempData["CreateContactTypeSaved"] = " Die Erstellung war erfolgreich";
-            return View();
-            //return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -69,7 +68,12 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ContactType ContactType)
         {
-            if (ModelState.IsValid)
+            List<ContactData> usedContactTypes = db.ContactDatas.Where(cd => cd.ContactTypeId == ContactType.Id).ToList();
+            if(usedContactTypes.Count > 0)
+            {
+                TempData["ContactTypeError"] = "Dieser Kontakttyp ist in Verwendung und kann nicht geändert werden.";
+                return RedirectToAction("Details");
+            } else if (ModelState.IsValid)
             {
                 db.Entry(ContactType).State = EntityState.Modified;
                 db.SaveChanges();

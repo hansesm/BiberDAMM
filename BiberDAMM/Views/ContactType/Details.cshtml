@@ -56,16 +56,8 @@
 <p>
 <div class="form-actions no-color">
 
-    @if (Session["TempClient"] != null || Session["TempNewClient"] != null)
-            {
-
-        <button title="Kontakttyp hinzufügen" onclick="location.href = '@Url.Action("AddContactTypeToClient", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Hinzufügen</button>
-    }
-    else
-    {
-        <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-
-    }
+   
+    <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new { id = Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
 
     <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
     <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
