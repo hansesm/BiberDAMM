@@ -15,7 +15,6 @@ using BiberDAMM.ViewModels;
 namespace BiberDAMM.Controllers
 {
     public class BlocksController : Controller
-    //TODO Comment the class ! [HansesM]
     {
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
@@ -42,7 +41,6 @@ namespace BiberDAMM.Controllers
                 blocks.StayId = stay.Id;
 
                 //Builds a selectesList out of the list of beds, only id and text are required [HansesM]
-                //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
                 var selectetlistBedModels = new List<SelectListItem>();
                 foreach (BedModels m in Enum.GetValues(typeof(BedModels)))
                 {
@@ -56,7 +54,7 @@ namespace BiberDAMM.Controllers
                 var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
                 return View(viewModel);
             }
-            //TODO [Hansesm] No stay found
+            //No stay found [Hansesm] 
             return RedirectToAction("Index", "Stay");
         }
 
@@ -160,7 +158,6 @@ namespace BiberDAMM.Controllers
             }
 
             //Gets a list of free beds, matching the given parameters! [HansesM]
-            //TODO TEST IT !!!!
             var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +
                                            "(select RoomId from beds group by RoomId having count(*) " + roomType +
                                            ")" +
@@ -176,7 +173,6 @@ namespace BiberDAMM.Controllers
             var result = events.Select(e => new JsonEvent
             {
                 value = e.Id.ToString(),
-                //TODO change to something with more sense
                 text = e.BedModels.ToString() + " " + e.Id.ToString() + " in Raum " + e.Room.RoomNumber.ToString()
             }).ToList();
 
