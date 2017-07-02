@@ -15,7 +15,7 @@ namespace BiberDAMM.Controllers
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
-        
+
         public ContactType ContactTypes { get; private set; }
 
         // GET all: ContactType [JEL] [ANNAS]
@@ -37,20 +37,39 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ContactType ContactType)
         {
-            ContactType checkContactType = db.ContactTypes.Where(c => c.Name == ContactType.Name).FirstOrDefault();
-            if (checkContactType != null)
+            try
             {
-                // Fehler alert schreiben und wenn es erfolgreich gespeichert ist
-                TempData["CreateContactTypeSaved_Bool"] = "0";
-                TempData["CreateContactTypeFailed"] = " Bei der Erstellung ist ein Fehler aufgetreten";
-                return View();
-            }
-            db.ContactTypes.Add(ContactType);
-            db.SaveChanges();
+                ContactType checkContactType = db.ContactTypes.Where(c => c.Name == ContactType.Name).FirstOrDefault();
+                if (ContactType.Name == "")
+                {
+                    TempData["CreateContactTypeSaved_Bool"] = "0";
+                    TempData["CreateContactTypeSaved"] = "Der Name darf nicht leer sein.";
+                    return RedirectToAction("Create");
+                }
+                if (checkContactType != null)
+                {
+                    // Fehler alert schreiben und wenn es erfolgreich gespeichert ist
+                    TempData["CreateContactTypeSaved_Bool"] = "0";
+                    TempData["CreateContactTypeFailed"] = " Bei der Erstellung ist ein Fehler aufgetreten";
+                    return View();
+                }
+                if (ModelState.IsValid)
+                {
+                    db.ContactTypes.Add(ContactType);
+                    db.SaveChanges();
+                }
 
-            TempData["CreateContactTypeSaved_Bool"] = "1";
-            TempData["CreateContactTypeSaved"] = " Die Erstellung war erfolgreich";
-            return RedirectToAction("Index");
+                TempData["CreateContactTypeSaved_Bool"] = "1";
+                TempData["CreateContactTypeSaved"] = " Die Erstellung war erfolgreich";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["CreateContactTypeSaved_Bool"] = "0";
+                TempData["CreateContactTypeSaved"] = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.";
+                return View(ContactType);
+            }
+
         }
 
         [HttpGet]
@@ -64,27 +83,49 @@ namespace BiberDAMM.Controllers
                 return HttpNotFound();
             return View(ContactType);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ContactType ContactType)
         {
-            List<ContactData> usedContactTypes = db.ContactDatas.Where(cd => cd.ContactTypeId == ContactType.Id).ToList();
-            if(usedContactTypes.Count > 0)
+            try
             {
-                TempData["ContactTypeError"] = "Dieser Kontakttyp ist in Verwendung und kann nicht geändert werden.";
-                return RedirectToAction("Details");
-            } else if (ModelState.IsValid)
-            {
-                db.Entry(ContactType).State = EntityState.Modified;
-                db.SaveChanges();
+                if (ContactType.Name == "")
+                {
+                    return View(ContactType);
+                }
+                List<ContactData> usedContactTypes = db.ContactDatas.Where(cd => cd.ContactTypeId == ContactType.Id).ToList();
+                List<ContactType> existingContactTypes = db.ContactTypes.Where(cd => cd.Name == ContactType.Name).ToList();
+                if (usedContactTypes.Count > 0)
+                {
+                    TempData["ContactTypeError"] = "Dieser Kontakttyp ist in Verwendung und kann nicht geändert werden.";
+                    return RedirectToAction("Details");
+                }
+                if(existingContactTypes.Count > 0)
+                {
+                    TempData["ContactTypeError"] = "Ein Kontakttyp mit diesem Namen ist bereits vorhanden.";
+                    return View(ContactType);
+                }
+                else if (ModelState.IsValid)
+                {
+                    db.Entry(ContactType).State = EntityState.Modified;
+                    db.SaveChanges();
 
-                TempData["ContactTypeSuccess"] = "Daten erfolgreich gespeichert";
-                return RedirectToAction("Details", new { id = ContactType.Id });
+                    TempData["ContactTypeSuccess"] = "Daten erfolgreich gespeichert";
+                    return RedirectToAction("Details", new { id = ContactType.Id });
+                }
+
+                TempData["ContactTypeError"] = "Eingaben fehlerhaft oder unvollständig";
+                return View(ContactType);
             }
-
-            TempData["ContactTypeError"] = "Eingaben fehlerhaft oder unvollständig";
-            return View(ContactType);
+            catch (Exception ex)
+            {
+                TempData["EditContactTypeSaved_Bool"] = "0";
+                TempData["EditContactTypeSaved"] = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.";
+                return View(ContactType);
+            }
         }
+
 
         //GET SINGLE: ContactType [JEL] [ANNAS]
         public ActionResult Details(int? contactTypeId)
@@ -98,11 +139,6 @@ namespace BiberDAMM.Controllers
 
             return View(_contactType);
         }
-
-        //new ActionResult RedirectToAction(string v)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         //SAVE: ContactType [JEL] [ANNAS]
         public ActionResult Save()
@@ -141,3 +177,4 @@ namespace BiberDAMM.Controllers
         }
     }
 }
+

@@ -41,13 +41,6 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
-        @*<div class="form-group">
-                @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @type = "Id", @min = "1", @step = "1", Value = "1" } })
-                    @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Hinzufügen" class="btn btn-outline-primary btn-sm" />
