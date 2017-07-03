@@ -221,12 +221,12 @@ namespace BiberDAMM.DAL
             {
                 new Room {RoomNumber = "O-1", RoomTypeId = 2},
                 new Room {RoomNumber = "O-2", RoomTypeId = 2},
-                new Room {RoomNumber = "KS-100", RoomTypeId = 1},
-                new Room {RoomNumber = "I-20", RoomTypeId = 1},
+                new Room {RoomNumber = "KS-100", RoomTypeId = 1, RoomMaxSize = 3},
+                new Room {RoomNumber = "I-20", RoomTypeId = 1, RoomMaxSize = 2},
                 new Room {RoomNumber = "2OG-12", RoomTypeId = 3},
                 new Room {RoomNumber = "E-10", RoomTypeId = 4},
                 new Room {RoomNumber = "E-11", RoomTypeId = 4},
-                new Room {RoomNumber = "P-32", RoomTypeId = 1}
+                new Room {RoomNumber = "P-32", RoomTypeId = 1, RoomMaxSize = 2}
             };
             rooms.ForEach(r => _context.Rooms.Add(r));
             _context.SaveChanges();

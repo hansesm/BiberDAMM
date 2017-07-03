@@ -15,10 +15,12 @@ namespace BiberDAMM.ViewModels
         month,
     }
 
-    // This is a ViewModel used to create a new treatment [KrabsJ]
+    // This is a ViewModel used to create and edit a treatment [KrabsJ]
     public class CreationTreatment
     {
         // general attributes
+        public int? Id { get; set; }
+
         public int StayId { get; set; }
 
         public int ClientId { get; set; }
@@ -77,6 +79,13 @@ namespace BiberDAMM.ViewModels
         [Display(Name ="Anzahl Wiederholungen")]
         [Range(0, int.MaxValue, ErrorMessage = "Der eingegebene Wert befindet sich ausserhalb des zulässigen Wertebereichs")]
         public int SeriesCounter { get; set; }
+
+        // attribute for checking if treatment is already stored in db and has got series
+        public bool IsStoredWithSeries { get; set; }
+        public int? IdOfSeries { get; set; }
+
+        // attribute for remembering the id of an already stored cleaning event
+        public int? CleaningId { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]
@@ -106,6 +115,8 @@ namespace BiberDAMM.ViewModels
         public DateTime EndDate { get; set; }
 
         public string EventColor { get; set; }
+
+        public bool IsOriginalAppointment { get; set; }
     }
 
     // [KrabsJ]

@@ -119,7 +119,7 @@
     </div>
 
     <div class="form-group col-md-12">
-        <button title="Bearbeiten" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", "Treatment" , new {Id=Model.Treatment.Id})'" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <button id="deleteButton" type="button" title="Löschen" class="btn btn-outline-primary btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
         <button title="Zurück zum Aufenthalt" onclick="location.href = '@Url.Action("Details", "Stay" , new {id=Model.Treatment.StayId})'" class="btn btn-outline-primary btn-sm">Zurück</button>
     </div>
