@@ -5,11 +5,7 @@ using System.Web.Mvc;
 
 namespace BiberDAMM.ViewModels
 {
-    // ===============================
-    // AUTHOR     : ChristesR
-    // ===============================
-
-   //[JEL]
+    //[JEL]
     public class RoomViewModel
     {
         public Room room { get; set; }       

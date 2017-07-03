@@ -24,8 +24,6 @@ namespace BiberDAMM.DAL
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin,
         CustomUserRole, CustomUserClaim>
     {
-        //TODO Sinn Klären ? [HansesM]
-        //internal object ContactType;
 
         public ApplicationDbContext()
             : base("DefaultConnection")

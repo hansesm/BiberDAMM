@@ -30,7 +30,7 @@ namespace BiberDAMM.Controllers
 
         }
 
-        //Method which decides ti which client page should be redirected
+        //Method which decides to which client page should be redirected
         public ActionResult GoBackToClient()
         {
             Client cachedClient = getCachedClient();

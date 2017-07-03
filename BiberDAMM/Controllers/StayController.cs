@@ -13,7 +13,7 @@ using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist )]
     public class StayController : Controller
     {
         //The Database-Context [HansesM]
@@ -38,9 +38,8 @@ namespace BiberDAMM.Controllers
 
                 if (!DateTime.TryParse(date, out requestedDate))
                 {
-                    //If parsing wasn't succsessfull return a empty page [HansesM]
-                    //ToDo add nice errorpage for parsing error [HansesM]
-                    return new EmptyResult();
+                    //If parsing wasn't succsessfull return to home :D [HansesM]
+                    return RedirectToAction("Index", "Home");
                 }
                 //Request all stays matching the given date from the DB using a sql-querry [HansesM]
                 var stays = _db.Stays.SqlQuery("select * from stays where CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) between BeginDate and EndDate or CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) = CAST(BeginDate AS DATE);").ToList();
@@ -94,7 +93,6 @@ namespace BiberDAMM.Controllers
                 //Returns the user and displays a alert [HansesM]
                 TempData["CreateStayAbort"] = "Anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
                 return RedirectToAction("Details", "Client", new { id = stay.ClientId });
-
             }
 
             //Checks if begin is greater than enddate [HansesM]
@@ -168,7 +166,7 @@ namespace BiberDAMM.Controllers
             //Creats a new View-BedModels with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
-            //returns the viewmodel [HansesM]
+            //returns the view [HansesM]
             return View(viewModel);
         }
 

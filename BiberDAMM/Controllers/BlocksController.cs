@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 using BiberDAMM.ViewModels;
 
 /*This is the controller witch handels blocks.
@@ -14,20 +15,15 @@ using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class BlocksController : Controller
-    //TODO Comment the class ! [HansesM]
     {
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
-        //TODO [HansesM] maybe display load-factor of beds for the hospital
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         //CREATE: Blocks [HansesM]
         //Method for creating a new blocks, returns a create-blocks view with a view-model
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(int id)
         {
             //Gets the Stay from the given stay-id [HansesM]
@@ -42,7 +38,6 @@ namespace BiberDAMM.Controllers
                 blocks.StayId = stay.Id;
 
                 //Builds a selectesList out of the list of beds, only id and text are required [HansesM]
-                //TODO [HansesM] Group-By to display only 1 model (Wait for Jean-Pierre to implement it as an enum)
                 var selectetlistBedModels = new List<SelectListItem>();
                 foreach (BedModels m in Enum.GetValues(typeof(BedModels)))
                 {
@@ -56,13 +51,14 @@ namespace BiberDAMM.Controllers
                 var viewModel = new BlocksCreateViewModel(blocks, selectetlistBedModels);
                 return View(viewModel);
             }
-            //TODO [Hansesm] No stay found
+            //No stay found [Hansesm] 
             return RedirectToAction("Index", "Stay");
         }
 
         //Post Method for creating new Stay [HansesM]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(Blocks blocks, string command)
         {
             //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
@@ -106,6 +102,7 @@ namespace BiberDAMM.Controllers
 
 
         //GET SINGLE: Blocks [HansesM]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Details(int id)
         {
             var room = _db.Blocks.SingleOrDefault(m => m.Id == id);
@@ -118,6 +115,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Delete(Blocks blocks, string command)
         {
             //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
@@ -160,7 +158,6 @@ namespace BiberDAMM.Controllers
             }
 
             //Gets a list of free beds, matching the given parameters! [HansesM]
-            //TODO TEST IT !!!!
             var events = _db.Beds.SqlQuery("select * from Beds b where b.RoomId in " +
                                            "(select RoomId from beds group by RoomId having count(*) " + roomType +
                                            ")" +
@@ -176,7 +173,6 @@ namespace BiberDAMM.Controllers
             var result = events.Select(e => new JsonEvent
             {
                 value = e.Id.ToString(),
-                //TODO change to something with more sense
                 text = e.BedModels.ToString() + " " + e.Id.ToString() + " in Raum " + e.Room.RoomNumber.ToString()
             }).ToList();
 

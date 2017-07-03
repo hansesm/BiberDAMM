@@ -232,11 +232,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\CustomAuthorize.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\BedsInRoomViewModel.cs" />
     <Compile Include="ViewModels\CreationBed.cs" />
-    <Compile Include="ViewModels\CreationClient.cs" />
-    <Compile Include="ViewModels\CreationContactData.cs" />
     <Compile Include="ViewModels\CreationContactType.cs" />
-    <Compile Include="ViewModels\CreationHealthInsurance.cs" />
     <Compile Include="ViewModels\DetailsTreatment.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
     <Compile Include="ViewModels\NurseIndexViewModel.cs" />
@@ -895,6 +893,7 @@
     <Content Include="Views\Room\RoomScheduler.cshtml" />
     <Content Include="Views\Error\Oops.cshtml" />
     <Content Include="Views\Treatment\Details.cshtml" />
+    <Content Include="Views\Stay\DetailsWithoutICD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

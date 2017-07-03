@@ -26,10 +26,7 @@
     </div>
 }
 
-<div class="jumbotron">
-    <h1>Willkommen @User.Identity.GetUserName()</h1>
-    <p class="lead">Dies ist die Homeseite für Ärzte</p>
-</div>
+<h1>Willkommen @User.Identity.GetUserName()</h1>
 
 <!--
     Author: ChristesR
@@ -74,8 +71,7 @@
                 eventClick: function(calEvent, jsEvent, view) {
 
                     window.location.href = "/Treatment/Details/" + calEvent.id;
-                    //alert("Event mit der ID geklickt: " + calEvent.id);
-                    //$(this).css('border-color', 'red');
+                    
                 }
             });
         });

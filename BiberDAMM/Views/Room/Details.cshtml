@@ -2,7 +2,10 @@
 
 @* Details-View to show room details *@
 
-@model BiberDAMM.Models.Room
+@*@model BiberDAMM.Models.Room*@
+@model BiberDAMM.ViewModels.BedsInRoomViewModel
+
+
 
 @{
     ViewBag.Title = "Raumdetails";
@@ -36,36 +39,82 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.RoomNumber)
+            @Html.DisplayNameFor(model => model.room.RoomNumber)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RoomNumber)
+            @Html.DisplayFor(model => model.room.RoomNumber)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RoomType.Name)
+            @Html.DisplayNameFor(model => model.room.RoomType.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RoomType.Name)
+            @Html.DisplayFor(model => model.room.RoomType.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RoomMaxSize)
+            @Html.DisplayNameFor(model => model.room.RoomMaxSize)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RoomMaxSize)
+            @Html.DisplayFor(model => model.room.RoomMaxSize)
         </dd>
 
     </dl>
 </div>
+<!--Table lists all beds and their current patient who are staying in the current room-->
+<table id="example" class="table table-striped table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                Betten
+            </th>
+            <th>
+                Patient
+            </th>
+
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="2">
+                <span style="display:inline-block;height:15px"></span>
+            </td>
+        </tr>
+    </tfoot>
+    @foreach (var block in Model.currentBedBlocks)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => block.Bed.BedModels)
+               
+               </td>
+            <td>
+              @Html.DisplayFor(modelItem => block.Stay.Client.Surname) 
+                @Html.DisplayFor(modelItem => block.Stay.Client.Lastname)
+            </td>
+            </tr>
+        }
+    @foreach (var bed in Model.ListEmptyBeds)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => bed.BedModels)
+            </td>
+            <td></td>
+        </tr>
+    }
+
+
+    </table>
+
 <p>
-    <button title="Bearbeiten" onclick="location.href='@Url.Action("Edit", new { id= Model.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button title="Bearbeiten" onclick="location.href='@Url.Action("Edit", new { id= Model.room.Id })';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <!-- Trigger the modal with a button -->
     <button type="button" title="Löschen" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-    <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index", new { id=Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+    <button title="Zur Übersicht" onclick="location.href='@Url.Action("Index", new { id=Model.room.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
 </p>
 
 <!-- Delete Modal -->
@@ -79,28 +128,28 @@
                 <i class="fa fa-exclamation-triangle fa-3x" aria-hidden="true" style="float: right;color:deepskyblue"></i>
             </div>
             <div class="modal-body">
-                <p>Möchten Sie den Raum "<b>@Html.DisplayFor(model => model.RoomNumber)</b>" wirklich löschen?</p>
+                <p>Möchten Sie den Raum "<b>@Html.DisplayFor(model => model.room.RoomNumber)</b>" wirklich löschen?</p>
                 <table class="table" style="width:70%">
                     <tr>
                         <td>
                             <dl class="dl-horizontal">
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.RoomNumber)
+                                    @Html.DisplayNameFor(model => model.room.RoomNumber)
                                 </dt>
 
                                 <dd>
-                                    @Html.DisplayFor(model => model.RoomNumber)
+                                    @Html.DisplayFor(model => model.room.RoomNumber)
                                 </dd>
                             </dl>
                         </td>
                         <td>
                             <dl class="dl-horizontal">
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.RoomType.Name)
+                                    @Html.DisplayNameFor(model => model.room.RoomType.Name)
                                 </dt>
 
                                 <dd>
-                                    @Html.DisplayFor(model => model.RoomType.Name)
+                                    @Html.DisplayFor(model => model.room.RoomType.Name)
                                 </dd>
                             </dl>
                         </td>
@@ -108,7 +157,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("Delete", "Room", new { Id = Model.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Delete", "Room", new { Id = Model.room.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <input title="Löschen" type="submit" value="Löschen" class="btn btn-outline-primary btn-sm" />

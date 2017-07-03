@@ -50,23 +50,11 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.Id, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input title="Speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm" />
-                <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("Index")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+                <button title="Zurück zur Details" onclick="location.href = '@Url.Action("Details", new { contactTypeId = Model.Id })';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
             </div>
         </div>
     </div>
     }
-
-
-        <div>
-            @Html.ActionLink("Zurück zur Übersicht", "Index")
-        </div>

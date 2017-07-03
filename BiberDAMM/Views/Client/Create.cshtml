@@ -68,8 +68,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Birthdate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control" } })*@
-                @Html.TextBoxFor(model => model.Birthdate, new { @class = "form-control", id = "birthDate" })
+                @Html.TextBoxFor(model => model.Birthdate, "{0:d.MM.yyyy}", new { @class = "form-control", id = "birthDate" })
                 @Html.ValidationMessageFor(model => model.Birthdate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -85,8 +84,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-               @Html.TextAreaFor(model => model.Comment, new { @class = "form-control", rows = "6" })
-            @* @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.TextAreaFor(model => model.Comment, new { @class = "form-control", rows = "6" })
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -94,7 +92,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.DisplayNameFor(model => model.HealthInsurance.Name)
-                <input type="submit" name="ChangeHealthInsurance" value="Krankenversicherung ändern" class="btn btn-outline-primary btn-sm"  />
+                <input type="submit" name="ChangeHealthInsurance" value="Krankenversicherung ändern" class="btn btn-outline-primary btn-sm" />
 
                 <br />
 
@@ -113,8 +111,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @*<input title="Kontaktdaten hinterlegen" type="submit" name="EditContacts" value="Kontaktdaten hinterlegen" class="btn btn-outline-primary btn-sm"  />*@
-                <input title="Patienten hinzufügen" type="submit" name="Save" value="Hinzufügen" class="btn btn-outline-primary btn-sm"  />
+                <input title="Patienten hinzufügen" type="submit" name="Save" value="Hinzufügen" class="btn btn-outline-primary btn-sm" />
                 <input title="Daten verwerfen" type="submit" name="Cancel" value="Abbrechen" class="btn btn-outline-primary btn-sm" />
             </div>
         </div>
