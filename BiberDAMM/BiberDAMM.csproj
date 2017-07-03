@@ -893,6 +893,7 @@
     <Content Include="Views\Room\RoomScheduler.cshtml" />
     <Content Include="Views\Error\Oops.cshtml" />
     <Content Include="Views\Treatment\Details.cshtml" />
+    <Content Include="Views\Stay\DetailsWithoutICD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

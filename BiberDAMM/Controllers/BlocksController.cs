@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
 using BiberDAMM.ViewModels;
 
 /*This is the controller witch handels blocks.
@@ -14,19 +15,15 @@ using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class BlocksController : Controller
     {
         //The Database-Context [HansesM]
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
-        //TODO [HansesM] maybe display load-factor of beds for the hospital
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         //CREATE: Blocks [HansesM]
         //Method for creating a new blocks, returns a create-blocks view with a view-model
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(int id)
         {
             //Gets the Stay from the given stay-id [HansesM]
@@ -61,6 +58,7 @@ namespace BiberDAMM.Controllers
         //Post Method for creating new Stay [HansesM]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(Blocks blocks, string command)
         {
             //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
@@ -104,6 +102,7 @@ namespace BiberDAMM.Controllers
 
 
         //GET SINGLE: Blocks [HansesM]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Details(int id)
         {
             var room = _db.Blocks.SingleOrDefault(m => m.Id == id);
@@ -116,6 +115,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Delete(Blocks blocks, string command)
         {
             //If abort button is pressed we get a new stay-details-view and dismiss all changes [HansesM]
