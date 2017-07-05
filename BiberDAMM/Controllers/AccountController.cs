@@ -229,7 +229,6 @@ namespace BiberDAMM.Controllers
             return View(userPassword);
         }
 
-        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
         // POST: /Acount/Delete
         // Deletes an user if possible [KrabsJ]
         [HttpPost]
@@ -688,9 +687,8 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

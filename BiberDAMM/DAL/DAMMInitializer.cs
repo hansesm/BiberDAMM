@@ -671,7 +671,5 @@ namespace BiberDAMM.DAL
             cleaningAppointments.ForEach(c => _context.Cleaner.Add(c));
             _context.SaveChanges();
         }
-
-        //TODO [KrabsJ] check if there has to be a Dispose method
     }
 }

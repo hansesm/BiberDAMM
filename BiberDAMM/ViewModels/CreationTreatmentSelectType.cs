@@ -7,7 +7,6 @@ using System.Web.Mvc;
 
 namespace BiberDAMM.ViewModels
 {
-    // TODO [KrabsJ] required attributes?
     // viewModel for selecting a treatment type in the process of creating a new treatment [KrabsJ]
     public class CreationTreatmentSelectType
     {
