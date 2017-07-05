@@ -92,6 +92,12 @@ namespace BiberDAMM.Controllers
             treatmentCreationModel.IdOfSeries = null;
             treatmentCreationModel.CleaningId = null;
 
+            Blocks currentBlock = _db.Blocks.Where(b => b.BeginDate <= DateTime.Now && b.EndDate >= DateTime.Now && b.StayId == treatmentCreationModel.StayId).FirstOrDefault();
+            if (currentBlock != null)
+            {
+                treatmentCreationModel.ClientRoomNumber = currentBlock.Bed.Room.RoomNumber;
+            }
+
             // set defaultDate for calendar in view
             treatmentCreationModel.ShowCalendarDay = DateTime.Now.ToString("s");
 
@@ -166,9 +172,13 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
         {
-            // if abortButton was clicked, go back to details page of stay
+            // if abortButton was clicked, go back to details page of stay or of treatment
             if (command.Equals(ConstVariables.AbortButton))
             {
+                if (treatmentCreationModel.Id != null)
+                {
+                    return RedirectToAction("Details", "Treatment", new { Id = treatmentCreationModel.Id });
+                }
                 return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
             }
 
@@ -582,12 +592,20 @@ namespace BiberDAMM.Controllers
                     }
                     loopCounter = loopCounter + 1;
                 }
-                
-                // success-message for alert-statement
-                TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
 
-                // go back to stays details page
-                return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
+                if (treatmentCreationModel.Id != null)
+                {
+                    // success-message for alert-statement
+                    TempData["EditTreatmentSuccess"] = " Die Behandlung wurde geändert.";
+                    return RedirectToAction("Details", "Treatment", new { Id = treatmentCreationModel.Id });
+                }
+                else
+                {
+                    // success-message for alert-statement
+                    TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
+                    // go back to stays details page
+                    return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
+                }
             }
 
             // this point is only reached if the modal was not valid when trying to save the new treatment
