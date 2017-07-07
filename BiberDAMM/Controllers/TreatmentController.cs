@@ -186,7 +186,7 @@ namespace BiberDAMM.Controllers
             treatmentCreationModel.ShowCalendarDay = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now).Date.ToString("s");
 
             // if button "Aktualisieren" was clicked, update the appointments of selected ressources and update the planned treatment to show it in the calendar
-            if (command.Equals("Aktualisieren"))
+            if (command.Equals(ConstVariables.Update))
             {
                 // update all data in the viewModel
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
@@ -208,7 +208,7 @@ namespace BiberDAMM.Controllers
             }
 
             //if a new room was selected, update the viewModel and return the View again
-            if (command.Equals("Raum verwenden"))
+            if (command.Equals(ConstVariables.UseRoom))
             {
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(updatedTreatmentCreationModel);
@@ -227,7 +227,7 @@ namespace BiberDAMM.Controllers
             }
 
             //if new staff was selected, update the viewModel and return the View again
-            if (command.Equals("Mitarbeiter einplanen"))
+            if (command.Equals(ConstVariables.UseStaff))
             {
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(updatedTreatmentCreationModel);

@@ -168,8 +168,9 @@ namespace BiberDAMM.Controllers
                                 UserManager.AddToRole(editUser.Id, ConstVariables.RoleTherapist);
                                 break;
                             default:
-                                //TODO [KrabsJ] throw custom exception
-                                break;
+                                // error-message for alert-statement [KrabsJ]
+                                TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                                return RedirectToAction("Index", "Home");
                         }
                     }
                     // success-message for alert-statement [KrabsJ]
@@ -454,8 +455,9 @@ namespace BiberDAMM.Controllers
                             UserManager.AddToRole(user.Id, ConstVariables.RoleTherapist);
                             break;
                         default:
-                            //TODO [KrabsJ] throw custom exception
-                            break;
+                            // error-message for alert-statement [KrabsJ]
+                            TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                            return RedirectToAction("Index", "Home");
                     }
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

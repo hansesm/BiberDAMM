@@ -12,7 +12,7 @@
     }
     else
     {
-        ViewBag.Title = "Neue Behandlung für " + Model.ClientName;
+        ViewBag.Title = "Neue Behandlung für " + Model.ClientName + " anlegen";
     }
 }
 
@@ -330,7 +330,7 @@
         <div class="row">
             <div class="col-md-12">
                 <input title="Behandlung speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm">
-                <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
+                <input title="Abbrechen" type="submit" name="command" value="@ConstVariables.AbortButton" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
             </div>
         </div>
     </div>
@@ -339,7 +339,7 @@
 
     <div class="row">
         <div class="form-group col-md-12">
-            <input title="Kalendaransicht aktualisieren" type="submit" name="command" value="Aktualisieren" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+            <input title="Kalendaransicht aktualisieren" type="submit" name="command" value="@ConstVariables.Update" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
         </div>
     </div>
 
@@ -412,7 +412,7 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Raumauswahl bestätigen" type="submit" name="command" value="Raum verwenden" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Raumauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseRoom" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
@@ -491,7 +491,7 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="Mitarbeiter einplanen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseStaff" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
