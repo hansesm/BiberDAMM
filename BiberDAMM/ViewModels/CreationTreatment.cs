@@ -86,6 +86,9 @@ namespace BiberDAMM.ViewModels
 
         // attribute for remembering the id of an already stored cleaning event
         public int? CleaningId { get; set; }
+
+        // attribute for remembering the client-room
+        public string ClientRoomNumber { get; set; }
     }
 
     //this class only implements the attributes of the class "room" that are necessary for creating a new treatment [KrabsJ]

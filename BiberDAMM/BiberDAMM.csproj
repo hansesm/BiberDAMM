@@ -233,17 +233,13 @@
     <Compile Include="Security\CustomAuthorize.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BedsInRoomViewModel.cs" />
-    <Compile Include="ViewModels\CreationBed.cs" />
-    <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\DetailsTreatment.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
     <Compile Include="ViewModels\NurseIndexViewModel.cs" />
     <Compile Include="ViewModels\RoomSchedulerViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
-    <Compile Include="ViewModels\CreationRoomType.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentSelectType.cs" />
-    <Compile Include="ViewModels\CreationTreatmentType.cs" />
     <Compile Include="ViewModels\BlocksCreateViewModel.cs" />
     <Compile Include="ViewModels\StayCreateViewModel.cs" />
     <Compile Include="ViewModels\StayDetailsViewModel.cs" />
@@ -811,8 +807,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\IndexAdmin.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />

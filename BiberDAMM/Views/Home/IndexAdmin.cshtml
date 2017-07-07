@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using BiberDAMM.Helpers 
 @{
     ViewBag.Title = "Home Administrator";
 }
@@ -24,7 +24,7 @@
         <strong>Unerwarteter Fehler!</strong>@TempData["UnexpectedFailure"]
     </div>
 }
-    <h1>Willkommen @User.Identity.GetUserName()</h1>
+    <h1>Willkommen @User.Identity.GetDisplayName()</h1>
     <!--JEL-->
     <span style="display:inline-block;height:20px"></span>
     <div class="container">

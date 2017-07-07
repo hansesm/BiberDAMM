@@ -10,8 +10,13 @@
         public const string RoleCleaner = "Reinigungskraft";
         public const string RoleTherapist = "Therapeut";
 
-        //const variables for navigation issues
+        //const variables for navigation issues (general)
         public const string AbortButton = "Abbrechen";
+
+        //const variables for navigation in treatment creation
+        public const string Update = "Aktualisieren";
+        public const string UseRoom = "Raum verwenden";
+        public const string UseStaff = "Mitarbeiter einplanen";
 
         //const variables for creating/editing treatments
         public const string AppointmentOfClient = "Patientenbehandlung";

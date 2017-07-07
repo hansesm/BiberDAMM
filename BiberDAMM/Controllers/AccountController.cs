@@ -168,8 +168,9 @@ namespace BiberDAMM.Controllers
                                 UserManager.AddToRole(editUser.Id, ConstVariables.RoleTherapist);
                                 break;
                             default:
-                                //TODO [KrabsJ] throw custom exception
-                                break;
+                                // error-message for alert-statement [KrabsJ]
+                                TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                                return RedirectToAction("Index", "Home");
                         }
                     }
                     // success-message for alert-statement [KrabsJ]
@@ -229,7 +230,6 @@ namespace BiberDAMM.Controllers
             return View(userPassword);
         }
 
-        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
         // POST: /Acount/Delete
         // Deletes an user if possible [KrabsJ]
         [HttpPost]
@@ -455,8 +455,9 @@ namespace BiberDAMM.Controllers
                             UserManager.AddToRole(user.Id, ConstVariables.RoleTherapist);
                             break;
                         default:
-                            //TODO [KrabsJ] throw custom exception
-                            break;
+                            // error-message for alert-statement [KrabsJ]
+                            TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                            return RedirectToAction("Index", "Home");
                     }
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -688,9 +689,8 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
