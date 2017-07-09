@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BiberDAMM.Models
+namespace BiberDAMM.ViewModels
 {
     //[KrabsJ]
     public class ChangePasswordViewModel

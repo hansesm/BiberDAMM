@@ -6,6 +6,7 @@ using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using BiberDAMM.Security;
+using BiberDAMM.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;

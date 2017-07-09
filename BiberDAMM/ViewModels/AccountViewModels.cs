@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BiberDAMM.Models;
 
-namespace BiberDAMM.Models
+namespace BiberDAMM.ViewModels
 {
     //[KrabsJ]
     public class LoginViewModel

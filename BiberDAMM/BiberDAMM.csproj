@@ -214,7 +214,7 @@
     <Compile Include="Helpers\IdentityExtensions.cs" />
     <Compile Include="Helpers\JsonEventTreatment.cs" />
     <Compile Include="Helpers\JsonRoomSchedulerEvents.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
     <Compile Include="Models\Cleaner.cs" />
@@ -223,7 +223,7 @@
     <Compile Include="Models\ContactType.cs" />
     <Compile Include="Models\HealthInsurance.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\RoomType.cs" />
     <Compile Include="Models\Stay.cs" />
