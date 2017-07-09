@@ -2,6 +2,7 @@
 
 namespace BiberDAMM.Models
 {
+    //[KrabsJ]
     public class ChangePasswordViewModel
     {
         [Required]

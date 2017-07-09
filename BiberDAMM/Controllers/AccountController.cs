@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 
 namespace BiberDAMM.Controllers
 {
+    //[KrabsJ]
     [CustomAuthorize]
     public class AccountController : Controller
     {

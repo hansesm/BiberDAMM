@@ -9,6 +9,7 @@ using BiberDAMM.Helpers;
 
 namespace BiberDAMM.Controllers
 {
+    //[KrabsJ]
     [CustomAuthorize]
     public class ManageController : Controller
     {
