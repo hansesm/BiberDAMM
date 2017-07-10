@@ -8,9 +8,11 @@ using BiberDAMM.Models;
 using System.Collections.ObjectModel;
 using System;
 using System.Data.Entity.Migrations;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
     public class TreatmentController : Controller
     {
         //The Database-Context [KrabsJ]
@@ -83,13 +85,23 @@ namespace BiberDAMM.Controllers
 
             // load data from the CreationTreatmentSelectType-viewmodel to a CreationTreatment-viewmodel
             CreationTreatment treatmentCreationModel = new CreationTreatment();
+            treatmentCreationModel.Id = null;
             treatmentCreationModel.StayId = treatmentCreationSelectTypeModel.StayId;
             treatmentCreationModel.TreatmentTypeId = treatmentCreationSelectTypeModel.TreatmentTypeId;
             treatmentCreationModel.ClientId = treatmentCreationSelectTypeModel.ClientId;
             treatmentCreationModel.ClientName = treatmentCreationSelectTypeModel.ClientName;
+            treatmentCreationModel.IsStoredWithSeries = false;
+            treatmentCreationModel.IdOfSeries = null;
+            treatmentCreationModel.CleaningId = null;
+
+            Blocks currentBlock = _db.Blocks.Where(b => b.BeginDate <= DateTime.Now && b.EndDate >= DateTime.Now && b.StayId == treatmentCreationModel.StayId).FirstOrDefault();
+            if (currentBlock != null)
+            {
+                treatmentCreationModel.ClientRoomNumber = currentBlock.Bed.Room.RoomNumber;
+            }
 
             // set defaultDate for calendar in view
-            treatmentCreationModel.ShowCalendarDay = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now).Date.ToString("s");
+            treatmentCreationModel.ShowCalendarDay = DateTime.Now.ToString("s");
 
             //load selectedTreatmentType from db and set attribute TreatmentTypeName of viewModel
             TreatmentType selectedTreatmentType = _db.TreatmentTypes.Where(t => t.Id == treatmentCreationModel.TreatmentTypeId).FirstOrDefault();
@@ -141,7 +153,7 @@ namespace BiberDAMM.Controllers
             }
 
             // get all client appointments and store them in the viewModel
-            treatmentCreationModel.AppointmentsOfSelectedRessources = GetClientAppointments(treatmentCreationModel.ClientId);
+            treatmentCreationModel.AppointmentsOfSelectedRessources = GetClientAppointments(treatmentCreationModel.ClientId, null);
 
             // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
             if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
@@ -162,9 +174,13 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreationTreatment treatmentCreationModel, string command)
         {
-            // if abortButton was clicked, go back to details page of stay
+            // if abortButton was clicked, go back to details page of stay or of treatment
             if (command.Equals(ConstVariables.AbortButton))
             {
+                if (treatmentCreationModel.Id != null)
+                {
+                    return RedirectToAction("Details", "Treatment", new { Id = treatmentCreationModel.Id });
+                }
                 return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
             }
 
@@ -172,7 +188,7 @@ namespace BiberDAMM.Controllers
             treatmentCreationModel.ShowCalendarDay = treatmentCreationModel.BeginDate.GetValueOrDefault(DateTime.Now).Date.ToString("s");
 
             // if button "Aktualisieren" was clicked, update the appointments of selected ressources and update the planned treatment to show it in the calendar
-            if (command.Equals("Aktualisieren"))
+            if (command.Equals(ConstVariables.Update))
             {
                 // update all data in the viewModel
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
@@ -194,7 +210,7 @@ namespace BiberDAMM.Controllers
             }
 
             //if a new room was selected, update the viewModel and return the View again
-            if (command.Equals("Raum verwenden"))
+            if (command.Equals(ConstVariables.UseRoom))
             {
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(updatedTreatmentCreationModel);
@@ -213,7 +229,7 @@ namespace BiberDAMM.Controllers
             }
 
             //if new staff was selected, update the viewModel and return the View again
-            if (command.Equals("Mitarbeiter einplanen"))
+            if (command.Equals(ConstVariables.UseStaff))
             {
                 CreationTreatment updatedTreatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
                 updatedTreatmentCreationModel = UpdateViewModelByPlannedTreatment(updatedTreatmentCreationModel);
@@ -234,8 +250,25 @@ namespace BiberDAMM.Controllers
             // if the user want to save the new treatment check if the model is valid
             if (ModelState.IsValid)
             {
+                // for the following checks it is necessary that the data is up-to-date:
+                treatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelClientAppointments(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
+                treatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
+
+                // extract the appointments that represent the planned treatments and cleaning events
+                // these time periods have to be checked on conflicts
+                List<AppointmentOfSelectedRessource> checkListOfPlannedTreatments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedTreatment).ToList();
+                List<AppointmentOfSelectedRessource> checkListOfPlannedCleanings = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedCleaning).ToList();
+
+                // extract the appointments that represent appointments of the room, the client and the staffmembers
+                // these time periods work as control instances
+                List<AppointmentOfSelectedRessource> controlListOfFutureClientAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfClient).ToList();
+                List<AppointmentOfSelectedRessource> controlListOfFutureRoomAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfRoom).ToList();
+                List<AppointmentOfSelectedRessource> controlListOfFutureStaffAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource != ConstVariables.AppointmentOfClient && a.Ressource != ConstVariables.AppointmentOfRoom && a.Ressource != ConstVariables.PlannedCleaning && a.Ressource != ConstVariables.PlannedTreatment).ToList();
+
                 // ensure that BeginDate is before EndDate
-                if (treatmentCreationModel.BeginDate > treatmentCreationModel.EndDate)
+                if (treatmentCreationModel.BeginDate >= treatmentCreationModel.EndDate)
                 {
                     // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
                     if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
@@ -245,15 +278,14 @@ namespace BiberDAMM.Controllers
                     treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
                     // error-message for alert-statement [KrabsJ]
-                    TempData["BeginDateEndDateError"] = " Der Behandlungsbeginn darf nicht nach dem Behandlungsende liegen.";
+                    TempData["BeginDateEndDateError"] = " Der Behandlungsbeginn muss vor dem Behandlungsende liegen.";
 
                     // return view
                     return View(treatmentCreationModel);
                 }
 
-                // ensure that the treatment is whithin the timeperiod of the stay
-                var stay = _db.Stays.Where(s => s.Id == treatmentCreationModel.StayId).FirstOrDefault();
-                if (stay.EndDate != null && stay.EndDate < treatmentCreationModel.EndDate)
+                // check series and seriescounter
+                if (treatmentCreationModel.Series != Series.noSeries && treatmentCreationModel.SeriesCounter == 0)
                 {
                     // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
                     if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
@@ -263,10 +295,31 @@ namespace BiberDAMM.Controllers
                     treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
                     // error-message for alert-statement [KrabsJ]
-                    TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten wurde am " + stay.EndDate + " beendet. Der Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+                    TempData["InvalidSeriesValues"] = " Sie haben angegeben, dass sie einen Serientermin planen möchten. Bitte geben Sie eine Anzahl an Wiederholungen an.";
 
                     // return view
                     return View(treatmentCreationModel);
+                }
+
+                // ensure that the treatments are whithin the timeperiod of the stay
+                var stay = _db.Stays.Where(s => s.Id == treatmentCreationModel.StayId).FirstOrDefault();
+                foreach (var plannedTreatment in checkListOfPlannedTreatments)
+                {
+                    if ((stay.EndDate != null && stay.EndDate < plannedTreatment.EndDate) || (stay.BeginDate > plannedTreatment.BeginDate))
+                    {
+                        // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
+                        if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
+                        {
+                            treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+                        }
+                        treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
+
+                        // error-message for alert-statement [KrabsJ]
+                        TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten endet am " + stay.EndDate + ". Mindestens ein geplanter Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+
+                        // return view
+                        return View(treatmentCreationModel);
+                    }
                 }
 
                 // if the new treatment is planed in the future it is necessary to check if there are conflicting appointments
@@ -287,26 +340,7 @@ namespace BiberDAMM.Controllers
                         break;
                     default:
                         break;
-                }
-
-                // the following steps ensure that there are no conflicts with other appointments
-                // these conflicts-checks works with the data stored in the viewModel (AppointmentsOfSelectedRessources)
-                // therefor it is necessary that this data is up-to-date --> all data is updated here:
-                treatmentCreationModel = UpdateViewModelByPlannedTreatment(treatmentCreationModel);
-                treatmentCreationModel = UpdateViewModelClientAppointments(treatmentCreationModel);
-                treatmentCreationModel = UpdateViewModelByRoomSelection(treatmentCreationModel);
-                treatmentCreationModel = UpdateViewModelByStaffSelection(treatmentCreationModel);
-
-                // extract the appointments that represent the planned treatments and cleaning events
-                // these time periods have to be checked on conflicts
-                List<AppointmentOfSelectedRessource> checkListOfPlannedTreatments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedTreatment).ToList();
-                List<AppointmentOfSelectedRessource> checkListOfPlannedCleanings = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.PlannedCleaning).ToList();
-
-                // extract the appointments that represent appointments of the room, the client and the staffmembers
-                // these time periods work as control instances
-                List<AppointmentOfSelectedRessource> controlListOfFutureClientAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfClient).ToList();
-                List<AppointmentOfSelectedRessource> controlListOfFutureRoomAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource == ConstVariables.AppointmentOfRoom).ToList();
-                List<AppointmentOfSelectedRessource> controlListOfFutureStaffAppointments = treatmentCreationModel.AppointmentsOfSelectedRessources.Where(a => a.Ressource != ConstVariables.AppointmentOfClient && a.Ressource != ConstVariables.AppointmentOfRoom && a.Ressource != ConstVariables.PlannedCleaning && a.Ressource != ConstVariables.PlannedTreatment).ToList();
+                }                
 
                 //helper list for unordered conflicts
                 List<AppointmentOfSelectedRessource> unorderedConflicts = new List<AppointmentOfSelectedRessource>();
@@ -314,6 +348,7 @@ namespace BiberDAMM.Controllers
                 //initialize list of conflicting appointments
                 treatmentCreationModel.ConflictingAppointmentsList = new List<AppointmentOfSelectedRessource>();
 
+                // the following steps ensure that there are no conflicts with other appointments
                 // if the planned treatment is in the future: check on conflicts
                 if (endOfTreatmentAndCleaning > DateTime.Now)
                 {
@@ -406,10 +441,8 @@ namespace BiberDAMM.Controllers
                 // a treatment that is stored retroactive (in the past) doesn't have to be checked on conflicts
 
                 // ensure that a treatment that is stored retroactive does not have series events
-                if (endOfTreatmentAndCleaning <= DateTime.Now)
+                if (endOfTreatmentAndCleaning <= DateTime.Now && treatmentCreationModel.Series != Series.noSeries)
                 {
-                    if (treatmentCreationModel.Series != Series.noSeries)
-                    {
                         // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
                         if (treatmentCreationModel.AppointmentsOfSelectedRessources == null)
                         {
@@ -422,7 +455,6 @@ namespace BiberDAMM.Controllers
 
                         // return view
                         return View(treatmentCreationModel);
-                    }
                 }
 
                 List<ApplicationUser> userList = new List<ApplicationUser>();
@@ -460,6 +492,19 @@ namespace BiberDAMM.Controllers
                         newTreatment.IdOfSeries = idOfSeries;
                     }
 
+                    // if this method is called for editing an already stored treatment, this treatment has got an ID
+                    if (plannedTreatment.IsOriginalAppointment == true && treatmentCreationModel.Id != null)
+                    {
+                        newTreatment.Id = treatmentCreationModel.Id.Value;
+                        // the method "addOrUpdate" doesn't update many-to-many tables --> this has to be made manually
+                        Treatment editTreatment = _db.Treatments.Single(t => t.Id == newTreatment.Id);
+                        editTreatment.ApplicationUsers.Clear();
+                        foreach (var user in userList)
+                        {
+                            editTreatment.ApplicationUsers.Add(user);
+                        }
+                        _db.SaveChanges();
+                    }
                     _db.Treatments.AddOrUpdate(newTreatment);
                     _db.SaveChanges();
 
@@ -472,11 +517,26 @@ namespace BiberDAMM.Controllers
                         _db.Treatments.AddOrUpdate(newTreatment);
                         _db.SaveChanges();
                     }
+                    else if (treatmentCreationModel.IdOfSeries != null)
+                    {
+                        // a treatment that is edited could already have an idOfSeries
+                        idOfSeries = treatmentCreationModel.IdOfSeries.Value;
+                        newTreatment.IdOfSeries = idOfSeries;
+                        _db.Treatments.AddOrUpdate(newTreatment);
+                        _db.SaveChanges();
+                    }
 
                     // create an optional cleaningAppointment
                     switch (treatmentCreationModel.CleaningDuration)
                     {
                         case CleaningDuration.noCleaning:
+                            // if a treatment is edited, check if there is an associated cleaning event, that should be removed, 
+                            if (plannedTreatment.IsOriginalAppointment ==  true && treatmentCreationModel.CleaningId != null)
+                            {
+                                Cleaner deleteCleaner = _db.Cleaner.Single(c => c.Id == treatmentCreationModel.CleaningId);
+                                _db.Cleaner.Remove(deleteCleaner);
+                                _db.SaveChanges();
+                            }
                             break;
                         case CleaningDuration.tenMinutes:
                             var newCleaningAppointmentTen = new Cleaner
@@ -488,6 +548,10 @@ namespace BiberDAMM.Controllers
                                 CleaningDuration = CleaningDuration.tenMinutes,
                                 TreatmentId = newTreatment.Id
                             };
+                            if (plannedTreatment.IsOriginalAppointment == true && treatmentCreationModel.CleaningId != null)
+                            {
+                                newCleaningAppointmentTen.Id = treatmentCreationModel.CleaningId.Value;
+                            }
                             _db.Cleaner.AddOrUpdate(newCleaningAppointmentTen);
                             _db.SaveChanges();
                             break;
@@ -501,6 +565,10 @@ namespace BiberDAMM.Controllers
                                 CleaningDuration = CleaningDuration.twentyMinutes,
                                 TreatmentId = newTreatment.Id
                             };
+                            if (plannedTreatment.IsOriginalAppointment == true && treatmentCreationModel.CleaningId != null)
+                            {
+                                newCleaningAppointmentTwenty.Id = treatmentCreationModel.CleaningId.Value;
+                            }
                             _db.Cleaner.AddOrUpdate(newCleaningAppointmentTwenty);
                             _db.SaveChanges();
                             break;
@@ -514,6 +582,10 @@ namespace BiberDAMM.Controllers
                                 CleaningDuration = CleaningDuration.thirtyMinutes,
                                 TreatmentId = newTreatment.Id
                             };
+                            if (plannedTreatment.IsOriginalAppointment == true && treatmentCreationModel.CleaningId != null)
+                            {
+                                newCleaningAppointmentThirty.Id = treatmentCreationModel.CleaningId.Value;
+                            }
                             _db.Cleaner.AddOrUpdate(newCleaningAppointmentThirty);
                             _db.SaveChanges();
                             break;
@@ -522,12 +594,20 @@ namespace BiberDAMM.Controllers
                     }
                     loopCounter = loopCounter + 1;
                 }
-                
-                // success-message for alert-statement
-                TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
 
-                // go back to stays details page
-                return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
+                if (treatmentCreationModel.Id != null)
+                {
+                    // success-message for alert-statement
+                    TempData["EditTreatmentSuccess"] = " Die Behandlung wurde geändert.";
+                    return RedirectToAction("Details", "Treatment", new { Id = treatmentCreationModel.Id });
+                }
+                else
+                {
+                    // success-message for alert-statement
+                    TempData["NewTreatmentSuccess"] = " Die neue Behandlung wurde gespeichert.";
+                    // go back to stays details page
+                    return RedirectToAction("Details", "Stay", new { id = treatmentCreationModel.StayId });
+                }
             }
 
             // this point is only reached if the modal was not valid when trying to save the new treatment
@@ -573,8 +653,8 @@ namespace BiberDAMM.Controllers
                     treatmentCreationModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
                 }
 
-                // load the appointments of the selected room from db
-                var newRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId).ToList();
+                // load the appointments of the selected room from db (don't load appointments where the id fits --> this is important for editing treatments)
+                var newRoomAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.RoomId == treatmentCreationModel.SelectedRoomId && t.Id != treatmentCreationModel.Id).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newRoomAppointments)
@@ -653,8 +733,8 @@ namespace BiberDAMM.Controllers
             // get the appointments of each selected staffmember
             foreach (var staffMember in treatmentCreationModel.SelectedStaff)
             {
-                // load the appointments of the selected staffmember from db
-                var newStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id)).ToList();
+                // load the appointments of the selected staffmember from db (don't load appointments where the id fits --> this is important for editing treatments)
+                var newStaffAppointments = _db.Treatments.Where(t => t.EndDate > DateTime.Now && t.ApplicationUsers.Any(a => a.Id == staffMember.Id) && t.Id != treatmentCreationModel.Id).ToList();
 
                 // convert these appointments (class treatment) into objects of AppointmentOfSelectedRessource and add them to treatmentCreationModel.AppointmentsOfSelectedRessources
                 foreach (var appointment in newStaffAppointments)
@@ -696,7 +776,7 @@ namespace BiberDAMM.Controllers
             }
 
             // get all client appointments from db
-            List<AppointmentOfSelectedRessource> clientAppointments = GetClientAppointments(treatmentCreationModel.ClientId);
+            List<AppointmentOfSelectedRessource> clientAppointments = GetClientAppointments(treatmentCreationModel.ClientId, treatmentCreationModel.Id);
 
             // store the (new) found client appointments in the viewModel
             foreach (var appointment in clientAppointments)
@@ -710,7 +790,7 @@ namespace BiberDAMM.Controllers
         //this method returns all appointments (in the future) of the client
         //expected parameter: int clientId
         //return: List<AppointmentOfSelectedRessource> clientAppointments
-        private List<AppointmentOfSelectedRessource> GetClientAppointments(int clientId)
+        private List<AppointmentOfSelectedRessource> GetClientAppointments(int clientId, int? treatmentId)
         {
             // get all stays of the client that are not finished
             var CurrentClientStays = _db.Stays.Where(s => s.ClientId == clientId && (s.EndDate == null || s.EndDate > DateTime.Now)).ToList();
@@ -721,7 +801,7 @@ namespace BiberDAMM.Controllers
             {
                 foreach (var treatment in stay.Treatments)
                 {
-                    if (treatment.EndDate > DateTime.Now)
+                    if (treatment.EndDate > DateTime.Now && treatment.Id != treatmentId)
                     {
                         ClientTreatments.Add(treatment);
                     }
@@ -773,7 +853,8 @@ namespace BiberDAMM.Controllers
                     BeginDate = treatmentCreationModel.BeginDate.Value,
                     EndDate = treatmentCreationModel.EndDate.Value,
                     Ressource = ConstVariables.PlannedTreatment,
-                    EventColor = "#FF8C00"
+                    EventColor = "#FF8C00",
+                    IsOriginalAppointment = true
                 };
                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedTreatment);
 
@@ -781,6 +862,7 @@ namespace BiberDAMM.Controllers
                 if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                 {
                     var optionalCleaningAppointment = CreateOptionalCleaningAppointment(treatmentCreationModel.EndDate.Value, treatmentCreationModel.CleaningDuration);
+                    optionalCleaningAppointment.IsOriginalAppointment = true;
                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointment);
                 }
 
@@ -799,7 +881,8 @@ namespace BiberDAMM.Controllers
                                     BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 1),
                                     EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 1),
                                     Ressource = ConstVariables.PlannedTreatment,
-                                    EventColor = "#FF8C00"
+                                    EventColor = "#FF8C00",
+                                    IsOriginalAppointment = false
                                 };
                                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
 
@@ -807,6 +890,7 @@ namespace BiberDAMM.Controllers
                                 if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                                 {
                                     var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                    optionalCleaningAppointmentForSeriesTreatment.IsOriginalAppointment = false;
                                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
                                 }
                             }
@@ -819,7 +903,8 @@ namespace BiberDAMM.Controllers
                                     BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 7),
                                     EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 7),
                                     Ressource = ConstVariables.PlannedTreatment,
-                                    EventColor = "#FF8C00"
+                                    EventColor = "#FF8C00",
+                                    IsOriginalAppointment = false
                                 };
                                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
 
@@ -827,6 +912,7 @@ namespace BiberDAMM.Controllers
                                 if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                                 {
                                     var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                    optionalCleaningAppointmentForSeriesTreatment.IsOriginalAppointment = false;
                                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
                                 }
                             }
@@ -839,7 +925,8 @@ namespace BiberDAMM.Controllers
                                     BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 14),
                                     EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 14),
                                     Ressource = ConstVariables.PlannedTreatment,
-                                    EventColor = "#FF8C00"
+                                    EventColor = "#FF8C00",
+                                    IsOriginalAppointment = false
                                 };
                                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
 
@@ -847,6 +934,7 @@ namespace BiberDAMM.Controllers
                                 if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                                 {
                                     var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                    optionalCleaningAppointmentForSeriesTreatment.IsOriginalAppointment = false;
                                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
                                 }
                             }
@@ -859,7 +947,8 @@ namespace BiberDAMM.Controllers
                                     BeginDate = treatmentCreationModel.BeginDate.Value.AddDays(i * 28),
                                     EndDate = treatmentCreationModel.EndDate.Value.AddDays(i * 28),
                                     Ressource = ConstVariables.PlannedTreatment,
-                                    EventColor = "#FF8C00"
+                                    EventColor = "#FF8C00",
+                                    IsOriginalAppointment = false
                                 };
                                 treatmentCreationModel.AppointmentsOfSelectedRessources.Add(plannedSeriesTreatment);
 
@@ -867,6 +956,7 @@ namespace BiberDAMM.Controllers
                                 if (treatmentCreationModel.CleaningDuration != CleaningDuration.noCleaning)
                                 {
                                     var optionalCleaningAppointmentForSeriesTreatment = CreateOptionalCleaningAppointment(plannedSeriesTreatment.EndDate, treatmentCreationModel.CleaningDuration);
+                                    optionalCleaningAppointmentForSeriesTreatment.IsOriginalAppointment = false;
                                     treatmentCreationModel.AppointmentsOfSelectedRessources.Add(optionalCleaningAppointmentForSeriesTreatment);
                                 }
                             }
@@ -1023,6 +1113,134 @@ namespace BiberDAMM.Controllers
             TempData["DeleteTreatmentSuccess"] = " Die Behandlungen wurde erfolgreich gelöscht.";
 
             return RedirectToAction("Details", "Stay", new { Id = stayId });
+        }
+
+        // GET: Treatment/Edit [KrabsJ]
+        // this method returns the view "Create" that enables the user to edit an existing treatment
+        // expected parameter: int treatmentId
+        // return: view("Create", CreationTreatment viewModel)
+        public ActionResult Edit(int Id)
+        {
+            // get treatment from db
+            var treatment = _db.Treatments.Single(t => t.Id == Id);
+
+            // create viewModel
+            CreationTreatment treatmentEditModel = new CreationTreatment
+            {
+                Id = treatment.Id,
+                StayId = treatment.StayId,
+                ClientId = treatment.Stay.ClientId,
+                ClientName = treatment.Stay.Client.Surname + " " + treatment.Stay.Client.Lastname,
+                TreatmentTypeId = treatment.TreatmentTypeId,
+                TreatmentTypeName = treatment.TreatmentType.Name,
+                BeginDate = treatment.BeginDate,
+                EndDate = treatment.EndDate,
+                Description = treatment.Description,
+                SelectedRoomId = treatment.RoomId,
+                SelectedRoomNumber = treatment.Room.RoomNumber,
+                ShowCalendarDay = treatment.BeginDate.ToString("s"),
+        };
+
+            //load the rooms that are available for the selectedTreatmentType
+            ICollection<Room> rooms = new Collection<Room>();
+            if (treatment.TreatmentType.RoomTypeId == null)
+            {
+                rooms = _db.Rooms.ToList();
+            }
+            else
+            {
+                rooms = _db.Rooms.Where(r => r.RoomTypeId == treatment.TreatmentType.RoomTypeId).ToList();
+            }
+
+            //convert the list of rooms to a list of SelectionRooms (this class only contains the attributes that are necessary for creating a new treatment)
+            treatmentEditModel.Rooms = new List<SelectionRoom>();
+            foreach (var item in rooms)
+            {
+                SelectionRoom selectionRoom = new SelectionRoom();
+                selectionRoom.Id = item.Id;
+                selectionRoom.RoomNumber = item.RoomNumber;
+                selectionRoom.RoomTypeName = item.RoomType.Name;
+                treatmentEditModel.Rooms.Add(selectionRoom);
+            }
+
+            // get all users (besides cleaners & adminstrators) from the db
+            ICollection<ApplicationUser> userList = new Collection<ApplicationUser>();
+            userList = _db.Users.Where(u => u.UserType.ToString() != ConstVariables.RoleCleaner && u.UserType.ToString() != ConstVariables.RoleAdministrator).ToList();
+
+            // convert the list of users into a list of staffmembers and store already seleted staff members in the associated list
+            treatmentEditModel.Staff = new List<Staff>();
+            treatmentEditModel.SelectedStaff = new List<Staff>();
+            foreach (var item in userList)
+            {
+                Staff staffMember = new Staff();
+                staffMember.Id = item.Id;
+                if (item.Title == null)
+                {
+                    staffMember.DisplayName = item.Surname + " " + item.Lastname;
+                }
+                else
+                {
+                    staffMember.DisplayName = item.Title + " " + item.Surname + " " + item.Lastname;
+                }
+                staffMember.StaffType = item.UserType;
+                if (treatment.ApplicationUsers.Any(u => u.Id == staffMember.Id))
+                {
+                    staffMember.Selected = true;
+                    treatmentEditModel.SelectedStaff.Add(staffMember);
+                }
+                else
+                {
+                    staffMember.Selected = false;
+                }
+                treatmentEditModel.Staff.Add(staffMember);
+            }
+
+            // get an optional cleaning event
+            Cleaner associatedCleaning = _db.Cleaner.SingleOrDefault(c => c.TreatmentId == treatment.Id);
+            if (associatedCleaning != null)
+            {
+                treatmentEditModel.CleaningDuration = associatedCleaning.CleaningDuration;
+                treatmentEditModel.CleaningId = associatedCleaning.Id;
+            }
+            else
+            {
+                treatmentEditModel.CleaningDuration = CleaningDuration.noCleaning;
+                treatmentEditModel.CleaningId = null;
+            }
+
+            // check if treatment has got a series
+            if (treatment.IdOfSeries != null)
+            {
+                treatmentEditModel.IsStoredWithSeries = true;
+                treatmentEditModel.IdOfSeries = treatment.IdOfSeries;
+            }
+            else
+            {
+                treatmentEditModel.IsStoredWithSeries = false;
+                treatmentEditModel.IdOfSeries = null;
+            }
+            //treatmentEditModel.Series = Series.noSeries and treatmentEditModel.SeriesCounter = 0 are the initial values for planing series events
+            //but it is also important that these values are set, if a treatment already is part of a series because these attribute ensures that the method "UpdateViewModelByPlannedTreatment" doesn't create further series object
+            //there is no possibilty to edit a whole series --> it is only possible to a single treatment
+            //if needed the user can delete a whole series and create a new one
+            treatmentEditModel.Series = Series.noSeries;
+            treatmentEditModel.SeriesCounter = 0;
+
+            // update the viewModelDate --> this means especially creating data for AppointmentsOfSelectedRessources
+            treatmentEditModel = UpdateViewModelByPlannedTreatment(treatmentEditModel);
+            treatmentEditModel = UpdateViewModelByRoomSelection(treatmentEditModel);
+            treatmentEditModel = UpdateViewModelByStaffSelection(treatmentEditModel);
+            treatmentEditModel = UpdateViewModelClientAppointments(treatmentEditModel);
+
+            // create JsonResult for calendar in view (therefore it is necessary that the list of appointments is not null)
+            if (treatmentEditModel.AppointmentsOfSelectedRessources == null)
+            {
+                treatmentEditModel.AppointmentsOfSelectedRessources = new List<AppointmentOfSelectedRessource>();
+            }
+            treatmentEditModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentEditModel.AppointmentsOfSelectedRessources);
+
+            //return view
+            return View("Create", treatmentEditModel);
         }
 
         //helper method for creating the JsonResult, this is required for the calendar in the create-view [KrabsJ]

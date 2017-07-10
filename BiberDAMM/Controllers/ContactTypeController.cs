@@ -63,7 +63,7 @@ namespace BiberDAMM.Controllers
                 TempData["CreateContactTypeSaved"] = " Die Erstellung war erfolgreich";
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["CreateContactTypeSaved_Bool"] = "0";
                 TempData["CreateContactTypeSaved"] = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.";
@@ -118,7 +118,7 @@ namespace BiberDAMM.Controllers
                 TempData["ContactTypeError"] = "Eingaben fehlerhaft oder unvollständig";
                 return View(ContactType);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["EditContactTypeSaved_Bool"] = "0";
                 TempData["EditContactTypeSaved"] = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.";

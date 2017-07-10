@@ -12,11 +12,11 @@ using System.Data.Entity;
 
 namespace BiberDAMM.Controllers
 {
+    // load the different homepages based on the usertype of the logged in user [KrabsJ]
     [CustomAuthorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
-        // load the different homepages based on the usertype of the logged in user [KrabsJ]
 
         //Author: ChristesR
         public ActionResult Index()
@@ -149,24 +149,6 @@ namespace BiberDAMM.Controllers
                 default:
                     return RedirectToAction("Login", "Account");
             }
-        }
-
-
-
-        public ActionResult About()
-        {
-            // TODO [KrabsJ] decide what to show on this page
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            // TODO [KrabsJ] decide what to show on this page
-            ViewBag.Message = "Your contact page.";
-
-            return View();
         }
 
         [HttpPost]

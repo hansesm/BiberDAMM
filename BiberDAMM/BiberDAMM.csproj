@@ -214,7 +214,7 @@
     <Compile Include="Helpers\IdentityExtensions.cs" />
     <Compile Include="Helpers\JsonEventTreatment.cs" />
     <Compile Include="Helpers\JsonRoomSchedulerEvents.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Bed.cs" />
     <Compile Include="Models\Blocks.cs" />
     <Compile Include="Models\Cleaner.cs" />
@@ -223,7 +223,7 @@
     <Compile Include="Models\ContactType.cs" />
     <Compile Include="Models\HealthInsurance.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\RoomType.cs" />
     <Compile Include="Models\Stay.cs" />
@@ -233,17 +233,13 @@
     <Compile Include="Security\CustomAuthorize.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BedsInRoomViewModel.cs" />
-    <Compile Include="ViewModels\CreationBed.cs" />
-    <Compile Include="ViewModels\CreationContactType.cs" />
     <Compile Include="ViewModels\DetailsTreatment.cs" />
     <Compile Include="ViewModels\DoctorIndexViewModel.cs" />
     <Compile Include="ViewModels\NurseIndexViewModel.cs" />
     <Compile Include="ViewModels\RoomSchedulerViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
-    <Compile Include="ViewModels\CreationRoomType.cs" />
     <Compile Include="ViewModels\CreationTreatment.cs" />
     <Compile Include="ViewModels\CreationTreatmentSelectType.cs" />
-    <Compile Include="ViewModels\CreationTreatmentType.cs" />
     <Compile Include="ViewModels\BlocksCreateViewModel.cs" />
     <Compile Include="ViewModels\StayCreateViewModel.cs" />
     <Compile Include="ViewModels\StayDetailsViewModel.cs" />
@@ -811,27 +807,10 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\IndexAdmin.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
@@ -893,6 +872,7 @@
     <Content Include="Views\Room\RoomScheduler.cshtml" />
     <Content Include="Views\Error\Oops.cshtml" />
     <Content Include="Views\Treatment\Details.cshtml" />
+    <Content Include="Views\Stay\DetailsWithoutICD.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

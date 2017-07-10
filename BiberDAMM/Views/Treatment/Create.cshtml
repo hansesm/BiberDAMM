@@ -6,7 +6,14 @@
 @model BiberDAMM.ViewModels.CreationTreatment
 
 @{
-    ViewBag.Title = "Neue Behandlung für " + Model.ClientName;
+    if (Model.Id != null)
+    {
+        ViewBag.Title = "Behandlung für " + Model.ClientName + " bearbeiten";
+    }
+    else
+    {
+        ViewBag.Title = "Neue Behandlung für " + Model.ClientName + " anlegen";
+    }
 }
 
 <h2>@ViewBag.Title</h2>
@@ -30,6 +37,17 @@
             <span aria-hidden="true">&times;</span>
         </button>
         <strong>Fehlerhafte Eingaben!</strong>@TempData["StayClosedError"]
+    </div>
+}
+
+<!--show alert "InvalidSeriesValues" if there is a series planned, but seriesCounter is 0-->
+@if (TempData["InvalidSeriesValues"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Fehlerhafte Eingaben!</strong>@TempData["InvalidSeriesValues"]
     </div>
 }
 
@@ -63,11 +81,16 @@
     @Html.AntiForgeryToken();
 
     //save all hidden fields
+    @Html.HiddenFor(m => m.Id);
     @Html.HiddenFor(m => m.StayId);
     @Html.HiddenFor(m => m.TreatmentTypeId);
     @Html.HiddenFor(m => m.ClientId);
     @Html.HiddenFor(m => m.ClientName);
     @Html.HiddenFor(m => m.ShowCalendarDay);
+    @Html.HiddenFor(m => m.IsStoredWithSeries);
+    @Html.HiddenFor(m => m.IdOfSeries);
+    @Html.HiddenFor(m => m.CleaningId);
+    @Html.HiddenFor(m => m.ClientRoomNumber);
     if (Model.Rooms != null)
     {
         for (int i = 0; i < Model.Rooms.Count; i++)
@@ -85,6 +108,7 @@
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EndDate)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].Ressource)
             @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].EventColor)
+            @Html.HiddenFor(m => Model.AppointmentsOfSelectedRessources[i].IsOriginalAppointment)
         }
     }
     if (Model.Staff != null)
@@ -106,6 +130,9 @@
             @Html.HiddenFor(m => Model.SelectedStaff[i].Selected)
         }
     }
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
     <div>
         <!--Inputfields for treatment attributes-->
         <!--This row includes options for changing the treatment type and for selecting a room-->
@@ -117,9 +144,14 @@
                     <div class="col-md-10" style="padding-right:0px">
                         @Html.TextBoxFor(model => model.TreatmentTypeName, new { @class = "form-control-inline", @readonly = "readonly" })
                     </div>
-                    <div class="col-md-2" style="padding-left:5px">
-                        <button type="button" title="Behandlungstyp ändern" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#changeTreatmentTypeModal">Ändern</button>
-                    </div>
+                    @*if the page is opened for editing a treatment, this treatment already has an Id*@
+                    @*when editing a treatment it should not be possible to change the type of treatment*@
+                    @if (Model.Id == null)
+                    {
+                        <div class="col-md-2" style="padding-left:5px">
+                            <button type="button" title="Behandlungstyp ändern" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#changeTreatmentTypeModal">Ändern</button>
+                        </div>
+                    }
                 </div>
                 @Html.ValidationMessageFor(m => m.TreatmentTypeName, "", new { @class = "text-danger" })
             </div>
@@ -156,7 +188,6 @@
 
         </div>
         <!--end row-->
-
         <!--This row includes the option for selecting staffmembers-->
         <div class="row">
 
@@ -226,11 +257,10 @@
 
         </div>
         <!--end row-->
-
         <!--this row includes the option to plan a cleaning event-->
         @Html.Label("Raumreinigung planen", new { @class = "col-form-label" })
         <div class="row" style="padding-left:15px; padding-right:15px; margin-bottom:20px">
-            <div class ="col-md-12" style="border-style: solid; padding-bottom:15px; padding-top:15px">
+            <div class="col-md-12" style="border-style: solid; padding-bottom:15px; padding-top:15px">
                 <div class="row">
                     <div class="col-md-3" style="text-align:center">
                         <label for="@CleaningDuration.noCleaning" style="margin-top: .5rem">keine Reinigung</label>
@@ -252,47 +282,55 @@
             </div>
         </div>
         <!--end row-->
-
         <!--this row includes the option to plan a series event-->
         @Html.Label("Serientermin planen", new { @class = "col-form-label" })
         <div class="row" style="padding-left:15px; padding-right:15px; margin-bottom:20px">
             <div class="col-md-12" style="border-style: solid; padding-bottom:15px; padding-top:15px">
-                <div class="row" style="padding-bottom:15px">
-                    <div class="col-md-2 offset-md-1" style="text-align:center">
-                        <label for="@Series.noSeries" style="margin-top: .5rem">kein Serientermin</label>
-                        @Html.RadioButtonFor(m => m.Series, Series.noSeries)
+                @if (Model.IsStoredWithSeries == false)
+                {
+                    <div class="row" style="padding-bottom:15px">
+                        <div class="col-md-2 offset-md-1" style="text-align:center">
+                            <label for="@Series.noSeries" style="margin-top: .5rem">kein Serientermin</label>
+                            @Html.RadioButtonFor(m => m.Series, Series.noSeries)
+                        </div>
+                        <div class="col-md-2" style="text-align:center">
+                            <label for="@Series.day" style="margin-top: .5rem">täglich</label>
+                            @Html.RadioButtonFor(m => m.Series, Series.day)
+                        </div>
+                        <div class="col-md-2" style="text-align:center">
+                            <label for="@Series.week" style="margin-top: .5rem">wöchentlich</label>
+                            @Html.RadioButtonFor(m => m.Series, Series.week)
+                        </div>
+                        <div class="col-md-2" style="text-align:center">
+                            <label for="@Series.twoWeeks" style="margin-top: .5rem">alle zwei Wochen</label>
+                            @Html.RadioButtonFor(m => m.Series, Series.twoWeeks)
+                        </div>
+                        <div class="col-md-2" style="text-align:center">
+                            <label for="@Series.month" style="margin-top: .5rem">monatlich</label>
+                            @Html.RadioButtonFor(m => m.Series, Series.month)
+                        </div>
                     </div>
-                    <div class="col-md-2" style="text-align:center">
-                        <label for="@Series.day" style="margin-top: .5rem">täglich</label>
-                        @Html.RadioButtonFor(m => m.Series, Series.day)
-                    </div>
-                    <div class="col-md-2" style="text-align:center">
-                        <label for="@Series.week" style="margin-top: .5rem">wöchentlich</label>
-                        @Html.RadioButtonFor(m => m.Series, Series.week)
-                    </div>
-                    <div class="col-md-2" style="text-align:center">
-                        <label for="@Series.twoWeeks" style="margin-top: .5rem">alle zwei Wochen</label>
-                        @Html.RadioButtonFor(m => m.Series, Series.twoWeeks)
-                    </div>
-                    <div class="col-md-2" style="text-align:center">
-                        <label for="@Series.month" style="margin-top: .5rem">monatlich</label>
-                        @Html.RadioButtonFor(m => m.Series, Series.month)
-                    </div>
-                </div>
-                <div class="col-md-12" style="text-align:center; border-top-style:groove; padding-top:15px">
+                    <div class="col-md-12" style="text-align:center; border-top-style:groove; padding-top:15px">
                         @Html.LabelFor(m => m.SeriesCounter, new { @class = "control-label" })
                         @Html.EditorFor(m => m.SeriesCounter, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.SeriesCounter, "", new { @class = "text-danger" })
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Diese Behandlung ist bereits Teil einer Serie.
+                    </div>
+                }
             </div>
         </div>
-        <!--end row-->
 
+        <!--end row-->
         <!--This row includes the buttons for creating the treatment and for stopping the creation-->
         <div class="row">
             <div class="col-md-12">
                 <input title="Behandlung speichern" type="submit" name="command" value="Speichern" class="btn btn-outline-primary btn-sm">
-                <input title="Abbrechen" type="submit" name="command" value=@ConstVariables.AbortButton class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
+                <input title="Abbrechen" type="submit" name="command" value="@ConstVariables.AbortButton" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate" />
             </div>
         </div>
     </div>
@@ -301,7 +339,7 @@
 
     <div class="row">
         <div class="form-group col-md-12">
-            <input title="Kalendaransicht aktualisieren" type="submit" name="command" value="Aktualisieren" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+            <input title="Kalendaransicht aktualisieren" type="submit" name="command" value="@ConstVariables.Update" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
         </div>
     </div>
 
@@ -320,6 +358,10 @@
 
                 <div class="modal-body">
                     <p>Bitte wählen Sie einen der aufgeführten Räume aus!</p>
+                    @if (Model.ClientRoomNumber != null)
+                    {
+                        <p>* Der Patient liegt momentan in Zimmer @Model.ClientRoomNumber</p>
+                    }
                     <table id="roomsTable" class="table table-striped table-bordered" style="width: 100%;" border="1" cellspacing="0">
 
                         <thead class="thead-inverse">
@@ -370,7 +412,7 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Raumauswahl bestätigen" type="submit" name="command" value="Raum verwenden" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Raumauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseRoom" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
@@ -449,7 +491,7 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="Mitarbeiter einplanen" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseStaff" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
                     <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
                 </div>
                 <!--end modal footer-->
@@ -685,9 +727,9 @@
                 height: 550,
                 editable: false,
                 header: {
-                    left: 'today prev,next',
+                    left: 'agendaWeek agendaDay',
                     center: 'title',
-                    right: 'agendaWeek agendaDay'
+                    right: 'today prev,next'
                 },
                 events: @Html.Raw(Json.Encode(Model.JsonAppointmentsOfSelectedRessources.Data)),
                 allDaySlot: false,

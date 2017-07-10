@@ -6,12 +6,14 @@ using BiberDAMM.DAL;
 using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using BiberDAMM.Security;
+using BiberDAMM.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 
 namespace BiberDAMM.Controllers
 {
+    //[KrabsJ]
     [CustomAuthorize]
     public class AccountController : Controller
     {
@@ -168,8 +170,9 @@ namespace BiberDAMM.Controllers
                                 UserManager.AddToRole(editUser.Id, ConstVariables.RoleTherapist);
                                 break;
                             default:
-                                //TODO [KrabsJ] throw custom exception
-                                break;
+                                // error-message for alert-statement [KrabsJ]
+                                TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                                return RedirectToAction("Index", "Home");
                         }
                     }
                     // success-message for alert-statement [KrabsJ]
@@ -229,7 +232,6 @@ namespace BiberDAMM.Controllers
             return View(userPassword);
         }
 
-        // TODO [KrabsJ] test delete method carefully after implementing stays and treatements!!!!!
         // POST: /Acount/Delete
         // Deletes an user if possible [KrabsJ]
         [HttpPost]
@@ -337,54 +339,14 @@ namespace BiberDAMM.Controllers
                 // section changed: there should be no rememberMe function --> so it is set to "false" [KrabsJ]
                 //case SignInStatus.RequiresVerification:
                 //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = false});
+                // there is no support of twofactorauthentication in this program [KrabsJ]
+                //case SignInStatus.RequiresVerification:
+                    //return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = false});
 
                 //Added errormessage name to dispay in loginview [HansesM]
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("WrongUsernameOrPass", "Falscher Benutzername oder falsches Passwort. Falls Sie Ihr Passwort vergessen haben, wenden Sie sich bitte an einen Administrator.");
-                    return View(model);
-            }
-        }
-
-        //
-        // GET: /Account/VerifyCode
-        [AllowAnonymous]
-        public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        {
-            // Verlangen, dass sich der Benutzer bereits mit seinem Benutzernamen/Kennwort oder einer externen Anmeldung angemeldet hat.
-            if (!await SignInManager.HasBeenVerifiedAsync())
-                return View("Error");
-            return View(new VerifyCodeViewModel {Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe});
-        }
-
-        //
-        // POST: /Account/VerifyCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            // Der folgende Code schützt vor Brute-Force-Angriffen der zweistufigen Codes. 
-            // Wenn ein Benutzer in einem angegebenen Zeitraum falsche Codes eingibt, wird das Benutzerkonto 
-            // für einen bestimmten Zeitraum gesperrt. 
-            // Sie können die Einstellungen für Kontosperren in "IdentityConfig" konfigurieren.
-            var result =
-                await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe,
-                    model.RememberBrowser);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Ungültiger Code.");
                     return View(model);
             }
         }
@@ -455,8 +417,9 @@ namespace BiberDAMM.Controllers
                             UserManager.AddToRole(user.Id, ConstVariables.RoleTherapist);
                             break;
                         default:
-                            //TODO [KrabsJ] throw custom exception
-                            break;
+                            // error-message for alert-statement [KrabsJ]
+                            TempData["UnexpectedFailure"] = " Bei der Vergabe der Berechtigungen ist ein Fehler aufgetreten.";
+                            return RedirectToAction("Index", "Home");
                     }
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -481,224 +444,13 @@ namespace BiberDAMM.Controllers
         }
 
         //
-        // GET: /Account/ConfirmEmail
-        // Change PrimaryKey of identity package to int [public async Task<ActionResult> ConfirmEmail(string userId, string code)] //KrabsJ
-        [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(int userId, string code)
-        {
-            //Change PrimaryKey of identity package to int [if (userId == null || code == null)] //KrabsJ
-            if (userId == default(int) || code == null)
-                return View("Error");
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
-        //
-        // GET: /Account/ForgotPassword
-        [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/ForgotPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !await UserManager.IsEmailConfirmedAsync(user.Id))
-                    return View("ForgotPasswordConfirmation");
-
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // E-Mail-Nachricht mit diesem Link senden
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Kennwort zurücksetzen", "Bitte setzen Sie Ihr Kennwort zurück. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
-            }
-
-            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
-            return View(model);
-        }
-
-        //
-        // GET: /Account/ForgotPasswordConfirmation
-        [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPassword
-        [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
-        {
-            return code == null ? View("Error") : View();
-        }
-
-        //
-        // POST: /Account/ResetPassword
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-            if (result.Succeeded)
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
-            AddErrors(result);
-            return View();
-        }
-
-        //
-        // GET: /Account/ResetPasswordConfirmation
-        [AllowAnonymous]
-        public ActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Account/ExternalLogin
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string provider, string returnUrl)
-        {
-            // Umleitung an den externen Anmeldeanbieter anfordern
-            return new ChallengeResult(provider,
-                Url.Action("ExternalLoginCallback", "Account", new {ReturnUrl = returnUrl}));
-        }
-
-        //
-        // GET: /Account/SendCode
-        [AllowAnonymous]
-        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
-        {
-            var userId = await SignInManager.GetVerifiedUserIdAsync();
-            // Change PrimaryKey of identity package to int [if (userId == null)] //KrabsJ
-            if (userId == default(int))
-                return View("Error");
-            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-            var factorOptions = userFactors.Select(purpose => new SelectListItem {Text = purpose, Value = purpose})
-                .ToList();
-            return View(new SendCodeViewModel
-            {
-                Providers = factorOptions,
-                ReturnUrl = returnUrl,
-                RememberMe = rememberMe
-            });
-        }
-
-        //
-        // POST: /Account/SendCode
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View();
-
-            // Token generieren und senden
-            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
-                return View("Error");
-            return RedirectToAction("VerifyCode",
-                new {Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe});
-        }
-
-        //
-        // GET: /Account/ExternalLoginCallback
-        [AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
-        {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null)
-                return RedirectToAction("Login");
-
-            // Benutzer mit diesem externen Anmeldeanbieter anmelden, wenn der Benutzer bereits eine Anmeldung besitzt
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new {ReturnUrl = returnUrl, RememberMe = false});
-                case SignInStatus.Failure:
-                default:
-                    // Benutzer auffordern, ein Konto zu erstellen, wenn er kein Konto besitzt
-                    ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation",
-                        new ExternalLoginConfirmationViewModel {Email = loginInfo.Email});
-            }
-        }
-
-        //
-        // POST: /Account/ExternalLoginConfirmation
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,
-            string returnUrl)
-        {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Manage");
-
-            if (ModelState.IsValid)
-            {
-                // Informationen zum Benutzer aus dem externen Anmeldeanbieter abrufen
-                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                    return View("ExternalLoginFailure");
-                var user = new ApplicationUser {UserName = model.Email, Email = model.Email};
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
-                    {
-                        await SignInManager.SignInAsync(user, false, false);
-                        return RedirectToLocal(returnUrl);
-                    }
-                }
-                AddErrors(result);
-            }
-
-            ViewBag.ReturnUrl = returnUrl;
-            return View(model);
-        }
-
-        //
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            // TODO [KrabsJ] Redirect to Login Page
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
-        }
-
-        //
-        // GET: /Account/ExternalLoginFailure
-        [AllowAnonymous]
-        public ActionResult ExternalLoginFailure()
-        {
-            return View();
+            return RedirectToAction("Login", "Account");
         }
 
         protected override void Dispose(bool disposing)
@@ -726,9 +478,6 @@ namespace BiberDAMM.Controllers
 
         #region Hilfsprogramme
 
-        // Wird für XSRF-Schutz beim Hinzufügen externer Anmeldungen verwendet
-        private const string XsrfKey = "XsrfId";
-
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
@@ -742,33 +491,6 @@ namespace BiberDAMM.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
             return RedirectToAction("Index", "Home");
-        }
-
-        internal class ChallengeResult : HttpUnauthorizedResult
-        {
-            public ChallengeResult(string provider, string redirectUri)
-                : this(provider, redirectUri, null)
-            {
-            }
-
-            public ChallengeResult(string provider, string redirectUri, string userId)
-            {
-                LoginProvider = provider;
-                RedirectUri = redirectUri;
-                UserId = userId;
-            }
-
-            public string LoginProvider { get; set; }
-            public string RedirectUri { get; set; }
-            public string UserId { get; set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                var properties = new AuthenticationProperties {RedirectUri = RedirectUri};
-                if (UserId != null)
-                    properties.Dictionary[XsrfKey] = UserId;
-                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
-            }
         }
         #endregion
 

@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using BiberDAMM.Helpers 
 @model BiberDAMM.ViewModels.TherapistIndexViewModel
 @{
     ViewBag.Title = "Home Therapeut";
@@ -26,7 +26,7 @@
     </div>
 }
 
-<h1>Willkommen @User.Identity.GetUserName()</h1>
+<h1>Willkommen @User.Identity.GetDisplayName()</h1>
 
 <!--
     Author: ChristesR

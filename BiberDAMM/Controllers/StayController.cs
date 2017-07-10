@@ -13,7 +13,7 @@ using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
-    [CustomAuthorize]
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist )]
     public class StayController : Controller
     {
         //The Database-Context [HansesM]
@@ -93,7 +93,6 @@ namespace BiberDAMM.Controllers
                 //Returns the user and displays a alert [HansesM]
                 TempData["CreateStayAbort"] = "Anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
                 return RedirectToAction("Details", "Client", new { id = stay.ClientId });
-
             }
 
             //Checks if begin is greater than enddate [HansesM]
@@ -167,7 +166,7 @@ namespace BiberDAMM.Controllers
             //Creats a new View-BedModels with stay, the selectable list of doctors and the json with treatment calendar data [HansesM]
             var viewModel = new StayDetailsViewModel(stay, selectetListDoctors, resultJson);
 
-            //returns the viewmodel [HansesM]
+            //returns the view [HansesM]
             return View(viewModel);
         }
 
