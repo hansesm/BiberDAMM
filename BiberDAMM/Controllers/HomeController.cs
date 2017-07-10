@@ -81,47 +81,16 @@ namespace BiberDAMM.Controllers
                     return View("IndexNursingStaff", viewModelNurse);
 
                 case ConstVariables.RoleCleaner:
-                    /*Author: ChristeR
-                    //First get relevant treatments
-                    var treatments = new List<Treatment>().AsQueryable();
 
-
-                    treatments = from m in db.Treatments
-                                 select m;
-                    //To get treatments, which are running and treatments, which are completed today
-                    treatments = treatments.Where(s => s.BeginDate.Year <= DateTime.Now.Year && s.BeginDate.Month <= DateTime.Now.Month && s.BeginDate.Day <= DateTime.Now.Day && s.EndDate.Year >= DateTime.Now.Year
-                    && s.EndDate.Month >= DateTime.Now.Month && s.EndDate.Day >= DateTime.Now.Day);
-
-                    var rooms = new List<Room>();
-
-                    //Get rooms from found treatments
-                    foreach (Treatment actTreat in treatments)
-                    {
-                        //Get room from database and check, if already contained
-                        var room = db.Rooms.Find(actTreat.RoomId);
-                        Boolean roomContained = false;
-
-                        foreach (Room actRoom in rooms)
-                        {
-                            if (actRoom.Id == actTreat.RoomId)
-                            {
-                                roomContained = true;
-                            }
-                        }
-
-                        //if room not contained add to list
-                        if (!roomContained)
-                        {
-                            rooms.Add(room);
-                        }
-
-                    }*/
-
-                   
-                    var AllRooms = db.Rooms.ToList();
-                    ViewBag.Rooms = AllRooms;
+                    var PatientRooms = db.Rooms.SqlQuery ("select * from rooms r where r.id in " +
+                                                    "(select be.RoomId from beds be where be.Id in " +
+                                                    "(select b.BedId from blocks b where " +
+                                                    "convert(datetime, GetDate() , 104) between b.BeginDate " +
+                                                    "and b.EndDate ))");
                     var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
-                    return View("IndexCleaner", RoomsToClean);
+                    ViewBag.OccupiedRooms = PatientRooms;
+                    ViewBag.CleaningEvents = RoomsToClean;
+                    return View("IndexCleaner");
 
                 case ConstVariables.RoleTherapist:
 
@@ -160,10 +129,15 @@ namespace BiberDAMM.Controllers
             cleaned.CleaningDone = true;
             db.Entry(cleaned).State = EntityState.Modified;
             db.SaveChanges();
+            var PatientRooms = db.Rooms.SqlQuery("select * from rooms r where r.id in " +
+                               "(select be.RoomId from beds be where be.Id in " +
+                               "(select b.BedId from blocks b where " +
+                               "convert(datetime, GetDate() , 104) between b.BeginDate " +
+                               "and b.EndDate ))");
             var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
-            var AllRooms = db.Rooms.ToList();
-            ViewBag.Rooms = AllRooms;
-            return View("IndexCleaner", RoomsToClean);
+            ViewBag.OccupiedRooms = PatientRooms;
+            ViewBag.CleaningEvents = RoomsToClean;
+            return View("IndexCleaner");
         }
     }
 }
