@@ -8,9 +8,11 @@ using BiberDAMM.Models;
 using System.Collections.ObjectModel;
 using System;
 using System.Data.Entity.Migrations;
+using BiberDAMM.Security;
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
     public class TreatmentController : Controller
     {
         //The Database-Context [KrabsJ]
