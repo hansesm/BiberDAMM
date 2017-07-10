@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<BiberDAMM.Models.Room>  
+@model IEnumerable<BiberDAMM.Models.Cleaner>
 @{
     ViewBag.Title = "Home Reinigungskraft";
 }
@@ -27,41 +27,80 @@
 }
 
 <h1>Willkommen @User.Identity.GetUserName()</h1>
-
+<br />
 <!--
-    Author: ChristesR    
+    Authors: ChristesR, Jean-PierreK
 -->
-<h2>Räume, welche heute gereinigt werden müssen</h2>
+<h2>Es sind folgende Reinigungsarbeiten ausstehend:</h2>
 <table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RoomNumber)
+                @Html.DisplayNameFor(model => model.Room.RoomNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoomType.Name)
+                @Html.DisplayNameFor(model => model.BeginDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CleaningDone)
             </th>
         </tr>
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
-            <td colspan="2">
-                </td>
+            <td colspan="4"></td>
         </tr>
     </tfoot>
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.RoomNumber)
+                @Html.DisplayFor(modelItem => item.Room.RoomNumber)
             </td>
             <td>
-                @Html.DisplayFor(modeItem => item.RoomType.Name)
+                @Html.DisplayFor(modelitem => item.BeginDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.EndDate)
+            </td>
+            <td>
+                @using (Html.BeginForm("Check", "Home", new { id = item.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button title="Reinigung durchgeführt" type="submit" class="btn btn-outline-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+                }
             </td>
         </tr>
     }
 </table>
-
+<br />
+<br />
+<h2>Es sind folgende Zimmer belegt:</h2>
+<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+    <thead class="thead-inverse">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Room.RoomNumber)
+            </th>
+        </tr>
+    </thead>
+    <tfoot style="background-color: #263238; text-align: right;">
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+    </tfoot>
+    @foreach (var item in ViewBag.Rooms)
+    {
+        <tr>
+            <td>
+                @item.RoomNumber
+            </td>
+        </tr>
+    }
+</table>
 @section Scripts{
-    <script> $(function () { $("#example").dataTable();})</script>
+    <script> $(function () { $("#example").dataTable(); })</script>
 }

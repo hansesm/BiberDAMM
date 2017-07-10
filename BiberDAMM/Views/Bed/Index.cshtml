@@ -23,6 +23,18 @@
     </div>
 }
 
+<!-- Notification if a bed is not added -->
+@if (TempData["CreateBedFailed"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Ungültige Angaben!</strong>@TempData["CreateBedFailed"]
+    </div>
+}
+
+
 <!-- Notification if a bed is deleted successfully -->
 @if (TempData["DeleteBedSuccess"] != null)
 {

@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using BiberDAMM.ViewModels;
 using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 
 namespace BiberDAMM.Controllers
 {
@@ -36,9 +37,9 @@ namespace BiberDAMM.Controllers
                     //Gets all treatments not older than 7 Days [ChristesR]
                     DateTime daysConstantDoctor = DateTime.Now.AddDays(-7);
                     string loggedInUserIDDoctor = User.Identity.GetUserId();
-                    var eventsDoctor = db.Treatments.Where(e => e.BeginDate>= daysConstantDoctor && e.ApplicationUsers.Any
+                    var eventsDoctor = db.Treatments.Where(e => e.BeginDate >= daysConstantDoctor && e.ApplicationUsers.Any
                     (a => a.Id.ToString().Equals(loggedInUserIDDoctor))).ToList();
-                    
+
                     //Builds a JSon from the stay-treatments, this is required for the calendar-view[HansesM]
                     var resultDoctor = eventsDoctor.Select(e => new JsonEventTreatment()
                     {
@@ -78,9 +79,9 @@ namespace BiberDAMM.Controllers
 
                     NurseIndexViewModel viewModelNurse = new NurseIndexViewModel(resultJsonNurse);
                     return View("IndexNursingStaff", viewModelNurse);
-                case ConstVariables.RoleCleaner:
 
-                    //Author: ChristeR
+                case ConstVariables.RoleCleaner:
+                    /*Author: ChristeR
                     //First get relevant treatments
                     var treatments = new List<Treatment>().AsQueryable();
 
@@ -114,8 +115,13 @@ namespace BiberDAMM.Controllers
                             rooms.Add(room);
                         }
 
-                    }
-                    return View("IndexCleaner", rooms);
+                    }*/
+
+                   
+                    var AllRooms = db.Rooms.ToList();
+                    ViewBag.Rooms = AllRooms;
+                    var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
+                    return View("IndexCleaner", RoomsToClean);
 
                 case ConstVariables.RoleTherapist:
 
@@ -161,6 +167,19 @@ namespace BiberDAMM.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [HttpPost]
+        [ActionName("Check")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckConfirmed(int id)
+        {
+            var cleaned = db.Cleaner.Find(id);
+            cleaned.CleaningDone = true;
+            db.Entry(cleaned).State = EntityState.Modified;
+            db.SaveChanges();
+            var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
+            return View("IndexCleaner", RoomsToClean);
         }
     }
 }

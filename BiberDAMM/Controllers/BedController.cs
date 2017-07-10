@@ -66,8 +66,12 @@ namespace BiberDAMM.Controllers
                 TempData["CreateBedSuccess"] = " Das Bett wurde hinzugefügt";
                 return RedirectToAction("Index");
             }
-
-            return View(bed);
+            else
+            {
+                // Return notification if adding the new bed was unsuccessful
+                TempData["CreateBedFailed"] = " Das Bett konnte nicht hinzugefügt werden";
+                return RedirectToAction("Index");
+            }
         }
 
         //-- GET /Bed/Edit to edit selected bed entry --//
