@@ -161,6 +161,8 @@ namespace BiberDAMM.Controllers
             db.Entry(cleaned).State = EntityState.Modified;
             db.SaveChanges();
             var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
+            var AllRooms = db.Rooms.ToList();
+            ViewBag.Rooms = AllRooms;
             return View("IndexCleaner", RoomsToClean);
         }
     }
