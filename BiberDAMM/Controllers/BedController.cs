@@ -175,7 +175,7 @@ namespace BiberDAMM.Controllers
             if (dependentBlock != null) // if bed is blocked
             {
                 // Return alert-message if bed deletion not possible
-                TempData["DeleteBedFailed"] = " Das Bett ist belegt";
+                TempData["DeleteBedFailed"] = " Es bestehen Abhängigkeiten zu Patientenaufenthalten";
                 return RedirectToAction("Details", "Bed", new { id });
             }
 
