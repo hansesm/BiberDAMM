@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
 using BiberDAMM.Security;
+using BiberDAMM.Helpers;
 
 namespace BiberDAMM.Controllers
 {
@@ -16,6 +17,7 @@ namespace BiberDAMM.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         //Generating Index Page
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator+","+ ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Index()
         {
             var healthInsurances = from m in db.HealthInsurances
@@ -24,6 +26,7 @@ namespace BiberDAMM.Controllers
         }
 
         //Generating Details Page
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,7 +39,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for Creation-Page
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create()
         {
             return View();
@@ -44,6 +47,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -70,6 +74,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for Edit-Page
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -83,6 +88,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(HealthInsurance healthInsurance)
         {
             if (ModelState.IsValid)
@@ -111,6 +117,7 @@ namespace BiberDAMM.Controllers
 
 
         //Function for deleting Datasets
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult DeleteConfirmed(int id)
         {
             var healthInsurance = db.HealthInsurances.Find(id);
@@ -127,6 +134,7 @@ namespace BiberDAMM.Controllers
         }
 
         //Function for Redirecting HealthInsurance to Client
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult AddInsuranceToClient(int id)
         {
             HealthInsurance healthInsurance = db.HealthInsurances.Find(id);
@@ -167,7 +175,7 @@ namespace BiberDAMM.Controllers
 
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult CancelEditingOrCreatingClient()
         {
             Session["TempClient"] = null;
@@ -176,6 +184,7 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index", "HealthInsurance");
         }
 
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
