@@ -4,16 +4,20 @@ using System.Net;
 using System.Web.Mvc;
 using BiberDAMM.DAL;
 using BiberDAMM.Models;
+using BiberDAMM.Security;
+using BiberDAMM.Helpers;
 
 namespace BiberDAMM.Controllers
 {
     // ===============================
     // AUTHOR     : ChristesR
     // ===============================
+    [CustomAuthorize]
     public class ContactDataController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         private Client getCachedClient()
         {
             Client client = null;
@@ -31,6 +35,7 @@ namespace BiberDAMM.Controllers
         }
 
         //Method which decides to which client page should be redirected
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult GoBackToClient()
         {
             Client cachedClient = getCachedClient();
@@ -50,7 +55,7 @@ namespace BiberDAMM.Controllers
         }
 
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Index()
         {
             //To prevent rendering the Page if no Client is cached
@@ -73,7 +78,7 @@ namespace BiberDAMM.Controllers
             return View(contactDatas.ToList());
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -85,6 +90,7 @@ namespace BiberDAMM.Controllers
             return View(contactData);
         }
 
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create()
         {
             ViewBag.ClientId = new SelectList(db.Clients, "Id", "Surname");
@@ -94,6 +100,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(ContactData contactData)
         {
             if (Request.Form["Save"] != null)
@@ -128,7 +135,7 @@ namespace BiberDAMM.Controllers
             }
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -144,6 +151,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(ContactData contactData)
         {
             if (Request.Form["Save"] != null)
@@ -177,7 +185,7 @@ namespace BiberDAMM.Controllers
             }
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -188,7 +196,7 @@ namespace BiberDAMM.Controllers
             return View(contactData);
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult DeleteCheck(int? id)
         {
             if (id == null)
@@ -203,6 +211,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         public ActionResult DeleteConfirmed(int id)
         {
             var contactData = db.ContactDatas.Find(id);
@@ -218,7 +227,7 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
