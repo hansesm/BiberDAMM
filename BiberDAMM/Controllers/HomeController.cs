@@ -81,15 +81,21 @@ namespace BiberDAMM.Controllers
                     return View("IndexNursingStaff", viewModelNurse);
 
                 case ConstVariables.RoleCleaner:
-
+                //-- The following implements the cleaning schedule [Jean-PierreK] --/
+                
+                    // Return a list of all occupied patient rooms for the day: 
                     var PatientRooms = db.Rooms.SqlQuery ("select * from rooms r where r.id in " +
                                                     "(select be.RoomId from beds be where be.Id in " +
                                                     "(select b.BedId from blocks b where " +
                                                     "convert(datetime, GetDate() , 104) between b.BeginDate " +
                                                     "and b.EndDate ))");
+                
+                    // Gather the to do list of scheduled cleaning jobs for cleaning personnel:
                     var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
+
                     ViewBag.OccupiedRooms = PatientRooms;
                     ViewBag.CleaningEvents = RoomsToClean;
+
                     return View("IndexCleaner");
 
                 case ConstVariables.RoleTherapist:
@@ -120,6 +126,7 @@ namespace BiberDAMM.Controllers
             }
         }
 
+        //-- Post function to mark a cleaning job as done [Jean-PierreK] --// 
         [HttpPost]
         [ActionName("Check")]
         [ValidateAntiForgeryToken]

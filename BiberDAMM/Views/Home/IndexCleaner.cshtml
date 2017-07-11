@@ -29,7 +29,8 @@
 <h1>Willkommen @User.Identity.GetUserName()</h1>
 
 <!--
-    Authors: ChristesR, Jean-PierreK
+    Cleaning schedule viewpage 
+    Author: Jean-PierreK
 -->
 <h2>Es sind folgende Reinigungsarbeiten ausstehend:</h2>
 <table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
@@ -78,7 +79,7 @@
 </table>
 <br />
 <br />
-<h2>Es sind zurzeit folgende Zimmer belegt:</h2>
+<h2>Es sind zurzeit folgende Patientenzimmer belegt:</h2>
 <table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
@@ -101,6 +102,7 @@
         </tr>
     }
 </table>
+
 @section Scripts{
     <script> $(function () { $("#example").dataTable(); })</script>
 }
