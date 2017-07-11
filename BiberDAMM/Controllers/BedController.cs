@@ -165,9 +165,13 @@ namespace BiberDAMM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            // Check if bed is occupied by a patient
+            // Check if bed is or was tied to a patient or block
             Blocks dependentBlock = db.Blocks.Where(b => b.BedId == id).FirstOrDefault();
-
+            /* The following would allow the deletion of beds not currently in use or booked
+             * Blocks dependentBlock = db.Blocks.Where(b => b.BedId == id 
+                                    && b.BeginDate <= DateTime.Now 
+                                    && b.EndDate >= DateTime.Now).FirstOrDefault();
+             */
             if (dependentBlock != null) // if bed is blocked
             {
                 // Return alert-message if bed deletion not possible
