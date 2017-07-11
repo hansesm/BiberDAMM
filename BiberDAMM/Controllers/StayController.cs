@@ -91,7 +91,7 @@ namespace BiberDAMM.Controllers
             if (command.Equals(ConstVariables.AbortButton))
             {
                 //Returns the user and displays a alert [HansesM]
-                TempData["CreateStayAbort"] = "Anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
+                TempData["CreateStayAbort"] = "anlegen eines neuen Aufenthalts erfolgreich abgebrochen.";
                 return RedirectToAction("Details", "Client", new { id = stay.ClientId });
             }
 

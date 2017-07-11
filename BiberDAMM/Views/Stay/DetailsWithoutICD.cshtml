@@ -295,7 +295,7 @@
     <div id="calendar"></div>
     <!-- Empty row-->
     <br />
-    <button title="Behandlung hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {id = Model.Stay.Id}))';return false;" class="btn btn-outline-primary btn-sm">Behandlung hinzufügen</button>
+    <button title="Behandlung anlegen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {id = Model.Stay.Id}))';return false;" class="btn btn-outline-primary btn-sm">Behandlung hinzufügen</button>
     <br />
     <!-- Horizontal line-->
     <hr />
@@ -359,7 +359,7 @@
                 <tfoot style="background-color: #263238; color: white; text-align: right;">
                     <tr>
                         <td colspan="3">
-                            <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                            <button title="Treatment anlegen" onclick="location.href = '@(Url.Action("SelectTreatmentType", "Treatment", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                             </button>
                         </td>
@@ -431,7 +431,7 @@
             <tfoot style="background-color: #263238; color: white; text-align: right;">
                 <tr>
                     <td colspan="5">
-                        <button title="Treatment hinzufügen" onclick="location.href = '@(Url.Action("Create", "Blocks", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
+                        <button title="Treatment anlegen" onclick="location.href = '@(Url.Action("Create", "Blocks", new {Model.Stay.Id}))';return false;" style="background-color: transparent; border: hidden;" class="btn btn-outline-primary btn-sm">
                             <i class="fa fa-plus-circle" aria-hidden="true"></i>
                         </button>
                     </td>
