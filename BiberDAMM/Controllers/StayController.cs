@@ -13,7 +13,7 @@ using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
-    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist )]
+    [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
     public class StayController : Controller
     {
         //The Database-Context [HansesM]
@@ -130,7 +130,7 @@ namespace BiberDAMM.Controllers
             var viewModel = new StayCreateViewModel(stay.ClientId, stay, selectetListDoctors);
             return View(viewModel);
         }
-        
+
         //GET SINGLE: Stay [HansesM]
         public ActionResult Details(int id)
         {
@@ -139,7 +139,7 @@ namespace BiberDAMM.Controllers
 
             //Gets all doctors from the database [HansesM]
             var listDoctors = _db.Users.Where(s => s.UserType == UserType.Arzt);
-            
+
             //Fits all Doctors into a selectetList to display in a dropdown-list[HansesM]
             var selectetListDoctors = new List<SelectListItem>();
             foreach (var m in listDoctors)
@@ -178,9 +178,19 @@ namespace BiberDAMM.Controllers
             //Checks if begin is greater than enddate [HansesM]
             if (stay.BeginDate > stay.EndDate)
             {
-                //Added errormessage name to dispay in loginview [HansesM]
+                //Added errormessage to dispay in staydetails [HansesM]
                 ModelState.AddModelError("EndDateError", "Das Enddatum muss nach dem Beginndatum liegen");
             }
+
+            var treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
+
+
+            if (treatments.FirstOrDefault().EndDate != null && stay.EndDate < treatments.FirstOrDefault().EndDate)
+            {
+                //Added errormessage to display in staydetails [HansesM]
+                ModelState.AddModelError("EndDateError", "Das Enddatum darf nicht vor der letzen Behandlung liegen");
+            }
+            
 
             //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
@@ -285,7 +295,7 @@ namespace BiberDAMM.Controllers
                 return RedirectToAction("Details", "Client", new { id = tempClientId });
             }
 
-            
+
         }
 
         //Override on Dispose for security reasons. [HansesM]
