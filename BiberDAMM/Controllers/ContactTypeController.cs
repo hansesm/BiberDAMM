@@ -8,9 +8,11 @@ using System.Linq;
 using BiberDAMM.Helpers;
 using System.Data.Entity;
 using System.Collections.Generic;
+using System.Web.Security;
 
 namespace BiberDAMM.Controllers
 {
+    [Security.CustomAuthorize(Roles = ConstVariables.RoleAdministrator + ",")]
     public class ContactTypeController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
