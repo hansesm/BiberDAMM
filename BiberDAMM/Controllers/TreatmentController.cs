@@ -315,7 +315,14 @@ namespace BiberDAMM.Controllers
                         treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
                         // error-message for alert-statement [KrabsJ]
-                        TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten endet am " + stay.EndDate + ". Mindestens ein geplanter Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+                        if (stay.EndDate != null)
+                        {
+                            TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten beginnt am " + stay.BeginDate + " und endet am " + stay.EndDate + ". Mindestens ein geplanter Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+                        }
+                        else
+                        {
+                            TempData["StayClosedError"] = " Der zugehörige Aufenthalt des Patienten beginnt am " + stay.BeginDate + ". Mindestens ein geplanter Behandlungstermin befindet sich nicht im Zeitraum des Aufenthalts.";
+                        }
 
                         // return view
                         return View(treatmentCreationModel);
