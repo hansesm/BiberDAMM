@@ -20,7 +20,9 @@ namespace BiberDAMM
                 "~/Scripts/jquery-ui-timepicker-addon.js",
                 "~/Scripts/timetable.js",
                 "~/Content/pace/pace.js",
-                "~/Scripts/fullcalendar-de.js"
+                "~/Scripts/fullcalendar-de.js",
+                "~/Scripts/moment-min.js",
+                "~/Scripts/datetime-moment.js"
                 ));
 
             //JQuery UI Bundle [HansesM]
