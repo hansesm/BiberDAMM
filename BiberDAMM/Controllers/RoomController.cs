@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//RoomController
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -7,14 +8,18 @@ using BiberDAMM.Helpers;
 using BiberDAMM.Models;
 using BiberDAMM.ViewModels;
 using System;
+using BiberDAMM.Security;
+
 
 namespace BiberDAMM.Controllers
 {
+    [CustomAuthorize]
     public class RoomController : Controller
     {
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         // GET all: Room [JEL]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Index()
         {   // returns listed rooms
             return View(db.Rooms.ToList());
@@ -23,6 +28,7 @@ namespace BiberDAMM.Controllers
         //CREATE: Room [JEL]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Create(Room Room)
         {
             //checks if roomNumber is already in use; an alert will be displayed
@@ -49,19 +55,19 @@ namespace BiberDAMM.Controllers
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
-                selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
             //creats viewModel
             var viewModel = new RoomViewModel(Room, selectedListRoomTypes);
             return View(viewModel);
         }
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Create()
         {
             //Get all roomTypes from the database
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
-                selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
             var room = new Room();
             //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
@@ -69,8 +75,9 @@ namespace BiberDAMM.Controllers
         }
 
         //DELETE: Room [JEL]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Delete(int? id)
-        {   
+        {
             //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
                 return RedirectToAction("Index");
@@ -85,6 +92,7 @@ namespace BiberDAMM.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult DeleteConfirmed(int id)
         {
             // check if there are dependencies
@@ -97,7 +105,7 @@ namespace BiberDAMM.Controllers
             {
                 // failure-message for alert-statement
                 TempData["DeleteRoomFailed"] = " Es bestehen Abhängigkeiten zu anderen Krankenhausdaten.";
-                return RedirectToAction("Details", "Room", new {id});
+                return RedirectToAction("Details", "Room", new { id });
             }
             //deletes room
             var room = db.Rooms.Find(id);
@@ -107,7 +115,8 @@ namespace BiberDAMM.Controllers
             return RedirectToAction("Index");
         }
 
-        //CHANGE: Room [JEL] 
+        //CHANGE: Room [JEL]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Edit(int? id)
         {
             //checks if given id is equal null, if this is the case return to "index-view" 
@@ -117,13 +126,13 @@ namespace BiberDAMM.Controllers
             var room = db.Rooms.Find(id);
             if (room == null)
                 return HttpNotFound();
-            
+
             //Get all roomTypes from the database
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             //selectedListRoomTypes.Add(new SelectListItem{ Text = " ", Value = null });
             foreach (var m in listRoomTypes)
-                selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
             //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
             return View(viewModel);
@@ -131,11 +140,12 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Edit(Room room, string command)
-        {   
-           
+        {
+
             if (command.Equals(ConstVariables.AbortButton))
-                return RedirectToAction("Details", "Room", new {id = room.Id});
+                return RedirectToAction("Details", "Room", new { id = room.Id });
 
             // checks if RoomMaxSize is negative
             if (room.RoomMaxSize < 0)
@@ -158,20 +168,20 @@ namespace BiberDAMM.Controllers
                 TempData["EditRoomFailed"] = " Es befindet sich noch mindestens ein Bett im Raum.";
                 return RedirectToAction("Edit", room);
             }
-            
+
             if (ModelState.IsValid)
             {
                 db.Entry(room).State = EntityState.Modified;
                 db.SaveChanges();
                 //if update succeeded
                 TempData["EditRoomSuccess"] = " Die Raumdetails wurden aktualisiert.";
-                return RedirectToAction("Details", "room", new {id = room.Id});
+                return RedirectToAction("Details", "room", new { id = room.Id });
             }
             //Get all roomTypes from the database
             var listRoomTypes = db.RoomTypes;
             var selectedListRoomTypes = new List<SelectListItem>();
             foreach (var m in listRoomTypes)
-                selectedListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+                selectedListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //creates viewModel
             var viewModel = new RoomViewModel(room, selectedListRoomTypes);
@@ -179,19 +189,7 @@ namespace BiberDAMM.Controllers
         }
 
         //GET SINGLE: Room [JEL]
-        //public ActionResult Details(int? id)
-        //{
-        //    //checks if given id is equal null, if this is the case return to "index-view" 
-        //    if (id == null)
-        //        return RedirectToAction("Index");
-        //    //checks if room with given id exists
-        //    var room = db.Rooms.Find(id);
-        //    if (room == null)
-        //        return HttpNotFound();
-        //    //returns room
-        //    return View(room);
-        //}
-        public ActionResult Details (int? id)
+        public ActionResult Details(int? id)
         {
             //checks if given id is equal null, if this is the case return to "index-view" 
             if (id == null)
@@ -202,13 +200,13 @@ namespace BiberDAMM.Controllers
                 return HttpNotFound();
 
             //lists all beds which are placed in the given room
-            List <Bed> listEmptyBeds = db.Beds.Where(b => b.RoomId == room.Id).ToList();
+            List<Bed> listEmptyBeds = db.Beds.Where(b => b.RoomId == room.Id).ToList();
             //lists all blocks which are connected to the beds which are placed in the given room
             List<Blocks> currentBedBlocks = new List<Blocks>();
             foreach (var bed in listEmptyBeds.ToArray())
             {
                 Blocks newBlock = db.Blocks.SingleOrDefault(b => b.BeginDate <= DateTime.Now && b.EndDate >= DateTime.Now && b.BedId == bed.Id);
-                if(newBlock != null)
+                if (newBlock != null)
                 {
                     currentBedBlocks.Add(newBlock);
                     //remove empty beds to avoid doule occurrence
@@ -219,7 +217,7 @@ namespace BiberDAMM.Controllers
             var viewModel = new BedsInRoomViewModel(room, currentBedBlocks, listEmptyBeds);
             return View(viewModel);
         }
-
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor)]
         public ActionResult RoomScheduler()
         {
             //Gets a list of RoomTypes for the Dropdownlist [HansesM]
@@ -229,7 +227,7 @@ namespace BiberDAMM.Controllers
             var selectetListRoomTypes = new List<SelectListItem>();
             selectetListRoomTypes.Add(new SelectListItem());
             foreach (var m in listRoomTypes)
-                selectetListRoomTypes.Add(new SelectListItem {Text = m.Name, Value = m.Id.ToString()});
+                selectetListRoomTypes.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             var viewModel = new RoomSchedulerViewModel(selectetListRoomTypes);
 
@@ -240,6 +238,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of rooms witch matches the given roomType
         //[HansesM]
         [HttpPost]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor)]
         public JsonResult GetSchedulerRooms(string roomTypeName)
         {
             //Gets a list of free beds, matching the given parameters! [HansesM]
@@ -247,7 +246,7 @@ namespace BiberDAMM.Controllers
 
             //Creates a array of roomnames out of the given rooms-list[HansesM]
             var result = (from a in rooms
-                select a.RoomNumber).ToArray();
+                          select a.RoomNumber).ToArray();
 
 
             //returns the array as json to the calling-function [HansesM]
@@ -258,6 +257,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of treatments and cleanings witch matches roomtype and the current-date
         //[HansesM]
         [HttpPost]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor)]
         public JsonResult GetSchedulerEvents(string roomTypeName, string schedulerDate)
         {
             //Gets a list of treatments, matching the given parameters! [HansesM]
