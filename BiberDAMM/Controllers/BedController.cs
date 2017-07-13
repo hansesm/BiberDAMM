@@ -12,6 +12,7 @@ using BiberDAMM.Helpers;
 using BiberDAMM.Security;
 using System;
 using System.Collections.Generic;
+using BiberDAMM.ViewModels;
 
 namespace BiberDAMM.Controllers
 {
@@ -22,6 +23,7 @@ namespace BiberDAMM.Controllers
 
         //-- GET Index page /Bed/ and return a list of all beds --//
         [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Index()
         {
             return View(db.Beds.ToList());
@@ -29,6 +31,7 @@ namespace BiberDAMM.Controllers
 
         //-- GET page /Bed/Create to add a new bed --//
         [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Create()
         {
             var AllRooms = db.Rooms.ToList(); // list of all rooms
@@ -51,6 +54,7 @@ namespace BiberDAMM.Controllers
 
         //-- SET/ Post method to add the newly created bed to the system --//
         [HttpPost]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Bed bed, string command)
         {
@@ -76,6 +80,7 @@ namespace BiberDAMM.Controllers
 
         //-- GET /Bed/Edit to edit selected bed entry --//
         [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -116,6 +121,7 @@ namespace BiberDAMM.Controllers
 
         //-- SET/ Post method to change details of selected bed entry --// 
         [HttpPost]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Bed bed, string command)
         {
@@ -137,6 +143,7 @@ namespace BiberDAMM.Controllers
 
         //-- GET Bed/Details page for Bed with id --//
         [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -149,6 +156,7 @@ namespace BiberDAMM.Controllers
 
         //-- Get for bed deletion --//
         [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -161,6 +169,7 @@ namespace BiberDAMM.Controllers
 
         //-- Post function to delete Bed --//
         [HttpPost]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator)]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -186,5 +195,28 @@ namespace BiberDAMM.Controllers
             TempData["DeleteBedSuccess"] = " Das Bett wurde entfernt";
             return RedirectToAction("Index");
         }
-    }
+        //-- Get the schedule for currently occupied beds --//
+        [HttpGet]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
+        public ActionResult BedSchedule()
+        {
+            var DataQuery = from c in db.Clients
+                            join s in db.Stays on c.Id equals s.ClientId
+                            join bl in db.Blocks on s.Id equals bl.StayId
+                            join b in db.Beds on bl.BedId equals b.Id
+                            where bl.BeginDate <= DateTime.Now && bl.EndDate >= DateTime.Now
+                            join r in db.Rooms on b.RoomId equals r.Id
+                            select new BedScheduleViewModel
+                            {
+                                BedNbr = b.Id,
+                                BedModel = b.BedModels,
+                                RoomNbr = r.RoomNumber,
+                                PatientSName = c.Surname,
+                                PatientLName = c.Lastname,
+                                StartDate = bl.BeginDate,
+                                EndDate = bl.EndDate
+                            };
+            return View(DataQuery);
+        }
+    } 
 }

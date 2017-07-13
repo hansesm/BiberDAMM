@@ -223,6 +223,7 @@
     <Compile Include="Models\ContactType.cs" />
     <Compile Include="Models\HealthInsurance.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModels\BedScheduleViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\RoomType.cs" />
@@ -875,6 +876,7 @@
     <Content Include="Views\Error\Oops.cshtml" />
     <Content Include="Views\Treatment\Details.cshtml" />
     <Content Include="Views\Stay\DetailsWithoutICD.cshtml" />
+    <Content Include="Views\Bed\BedSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
