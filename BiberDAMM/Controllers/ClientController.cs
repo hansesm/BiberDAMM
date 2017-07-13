@@ -19,7 +19,7 @@ namespace BiberDAMM.Controllers
         private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         //Getter for the Index-Page requires searchString for filtering entries, if searchString is empty, nothing will be displayed in order to optimize database-performance
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist + "," + ConstVariables.RoleNurse)]
         public ActionResult Index(string searchString)
         {
             Session["TempClient"] = null;
@@ -71,7 +71,7 @@ namespace BiberDAMM.Controllers
 
 
         //Gets the Last N modified Clients, if the given N is null, there will be the last 30 Clients taken
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist + "," + ConstVariables.RoleNurse)]
         public ActionResult LastNIndex(int? count)
         {
             Session["TempClient"] = null;
@@ -98,7 +98,7 @@ namespace BiberDAMM.Controllers
 
 
         //Gettter for the Details-Page
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist + "," + ConstVariables.RoleNurse)]
         public ActionResult Details(int? id)
         {
             Session["TempClient"] = null;
@@ -121,7 +121,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for the creating-Page
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         public ActionResult Create()
         {
 
@@ -142,7 +142,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         public ActionResult Create(Client client)
         {
             //Null the Editing Client for preventing user to get into undefined state
@@ -197,7 +197,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for the Editing Page
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -231,7 +231,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         public ActionResult Edit(Client client)
         {
             //Null the New Client for preventing user to get into undefined state
@@ -277,7 +277,7 @@ namespace BiberDAMM.Controllers
             }
         }
 
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
