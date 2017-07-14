@@ -182,15 +182,16 @@ namespace BiberDAMM.Controllers
                 ModelState.AddModelError("EndDateError", "Das Enddatum muss nach dem Beginndatum liegen");
             }
 
-            var treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
-
-
-            if (treatments.FirstOrDefault().EndDate != null && stay.EndDate < treatments.FirstOrDefault().EndDate)
-            {
-                //Added errormessage to display in staydetails [HansesM]
-                ModelState.AddModelError("EndDateError", "Das Enddatum darf nicht vor der letzen Behandlung liegen");
-            }
+            List<Treatment> treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
             
+            if (treatments.Count == 1)
+            {
+                if (stay.EndDate < treatments.FirstOrDefault().EndDate)
+                {
+                    //Added errormessage to display in staydetails [HansesM]
+                    ModelState.AddModelError("EndDateError", "Das Enddatum darf nicht vor der letzen Behandlung liegen");
+                }
+            }
 
             //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))
