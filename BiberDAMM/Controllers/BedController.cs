@@ -200,6 +200,17 @@ namespace BiberDAMM.Controllers
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         public ActionResult BedSchedule()
         {
+            // simple statistic gimmick
+            double CountAllBeds = (from b in db.Beds where b.Id > 0 select b).Count();
+            double CountOccupiedBeds = (from b in db.Beds join bl in db.Blocks on b.Id equals bl.BedId
+                                        where bl.BeginDate <= DateTime.Now && bl.EndDate >= DateTime.Now select b).Count();
+            double OccupationRate = Math.Round((100 * CountOccupiedBeds / CountAllBeds), 2);
+
+            ViewBag.TotalBeds = CountAllBeds;
+            ViewBag.BedsInUse = CountOccupiedBeds;
+            ViewBag.Percentage = OccupationRate;
+
+            // fetch all beds currently in use, show start and enddate, get name of patient in it
             var DataQuery = from c in db.Clients
                             join s in db.Stays on c.Id equals s.ClientId
                             join bl in db.Blocks on s.Id equals bl.StayId
@@ -216,6 +227,7 @@ namespace BiberDAMM.Controllers
                                 StartDate = bl.BeginDate,
                                 EndDate = bl.EndDate
                             };
+            
             return View(DataQuery);
         }
     } 
