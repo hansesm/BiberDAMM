@@ -26,14 +26,24 @@
     </div>
 }
 
+<!-- Notification if cleaning job done -->
+@if (TempData["CleaningDone"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Reinigungsplan aktualisiert!</strong>@TempData["CleaningDone"]
+    </div>
+}
 <h1>Willkommen @User.Identity.GetUserName()</h1>
-
+<hr />
 <!--
     Cleaning schedule viewpage 
     Author: Jean-PierreK
 -->
 <h2>Es sind folgende Reinigungsarbeiten ausstehend:</h2>
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<table id="CleaningJobs" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
@@ -79,8 +89,8 @@
 </table>
 <br />
 <br />
-<h2>Es sind zurzeit folgende Patientenzimmer belegt:</h2>
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<h2>Es sind aktuell folgende Patientenzimmer belegt:</h2>
+<table id="Roomplan" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
@@ -107,6 +117,6 @@
 <script>
  $(function () {
             $.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
-            $("#example").dataTable();
+            $("#CleaningJobs").dataTable();
         })</script>
 }

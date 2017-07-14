@@ -144,6 +144,8 @@ namespace BiberDAMM.Controllers
             var RoomsToClean = db.Cleaner.Where(e => e.CleaningDone == false).ToList();
             ViewBag.OccupiedRooms = PatientRooms;
             ViewBag.CleaningEvents = RoomsToClean;
+            // Return notification if cleaning done
+            TempData["CleaningDone"] = " Reinigung erfolgt und Raum zur Verwendung freigegeben";
             return View("IndexCleaner");
         }
     }

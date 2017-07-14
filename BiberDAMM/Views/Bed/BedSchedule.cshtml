@@ -12,7 +12,7 @@
 
 <h2>@ViewBag.Title</h2>
 <hr />
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<table id="BedSchedule" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>@Html.DisplayNameFor(model => model.BedNbr)</th>
@@ -63,6 +63,6 @@
     <script>
         $(function () {
             $.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
-            $("#example").dataTable();
+            $("#BedSchedule").dataTable();
         })</script>
 }
