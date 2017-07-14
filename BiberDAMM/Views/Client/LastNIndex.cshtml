@@ -87,6 +87,12 @@
 
     </table>
 
-    @section Scripts{
-        <script> $(function () { $("#clientIndexTable").dataTable(); })</script>
-    }
+
+@section Scripts{
+    <script>
+        $(function () {
+            $.fn.dataTable.moment('DD.MM.YYYY');
+            $("#clientIndexTable").dataTable();
+        })</script>
+    @*   <script> $(function () { $("#clientIndexTable").dataTable(); })</script>*@
+}
