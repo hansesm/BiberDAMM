@@ -160,7 +160,7 @@ namespace BiberDAMM.Controllers
                 {
 
                     Client cachedClient = (Client)getCachedClient();
-                    if (cachedClient.Id != 0)
+                    if (cachedClient != null && cachedClient.Id != 0)
                     {
                         contactData.ClientId = cachedClient.Id;
                     }
