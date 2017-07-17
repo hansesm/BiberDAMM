@@ -36,24 +36,25 @@
         <strong>Reinigungsplan aktualisiert!</strong>@TempData["CleaningDone"]
     </div>
 }
-<h1>Willkommen @User.Identity.GetUserName()</h1>
+<h1>Willkommen @User.Identity.GetDisplayName()</h1>
 <hr />
 <!--
     Cleaning schedule viewpage 
     Author: Jean-PierreK
 -->
 <h3>Es sind folgende Reinigungsarbeiten ausstehend</h3>
-<table id="CleaningJobs" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<table id="CleaningJobs" class="table table-striped table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Room.RoomNumber)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.BeginDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Room.RoomNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CleaningDone)
@@ -69,15 +70,16 @@
     </tfoot>
     @foreach (var item in ViewBag.CleaningEvents)
     {
-        <tr  onclick="location.href = '@(Url.Action("Details", "Room", new {id = item.Id}))'">
-            <td>
-                @item.Room.RoomNumber
-            </td>
+        <tr>
+            
             <td>
                 @item.BeginDate
             </td>
             <td>
                 @item.EndDate
+            </td>
+            <td>
+                @item.Room.RoomNumber
             </td>
             <td>
                 @using (Html.BeginForm("Check", "Home", new { id = item.Id }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -93,7 +95,7 @@
 <br />
 <hr />
 <h3>Es sind aktuell folgende Patientenzimmer belegt</h3>
-<table id="Roomplan" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<table id="Roomplan" class="table table-striped table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
@@ -103,7 +105,9 @@
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
-            <td colspan="1"></td>
+            <td colspan="1">
+                <span style="display:inline-block;height:15px"></span>
+            </td>
         </tr>
     </tfoot>
     @foreach (var item in ViewBag.OccupiedRooms)
