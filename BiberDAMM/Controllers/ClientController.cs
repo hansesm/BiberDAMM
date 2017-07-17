@@ -101,7 +101,7 @@ namespace BiberDAMM.Controllers
         [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleTherapist + "," + ConstVariables.RoleNurse)]
         public ActionResult Details(int? id)
         {
-            Session["TempClient"] = null;
+            //Session["TempClient"] = null;
             if (id == null)
             {
                 string redirectString = (String)Session["ClientIndexPage"];
@@ -114,6 +114,8 @@ namespace BiberDAMM.Controllers
             var client = db.Clients.Find(id);
             if (client == null)
                 return HttpNotFound();
+
+            Session["TempClient"] = client;
             return View(client);
         }
 

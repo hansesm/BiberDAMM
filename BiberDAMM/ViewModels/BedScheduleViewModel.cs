@@ -19,10 +19,10 @@ namespace BiberDAMM.ViewModels
         [Display(Name = "Id")]
         public int BedNbr { get; set; }
 
-        [Display(Name = "Modell")]
+        [Display(Name = "Modellbezeichnung")]
         public BedModels BedModel { get; set; }
 
-        [Display(Name = "Raumnummber")]
+        [Display(Name = "Raumnummer")]
         public string RoomNbr { get; set; }
 
         [Display(Name = "Vorname")]
@@ -31,10 +31,10 @@ namespace BiberDAMM.ViewModels
         [Display(Name = "Nachname")]
         public string PatientLName { get; set; }
 
-        [Display(Name = "Beginndatum")]
+        [Display(Name = "Belegungsbeginn")]
         public DateTime StartDate { get; set; }
 
-        [Display(Name = "Endatum")]
+        [Display(Name = "Belegungsende")]
         public DateTime EndDate { get; set; }
     }
 }
