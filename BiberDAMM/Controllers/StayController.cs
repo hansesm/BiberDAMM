@@ -29,7 +29,7 @@ namespace BiberDAMM.Controllers
             if (string.IsNullOrEmpty(date))
             {
                 var stays = _db.Stays.SqlQuery(
-                    "select distinct * from stays where CAST(CURRENT_TIMESTAMP AS DATE) between BeginDate and EndDate or Enddate is null;").ToList();
+                    "select distinct * from stays where (CAST(CURRENT_TIMESTAMP AS DATE) between Cast(BeginDate AS Date) and Cast(Enddate AS Date)) or CAST(CURRENT_TIMESTAMP AS DATE) >= Cast(BeginDate AS Date) and Enddate is null;").ToList();
                 return View(new StayIndexViewModel(stays, requestedDate));
             }
             else
@@ -42,7 +42,7 @@ namespace BiberDAMM.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 //Request all stays matching the given date from the DB using a sql-querry [HansesM]
-                var stays = _db.Stays.SqlQuery("select distinct * from stays where CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) between BeginDate and EndDate or EndDate is null;").ToList();
+                var stays = _db.Stays.SqlQuery("select distinct * from stays where (CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) >= Cast(BeginDate AS Date) and CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) <= Cast(Enddate AS Date)) or ( CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) >= Cast(BeginDate AS Date) and EndDate is null);").ToList();
 
                 //Returns the result [HansesM]
                 return View(new StayIndexViewModel(stays, requestedDate));
@@ -182,15 +182,16 @@ namespace BiberDAMM.Controllers
                 ModelState.AddModelError("EndDateError", "Das Enddatum muss nach dem Beginndatum liegen");
             }
 
-            var treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
-
-
-            if (treatments.FirstOrDefault().EndDate != null && stay.EndDate < treatments.FirstOrDefault().EndDate)
-            {
-                //Added errormessage to display in staydetails [HansesM]
-                ModelState.AddModelError("EndDateError", "Das Enddatum darf nicht vor der letzen Behandlung liegen");
-            }
+            List<Treatment> treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
             
+            if (treatments.Count == 1)
+            {
+                if (stay.EndDate < treatments.FirstOrDefault().EndDate)
+                {
+                    //Added errormessage to display in staydetails [HansesM]
+                    ModelState.AddModelError("EndDateError", "Das Enddatum darf nicht vor der letzen Behandlung liegen");
+                }
+            }
 
             //If abort button is pressed we get a new details-view and dismiss all changes [HansesM]
             if (command.Equals(ConstVariables.AbortButton))

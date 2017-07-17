@@ -688,6 +688,10 @@ namespace BiberDAMM.Controllers
                     }
                 }
             }
+            else
+            {
+                treatmentCreationModel.SelectedRoomNumber = null;
+            }
 
             // return ViewModel
             return treatmentCreationModel;

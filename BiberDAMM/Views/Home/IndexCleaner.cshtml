@@ -26,14 +26,24 @@
     </div>
 }
 
-<h1>Willkommen @User.Identity.GetDisplayName()</h1>
-
+<!-- Notification if cleaning job done -->
+@if (TempData["CleaningDone"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Reinigungsplan aktualisiert!</strong>@TempData["CleaningDone"]
+    </div>
+}
+<h1>Willkommen @User.Identity.GetUserName()</h1>
+<hr />
 <!--
     Cleaning schedule viewpage 
     Author: Jean-PierreK
 -->
-<h2>Es sind folgende Reinigungsarbeiten ausstehend:</h2>
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<h3>Es sind folgende Reinigungsarbeiten ausstehend</h3>
+<table id="CleaningJobs" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
@@ -81,8 +91,9 @@
 </table>
 <br />
 <br />
-<h2>Es sind zurzeit folgende Patientenzimmer belegt:</h2>
-<table id="example" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
+<hr />
+<h3>Es sind aktuell folgende Patientenzimmer belegt</h3>
+<table id="Roomplan" class="table table-striped table-hover table-bordered" style="width:100%;" border="1" cellspacing="0">
     <thead class="thead-inverse">
         <tr>
             <th>
@@ -92,7 +103,7 @@
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
-            <td colspan="4"></td>
+            <td colspan="1"></td>
         </tr>
     </tfoot>
     @foreach (var item in ViewBag.OccupiedRooms)
@@ -104,11 +115,18 @@
         </tr>
     }
 </table>
+<br />
+<br />
 
 @section Scripts{
 <script>
- $(function () {
-            $.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
-            $("#example").dataTable();
-        })</script>
+    $(function () {
+        $.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
+        $("#CleaningJobs").dataTable();
+    })
+    $(function () {
+        $.fn.dataTable.moment('DD.MM.YYYY HH:mm:ss');
+        $("#Roomplan").dataTable();
+    })
+    </script>
 }
