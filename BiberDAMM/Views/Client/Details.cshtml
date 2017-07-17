@@ -332,7 +332,7 @@
 
 <p>
     <button title="Bearbeiten" onclick="location.href = '@Url.Action("Edit", new {id = Model.Id})';return false;" class="btn btn-outline-primary btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-    <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action((String)Session["ClientIndexPage"])';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
+    <button title="Zurück zur Übersicht" onclick="location.href = '@Url.Action("RedirectToIndex")';return false;" class="btn btn-outline-primary btn-sm">Zurück</button>
 </p>
 
 

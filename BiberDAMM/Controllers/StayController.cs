@@ -183,7 +183,7 @@ namespace BiberDAMM.Controllers
             }
 
             List<Treatment> treatments = _db.Treatments.SqlQuery("select * from treatments where stayId = " + stay.Id + " and Enddate = (select max(Enddate) from treatments where stayId = " + stay.Id + ");").ToList();
-            
+
             if (treatments.Count == 1)
             {
                 if (stay.EndDate < treatments.FirstOrDefault().EndDate)
@@ -303,6 +303,18 @@ namespace BiberDAMM.Controllers
         protected override void Dispose(bool disposing)
         {
             _db.Dispose();
+        }
+
+
+        //Method to cache the Site for Redirection from Client [ChristesR]
+        public ActionResult CachePageForClientDetails(int id)
+        {
+            int clientID = _db.Stays.Find(id).Client.Id;
+
+            string cachedPage = "Details,Stay," + id;
+            Session["ClientIndexPage"] = cachedPage;
+
+            return RedirectToAction("Details", "Client", new { id = clientID });
         }
     }
 }

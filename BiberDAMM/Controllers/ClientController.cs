@@ -286,5 +286,25 @@ namespace BiberDAMM.Controllers
                 db.Dispose();
             base.Dispose(disposing);
         }
+
+        //To Redirect the User to the correct previous Page 
+        public ActionResult RedirectToIndex()
+        {
+            string cachedPage = (String)Session["ClientIndexPage"];
+            var pageValues = cachedPage.Split(',').ToList();
+
+            if (pageValues.Count > 2)
+            {
+                return RedirectToAction(pageValues.ElementAt(0), pageValues.ElementAt(1), new { id = pageValues.ElementAt(2) });
+            }
+            else if (pageValues.Count == 2)
+            {
+                return RedirectToAction(pageValues.ElementAt(0), new { id = pageValues.ElementAt(1) });
+            }
+
+            return RedirectToAction(pageValues.ElementAt(0));
+
+
+        }
     }
 }
