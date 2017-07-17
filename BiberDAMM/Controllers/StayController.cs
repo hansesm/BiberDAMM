@@ -29,7 +29,7 @@ namespace BiberDAMM.Controllers
             if (string.IsNullOrEmpty(date))
             {
                 var stays = _db.Stays.SqlQuery(
-                    "select distinct * from stays where (CAST(CURRENT_TIMESTAMP AS DATE) between BeginDate and EndDate) or CAST(CURRENT_TIMESTAMP AS DATE) >= Begindate and Enddate is null;").ToList();
+                    "select distinct * from stays where (CAST(CURRENT_TIMESTAMP AS DATE) between Cast(BeginDate AS Date) and Cast(Enddate AS Date)) or CAST(CURRENT_TIMESTAMP AS DATE) >= Cast(BeginDate AS Date) and Enddate is null;").ToList();
                 return View(new StayIndexViewModel(stays, requestedDate));
             }
             else
@@ -42,7 +42,7 @@ namespace BiberDAMM.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 //Request all stays matching the given date from the DB using a sql-querry [HansesM]
-                var stays = _db.Stays.SqlQuery("select distinct * from stays where (CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) between BeginDate and EndDate) or ( CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) >= Begindate and EndDate is null);").ToList();
+                var stays = _db.Stays.SqlQuery("select distinct * from stays where (CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) >= Cast(BeginDate AS Date) and CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) <= Cast(Enddate AS Date)) or ( CAST('" + requestedDate.ToString("MM-dd-yyyy") + "' AS DATE) >= Cast(BeginDate AS Date) and EndDate is null);").ToList();
 
                 //Returns the result [HansesM]
                 return View(new StayIndexViewModel(stays, requestedDate));
