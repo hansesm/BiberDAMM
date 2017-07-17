@@ -413,7 +413,7 @@
 
                 <div class="modal-footer" style="margin-top:20px">
                     <input title="Raumauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseRoom" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
-                    <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                    <button title="Fenster schließen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Schließen</button>
                 </div>
                 <!--end modal footer-->
 
@@ -491,8 +491,8 @@
                 <!--end modal body-->
 
                 <div class="modal-footer" style="margin-top:20px">
-                    <input title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseStaff" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
-                    <button title="Abbrechen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Abbrechen</button>
+                    <input id="chooseStaffButton" title="Mitarbeiterauswahl bestätigen" type="submit" name="command" value="@ConstVariables.UseStaff" class="btn btn-outline-primary btn-sm" formnovalidate="formnovalidate">
+                    <button id="abortChooseStaffButton" title="Fenster schließen" class="btn btn-outline-primary btn-sm" data-dismiss="modal">Schließen</button>
                 </div>
                 <!--end modal footer-->
 
@@ -688,12 +688,54 @@
 @section Scripts{
     <!--dynamic table for room list-->
     <script>
-        $(function () { $("#roomsTable").dataTable(); })
+        $(document).ready(function () {
+            $('#roomsTable').DataTable({
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": true
+            });
+        });
     </script>
 
     <!--dynamic table for staff list-->
     <script>
-        $(function () { $("#staffTable").dataTable(); })
+        $(document).ready(function () {
+            $('#staffTable').DataTable({
+                "scrollY": "200px",
+                "scrollCollapse": true,
+                "paging": false,
+                "searching": true
+            });
+        });
+    </script>
+
+    <!--ensure that modalbinding gets all lines of roomtable-->
+    <script>
+        $("#selectRoomModal").on('hide.bs.modal', function () {
+            $('#roomsTable').DataTable().search('').draw();
+        });
+    </script>
+
+    <!--ensure that modalbinding gets all lines of stafftable-->
+    <script>
+        $(document).ready(function () {
+            $("#chooseStaffButton").click(function () {
+                $('#staffTable').DataTable().search('').draw();
+            });
+        });
+    </script>
+    <script>
+        $("#selectStaffModal").on('hide.bs.modal', function () {
+            $('#staffTable').DataTable().search('').draw();
+        });
+    </script>
+
+    <!--render table columns when showing a modal; explanation: https://datatables.net/examples/api/tabs_and_scrolling.html-->
+    <script>
+        $(document).on('shown.bs.modal', function (e) {
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+        });
     </script>
 
     <!-- Datetimepicker for begin-->
