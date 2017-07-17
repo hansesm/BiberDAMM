@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using BiberDAMM.Helpers 
 @model IEnumerable<BiberDAMM.Models.Cleaner>  
 @{
     ViewBag.Title = "Home Reinigungskraft";
@@ -26,7 +26,7 @@
     </div>
 }
 
-<h1>Willkommen @User.Identity.GetUserName()</h1>
+<h1>Willkommen @User.Identity.GetDisplayName()</h1>
 
 <!--
     Cleaning schedule viewpage 
@@ -52,12 +52,14 @@
     </thead>
     <tfoot style="background-color: #263238; text-align: right;">
         <tr>
-            <td colspan="4"></td>
+            <td colspan="4">
+                <span style="display:inline-block;height:15px"></span>
+            </td>
         </tr>
     </tfoot>
     @foreach (var item in ViewBag.CleaningEvents)
     {
-        <tr>
+        <tr  onclick="location.href = '@(Url.Action("Details", "Room", new {id = item.Id}))'">
             <td>
                 @item.Room.RoomNumber
             </td>
