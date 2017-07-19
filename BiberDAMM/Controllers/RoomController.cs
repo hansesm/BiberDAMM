@@ -238,7 +238,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of rooms witch matches the given roomType
         //[HansesM]
         [HttpPost]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public JsonResult GetSchedulerRooms(string roomTypeName)
         {
             //Gets a list of free beds, matching the given parameters! [HansesM]
@@ -257,7 +257,7 @@ namespace BiberDAMM.Controllers
         //Jquery-Ajax and returns a list of treatments and cleanings witch matches roomtype and the current-date
         //[HansesM]
         [HttpPost]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public JsonResult GetSchedulerEvents(string roomTypeName, string schedulerDate)
         {
             //Gets a list of treatments, matching the given parameters! [HansesM]
