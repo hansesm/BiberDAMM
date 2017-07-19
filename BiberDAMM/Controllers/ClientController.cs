@@ -123,7 +123,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for the creating-Page
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create()
         {
 
@@ -144,7 +144,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Create(Client client)
         {
             //Null the Editing Client for preventing user to get into undefined state
@@ -199,7 +199,7 @@ namespace BiberDAMM.Controllers
 
 
         //Getter and Setter for the Editing Page
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -233,7 +233,7 @@ namespace BiberDAMM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
+        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse + "," + ConstVariables.RoleTherapist)]
         public ActionResult Edit(Client client)
         {
             //Null the New Client for preventing user to get into undefined state
@@ -279,12 +279,31 @@ namespace BiberDAMM.Controllers
             }
         }
 
-        [CustomAuthorize(Roles = ConstVariables.RoleAdministrator + "," + ConstVariables.RoleDoctor + "," + ConstVariables.RoleNurse)]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
                 db.Dispose();
             base.Dispose(disposing);
+        }
+
+        //To Redirect the User to the correct previous Page 
+        public ActionResult RedirectToIndex()
+        {
+            string cachedPage = (String)Session["ClientIndexPage"];
+            var pageValues = cachedPage.Split(',').ToList();
+
+            if (pageValues.Count > 2)
+            {
+                return RedirectToAction(pageValues.ElementAt(0), pageValues.ElementAt(1), new { id = pageValues.ElementAt(2) });
+            }
+            else if (pageValues.Count == 2)
+            {
+                return RedirectToAction(pageValues.ElementAt(0), new { id = pageValues.ElementAt(1) });
+            }
+
+            return RedirectToAction(pageValues.ElementAt(0));
+
+
         }
     }
 }

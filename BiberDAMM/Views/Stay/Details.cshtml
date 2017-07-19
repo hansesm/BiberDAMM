@@ -16,7 +16,7 @@
 
 
 @* Displays the main Stayinformation [HansesM]*@
-<h2>Aufenthalt von <a href="@Url.Action("Details", "Client" , new { id = Model.Stay.ClientId })">@Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname)</a></h2>
+<h2>Aufenthalt von <a href="@Url.Action("CachePageForClientDetails", "Stay" , new { id = Model.Stay.Id})">@Html.Raw(Model.Stay.Client.Surname) @Html.Raw(Model.Stay.Client.Lastname)</a></h2>
 @{
     <!-- Displays date-information depending if a end-date is set [HansesM] -->
     if (Model.Stay.EndDate.HasValue)
