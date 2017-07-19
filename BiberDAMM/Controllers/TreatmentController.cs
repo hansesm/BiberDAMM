@@ -295,7 +295,7 @@ namespace BiberDAMM.Controllers
                     treatmentCreationModel.JsonAppointmentsOfSelectedRessources = CreateJsonResult(treatmentCreationModel.AppointmentsOfSelectedRessources);
 
                     // error-message for alert-statement [KrabsJ]
-                    TempData["InvalidSeriesValues"] = " Sie haben angegeben, dass sie einen Serientermin planen möchten. Bitte geben Sie eine Anzahl an Wiederholungen an.";
+                    TempData["InvalidSeriesValues"] = " Sie haben angegeben, dass Sie einen Serientermin planen möchten. Bitte geben Sie eine Anzahl an Wiederholungen an.";
 
                     // return view
                     return View(treatmentCreationModel);
